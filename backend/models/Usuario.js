@@ -3,25 +3,34 @@ const bcrypt = require("bcrypt");
 const generarId = require("../helpers/generarId.js");
 
 const usuarioSchema = new mongoose.Schema({
-
-  // Campos que va a tener cada documento de la colección, con su tipo y validaciones correspondientes
   nombre: {
     type: String,
     required: true,
     trim: true,
   },
-  email: {
+  apellido: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  genero: {
+    type: String,
+    enum: ["Masculino", "Femenino"],
+    required: true,
+    trim: true,
+  },
+  correo_electronico: {
     type: String,
     required: true,
     trim: true,
     unique: true,
   },
-  telefono: {
+  contrasena: {
     type: String,
     required: true,
     trim: true,
   },
-  password: {
+  telefono: {
     type: String,
     required: true,
     trim: true,
@@ -38,24 +47,20 @@ const usuarioSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  rol: {
-    type: String,
-    default: "cliente",
-  },
 })
 
 usuarioSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) {
+  if (!this.isModified("contrasena")) {
     next();
   }
   const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
+  this.contrasena = await bcrypt.hash(this.contrasena, salt);
 });
 
 usuarioSchema.methods.comprobarPassword = async function (
   passwordFormulario
 ) {
-  return await bcrypt.compare(passwordFormulario, this.password);
+  return await bcrypt.compare(passwordFormulario, this.contrasena);
 };
 
 const Usuario = mongoose.model("Usuario", usuarioSchema);

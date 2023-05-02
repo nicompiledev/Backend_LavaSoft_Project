@@ -1,5 +1,5 @@
 const { Reserva } = require('../models/Agendar.js');
-const Lavadero = require('../models/Lavadero.js');
+const Lavadero = require('../models/lavadero.js');
 const { Servicio } = require('../models/Servicio.js');
 const Usuario = require('../models/Usuario.js');
 const moment = require('moment');

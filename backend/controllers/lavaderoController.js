@@ -1,9 +1,10 @@
-const Lavadero = require("../models/Lavadero.js");
+const Lavadero = require("../models/lavadero.js");
 const generarJWT = require("../helpers/generarJWT.js");
 const generarId = require("../helpers/generarId.js");
 const emailRegistro = require("../helpers/lavaderos/emailRegistro.js");
-const emailOlvidePassword = require("../helpers/emailOlvidePassword.js");
+const emailOlvidePassword = require("../helpers/usuarios/emailOlvidePassword.js");
 const openai = require("./openai/openai.js");
+const Usuario = require("../models/Usuario.js");
 
 /*
   nombre: { type: String, required: true },
@@ -52,7 +53,7 @@ const registrarLavadero = async (req, res) => {
 
     const existeLavadero = await Lavadero.findOne({ correo_electronico });
     if (existeLavadero) {
-      return res.status(400).json({ msg: "El usuario ya existe" });
+      return res.status(400).json({ msg: "El lavadero ya existe" });
     }
 
     const lavadero = new Lavadero({
@@ -123,7 +124,7 @@ const autenticarLavadero = async (req, res) => {
     }
 
     // Check if the password is correct
-    const isMatch = await user.comprobarPassword(contrasena);
+    const isMatch = await Usuario.comprobarPassword(contrasena);
 
     if (!isMatch) {
       return res.status(400).json({ msg: "La contraseña es incorrecta" });

@@ -1,4 +1,4 @@
-const Lavadero = require("../models/Lavadero.js");
+const Lavadero = require("../models/lavadero.js");
 const { conectarRedis } = require("../config/index.js");
 
 const getLavaderos = async (req, res) => {
