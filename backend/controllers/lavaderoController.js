@@ -29,8 +29,7 @@ const Usuario = require("../models/Usuario.js");
 
 const registrarLavadero = async (req, res) => {
   try {
-    console.log(req.files)
-    console.log(req.body)
+
     const { nombre, ciudad, direccion, telefono, correo_electronico, contrasena, hora_apertura, hora_cierre, espacios_de_trabajo, longitud, latitud } = req.body;
 
     // si algun campo esta vacio

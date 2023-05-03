@@ -3,7 +3,6 @@ const generarJWT = require("../helpers/generarJWT.js");
 const generarId = require("../helpers/generarId.js");
 const emailRegistro = require("../helpers/usuarios/emailRegistro.js");
 const emailOlvidePassword = require("../helpers/usuarios/emailOlvidePassword.js");
-const bcrypt = require("bcrypt");
 const Usuario = require("../models/Usuario.js");
 
 const registrar = async (req, res) => {
@@ -231,7 +230,7 @@ const nuevoPassword = async (req, res) => {
 
 const actualizarPerfil = async (req, res) => {
   try {
-    const usuario = await Usuario.findById(req.usuario.id).select("-contrasena");
+    const usuario = await Usuario.findById(req.usuario._id);
 
     if (!usuario) {
       const error = new Error("Hubo un error");
@@ -241,50 +240,26 @@ const actualizarPerfil = async (req, res) => {
     const { correo_electronico } = req.body;
 
     if (usuario.correo_electronico !== req.body.correo_electronico) {
-      const [rows] = await conexion.execute(
-        "SELECT * FROM usuarios WHERE correo_electronico = ?",
-        [correo_electronico]
-      );
+      const existeEmail = await Usuario.findOne({ correo_electronico });
 
-      const existeEmail = rows[0];
       if (existeEmail) {
         const error = new Error("Ese correo_electronico ya esta en uso");
         return res.status(400).json({ msg: error.message });
       }
     }
 
-    // contraseña
-    if (req.body.contrasena) {
-      const salt = await bcrypt.genSalt(10);
-      const contrasenaHash = await bcrypt.hash(req.body.contrasena, salt);
-      req.body.contrasena = contrasenaHash;
-    }
+    usuario.nombre = req.body.nombre;
+    usuario.apellido = req.body.apellido;
+    usuario.correo_electronico = req.body.correo_electronico;
+    usuario.telefono = req.body.correo_electronico;
 
-    await conexion.execute(
-      "UPDATE usuarios SET nombre = ?, apellido = ?, correo_electronico = ?, telefono = ? WHERE id_usuario = ?",
-      [req.body.nombre, req.body.apellido, req.body.correo_electronico, req.body.telefono, req.params.id_usuario]
-    );
-
-    const usuarioActualizado = {
-      id_usuario: req.params.id_usuario,
-      nombre: req.body.nombre,
-      apellido: req.body.apellido,
-      correo_electronico: req.body.correo_electronico,
-      telefono: req.body.telefono,
-    };
+    const usuarioActualizado = await usuario.save();
 
     res.json(usuarioActualizado);
 
   } catch (error) {
     console.log(error);
-  } finally {
-    if (conexion) {
-      try {
-        await conexion.close();
-      } catch (error) {
-        console.log('Error al cerrar la conexión:', error);
-      }
-    }
+    res.status(500).json({ msg: "Error del servidor" });
   }
 };
 
@@ -294,48 +269,30 @@ const actualizarPassword = async (req, res) => {
   const { id_usuario } = req.usuario;
   const { pwd_actual, pwd_nuevo } = req.body;
 
-
-  let conexion;
-
   try {
-    // Conectar a la base de datos
-    const conexion = await conectarDB();
+    const usuario = await Usuario.findById(id_usuario);
 
-    // Comprobar que el usuario existe
-    const [rows] = await conexion.execute(
-      "SELECT * FROM usuarios WHERE id_usuario = ?",
-      [id_usuario]
-    );
-
-    if (rows.length === 0) {
+    if (!usuario) {
       const error = new Error("Hubo un error");
       return res.status(400).json({ msg: error.message });
-    }
+    }  
 
-    // Comprobar su password
-    const usuario = rows[0];
-    if (pwd_actual === usuario.contrasena) {
+    if (await usuario.comprobarPassword(pwd_actual)) {
       // Almacenar el nuevo password
-      await conexion.execute(
-        "UPDATE usuarios SET contrasena = ? WHERE id_usuario = ?",
-        [pwd_nuevo, id_usuario]
-      );
+  
+      usuario.contrasena = pwd_nuevo;
+      
+      await usuario.save();
+
       res.json({ msg: "Password Almacenado Correctamente" });
     } else {
       const error = new Error("El Password Actual es Incorrecto");
       return res.status(400).json({ msg: error.message });
     }
+
   } catch (error) {
-    console.log(`error: ${error.message}`);
-    res.status(500).json({ msg: "Hubo un error en el servidor" });
-  } finally {
-    if (conexion) {
-      try {
-        await conexion.close();
-      } catch (error) {
-        console.log('Error al cerrar la conexión:', error);
-      }
-    }
+    console.log(error);
+    res.status(500).json({ msg: "Error del servidor" });
   }
 };
 
