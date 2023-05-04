@@ -25,10 +25,12 @@ const upload = multer({ storage: storage });
 const {
   registrarLavadero,
   autenticarLavadero,
+  getReservasNoAtendidas
 } = require('../controllers/lavaderoController.js');
 
 
 // área publica
 router.post("/peticion", upload.array('images'), registrarLavadero);
+router.get("/reservas/:id_lavadero", getReservasNoAtendidas);
 
 module.exports = router;

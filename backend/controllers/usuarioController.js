@@ -13,7 +13,7 @@ const registrar = async (req, res) => {
     const existeUsuario = await Usuario.findOne({ correo_electronico });
 
     if (existeUsuario) {
-      const error = new Error("Usuario ya registrado");
+      const error = new Error("Usuario ya registrado, no puedes crear una cuenta con este correo electrónico");
       return res.status(400).json({ msg: error.message });
     }
 
@@ -40,7 +40,7 @@ const registrar = async (req, res) => {
       token: usuario.token,
     });
 
-    res.json({ nombre, apellido, correo_electronico, telefono });
+    res.status(200).json({ nombre, apellido, correo_electronico, telefono });
 
   } catch (error) {
     console.log(error);
@@ -220,6 +220,13 @@ const nuevoPassword = async (req, res) => {
     usuario.token = null;
     usuario.contrasena = contrasena;
 
+    const usuarioActualizado = await usuario.save();
+
+    if(!usuarioActualizado) {
+      const error = new Error("Hubo un error al actualizar el usuario");
+      return res.status(400).json({ msg: error.message });
+    }
+
     res.json({ message: "Password modificado correctamente" });
 
   } catch (error) {
@@ -275,13 +282,13 @@ const actualizarPassword = async (req, res) => {
     if (!usuario) {
       const error = new Error("Hubo un error");
       return res.status(400).json({ msg: error.message });
-    }  
+    }
 
     if (await usuario.comprobarPassword(pwd_actual)) {
       // Almacenar el nuevo password
-  
+
       usuario.contrasena = pwd_nuevo;
-      
+
       await usuario.save();
 
       res.json({ msg: "Password Almacenado Correctamente" });

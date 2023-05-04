@@ -11,7 +11,6 @@ const initSockets = require('./socket/sockets.js');
 const socketIO = require('socket.io');
 
 // Imports
-
 const app = express();
 const server = require("http").createServer(app);
 const io = socketIO(server, {

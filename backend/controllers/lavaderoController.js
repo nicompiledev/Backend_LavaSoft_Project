@@ -5,27 +5,7 @@ const emailRegistro = require("../helpers/lavaderos/emailRegistro.js");
 const emailOlvidePassword = require("../helpers/usuarios/emailOlvidePassword.js");
 const openai = require("./openai/openai.js");
 const Usuario = require("../models/Usuario.js");
-
-/*
-  nombre: { type: String, required: true },
-  ciudad: { type: String, required: true },
-  direccion: { type: String, required: true },
-  telefono: { type: String, required: true },
-  correo_electronico: { type: String, required: true, unique: true },
-  contrasena: { type: String, required: true },
-  hora_apertura: { type: String, required: true },
-  hora_cierre: { type: String, required: true },
-  estado: { type: Boolean, default: true },
-  confirmado: {type: Boolean, default: false,},
-  token: { type: String, default: generarId() },
-  imagenes: [{ type: String }], // nuevo campo de matriz de imágenes
-  espacios_de_trabajo: { type: Number, required: true },
-  ubicacion: {
-    type: { type: String, default: "Point" },
-    coordinates: { type: [Number], required: true },
-  }
-
-*/
+const {Reserva} = require("../models/Reserva.js");
 
 const registrarLavadero = async (req, res) => {
   try {
@@ -151,8 +131,32 @@ const autenticarLavadero = async (req, res) => {
   }
 };
 
+const getReservasNoAtendidas = async (req, res) => {
+  try {
+    const { id_lavadero } = req.params;
+
+    if(!id_lavadero){
+      return res.status(400).json({ msg: "No se ha enviado el id del lavadero" });
+    }
+
+    const reservas = await Reserva.find({ id_lavadero, estado: "pendiente" });
+
+    if(!reservas){
+      return res.status(400).json({ msg: "No hay reservas pendientes" });
+    }
+
+    res.status(200).json({ reservas });
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: "Hubo un error" });
+  }
+}
+
+
 
 module.exports = {
   registrarLavadero,
   autenticarLavadero,
+  getReservasNoAtendidas
 };
