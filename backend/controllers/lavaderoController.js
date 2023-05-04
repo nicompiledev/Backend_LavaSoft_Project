@@ -154,9 +154,43 @@ const getReservasNoAtendidas = async (req, res) => {
 }
 
 
+const putCancelarReserva = async ( req , res)=>{
+
+  try{
+    
+    const { id_reserve } = req.body
+
+    const  buscarReserva = await  Reserva.findById(id_reserve);
+    
+    if(!buscarReserva){
+     return res.status(400).json({msg: 'Esta reservano existe'})
+    }
+
+    buscarReserva.estado = 'cancelado'
+
+    const result = await buscarReserva.save()
+
+
+    if(!result){
+     return res.status(400).json({msg:'error al actualizar'})
+    }
+
+
+    res.status(200).json({msg: 'Se cancelo con exito'})
+
+  }
+  catch(error){
+    console.log(error);
+    res.status(500).json({ msg: "Hubo un error" });
+  }
+
+}
+
+
 
 module.exports = {
   registrarLavadero,
   autenticarLavadero,
-  getReservasNoAtendidas
+  getReservasNoAtendidas, 
+  putCancelarReserva
 };
