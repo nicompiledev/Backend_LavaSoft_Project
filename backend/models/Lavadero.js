@@ -19,7 +19,8 @@ const LavaderoSchema = new mongoose.Schema({
   ubicacion: {
     type: { type: String, default: "Point" },
     coordinates: { type: [Number], required: true },
-  }
+  },
+  servicios: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Servicio' }],
 });
 
 // indexar ubicación

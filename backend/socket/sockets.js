@@ -1,4 +1,4 @@
-const { Reserva } = require('../models/Agendar.js');
+const { Reserva } = require('../models/Reserva.js');
 const Lavadero = require('../models/lavadero.js');
 const { Servicio } = require('../models/Servicio.js');
 const Usuario = require('../models/Usuario.js');

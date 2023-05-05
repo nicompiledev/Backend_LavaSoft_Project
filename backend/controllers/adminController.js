@@ -2,7 +2,7 @@ const conectarDB = require("../config/mysql.js");
 const generarJWT = require("../helpers/generarJWT.js");
 const generarId = require("../helpers/generarId.js");
 const emailConfirmado = require("../helpers/lavaderos/emailConfirmado.js");
-const emailOlvidePassword = require("../helpers/emailOlvidePassword.js");
+//const emailOlvidePassword = require("../helpers/emailOlvidePassword.js");
 const bcrypt = require("bcrypt");
 const lavadero = require("../models/lavadero.js");
 
