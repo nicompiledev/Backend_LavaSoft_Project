@@ -2,6 +2,8 @@ const Lavadero = require("../models/lavadero.js");
 const generarJWT = require("../helpers/generarJWT.js");
 const generarId = require("../helpers/generarId.js");
 const emailRegistro = require("../helpers/lavaderos/emailRegistro.js");
+const emailCancelado = require("../helpers/lavaderos/emailCancelado.js")
+const emailServicioTerminada = require("../helpers/lavaderos/emailServicioTerminada.js")
 const emailOlvidePassword = require("../helpers/usuarios/emailOlvidePassword.js");
 const openai = require("./openai/openai.js");
 const Usuario = require("../models/Usuario.js");
@@ -67,7 +69,7 @@ const registrarLavadero = async (req, res) => {
 
       // Send email
       await emailRegistro({
-        correo_electronico,
+        email: correo_electronico,
         nombre
       });
 
@@ -155,26 +157,40 @@ const getReservasNoAtendidas = async (req, res) => {
 
 
 const putCancelarReserva = async ( req , res)=>{
-
   try{
-    
-    const { id_reserve } = req.body
-
+    const { id_reserve, id_usuario, id_lavadero, motivo } = req.body
     const  buscarReserva = await  Reserva.findById(id_reserve);
     
     if(!buscarReserva){
-     return res.status(400).json({msg: 'Esta reservano existe'})
+     return res.status(400).json({msg: 'La reserva NO existe'})
+    }
+
+    const usuario = await  Usuario.findById(id_usuario); 
+
+    if(!usuario){
+      return res.status(400).json({msg:'El usuario NO existe'})
+    }
+
+    const lavadero = await Lavadero.findById(id_lavadero)
+
+    if(!lavadero){
+      return res.status(400).json({msg:'El lavadero NO existe'})
     }
 
     buscarReserva.estado = 'cancelado'
+    buscarReserva.motivoCancelacion = motivo;
 
     const result = await buscarReserva.save()
-
 
     if(!result){
      return res.status(400).json({msg:'error al actualizar'})
     }
 
+    await emailServicioTerminada({
+      email: usuario.correo_electronico,
+      nombre: usuario.nombre,
+      lavadero: lavadero.nombre,
+    });
 
     res.status(200).json({msg: 'Se cancelo con exito'})
 
@@ -183,8 +199,55 @@ const putCancelarReserva = async ( req , res)=>{
     console.log(error);
     res.status(500).json({ msg: "Hubo un error" });
   }
-
 }
+
+const servicioTerminado = async (req, res) => {
+  try{
+    const { id_reserve, id_usuario, id_lavadero } = req.body
+    const  buscarReserva = await  Reserva.findById(id_reserve);
+    
+    if(!buscarReserva){
+     return res.status(400).json({msg: 'La reserva NO existe'})
+    }
+
+    const usuario = await  Usuario.findById(id_usuario); 
+
+    if(!usuario){
+      return res.status(400).json({msg:'El usuario NO existe'})
+    }
+
+    const lavadero = await Lavadero.findById(id_lavadero)
+
+    if(!lavadero){
+      return res.status(400).json({msg:'El lavadero NO existe'})
+    }
+
+    buscarReserva.estado = 'terminado'
+
+    const result = await buscarReserva.save()
+
+    if(!result){
+     return res.status(400).json({msg:'error al actualizar'})
+    }
+
+    await emailCancelado({
+      email: usuario.correo_electronico,
+      nombre: usuario.nombre,
+      lavadero: lavadero.nombre,
+      reserva: buscarReserva.fecha,
+      motivo
+    });
+
+    res.status(200).json({msg: 'Se cambio el estado con exito'})
+
+  }
+  catch(error){
+    console.log(error);
+    res.status(500).json({ msg: "Hubo un error" });
+  }
+}
+
+
 
 
 
@@ -192,5 +255,6 @@ module.exports = {
   registrarLavadero,
   autenticarLavadero,
   getReservasNoAtendidas, 
-  putCancelarReserva
+  putCancelarReserva,
+  servicioTerminado
 };

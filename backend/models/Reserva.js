@@ -8,6 +8,7 @@ const reservaSchema = new mongoose.Schema({
   hora_fin: { type: String, required: true },
   espacio_de_trabajo: { type: Number, required: true },
   estado: { type: String, enum: ["pendiente", "terminado", "cancelado"], default: "pendiente"},
+  motivoCancelacion: {type: String, default: "No fue cancelado"}
 });
 
 
