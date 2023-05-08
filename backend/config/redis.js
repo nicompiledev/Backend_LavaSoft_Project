@@ -2,24 +2,35 @@ const redis = require("redis");
 const { promisify } = require("util");
 require("dotenv").config();
 
-const conectarRedis = () => {
-  const client = redis.createClient({
-    host: process.env.REDIS_URL,
-    port: process.env.REDIS_PORT,
-  });
+const publisher = redis.createClient({
+  host: process.env.REDIS_URL,
+  port: process.env.REDIS_PORT,
+});
 
-  client.on("error", (error) => {
-    console.error(`Error al conectarse a Redis: ${error.message}`);
-  });
+const subscriber = redis.createClient({
+  host: process.env.REDIS_URL,
+  port: process.env.REDIS_PORT,
+});
 
-  client.on("connect", () => {
-    console.log("Conexión a Redis exitosa");
-  });
+publisher.on("error", (error) => {
+  console.error(`Error al conectarse a Redis: ${error.message}`);
+});
 
-  return {
-    getAsync: promisify(client.get).bind(client),
-    setAsync: promisify(client.set).bind(client),
-  };
+subscriber.on("error", (error) => {
+  console.error(`Error al conectarse a Redis: ${error.message}`);
+});
+
+publisher.on("connect", () => {
+  console.log("Conexión a Redis exitosa");
+});
+
+subscriber.on("connect", () => {
+  console.log("Conexión a Redis exitosa");
+});
+
+module.exports = {
+  publisher,
+  subscriber,
+  getAsync: promisify(publisher.get).bind(publisher),
+  setAsync: promisify(publisher.set).bind(publisher),
 };
-
-module.exports = conectarRedis;

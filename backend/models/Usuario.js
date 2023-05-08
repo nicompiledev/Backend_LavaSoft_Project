@@ -19,6 +19,10 @@ const usuarioSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
+  fecha_nacimiento: {
+    type: Date,
+    required: true,
+  },
   correo_electronico: {
     type: String,
     required: true,

@@ -6,7 +6,8 @@ const emailOlvidePassword = require("../helpers/usuarios/emailOlvidePassword.js"
 const Usuario = require("../models/Usuario.js");
 
 const registrar = async (req, res) => {
-  const { nombre, apellido, genero, correo_electronico, contrasena, telefono } = req.body;
+  console.log("ENTRO AQUI")
+  const { nombre, apellido, genero, fecha_nacimiento, correo_electronico, contrasena, telefono } = req.body;
 
   try {
 
@@ -21,6 +22,7 @@ const registrar = async (req, res) => {
       nombre,
       apellido,
       genero,
+      fecha_nacimiento,
       correo_electronico,
       contrasena,
       telefono,
@@ -150,7 +152,7 @@ const autenticar = async (req, res) => {
     }
 
     // Revisar el password
-    if (await usuario.compararPassword(contrasena)) {
+    if (await usuario.comprobarPassword(contrasena)) {
       // Generar el JWT y devolverlo:
       const token = generarJWT(usuario._id);
       // Autenticar
@@ -180,7 +182,9 @@ const olvidePassword = async (req, res) => {
     // Ejecutar una consulta para obtener el usuario con el correo_electronico proporcionado
     const usuario = await Usuario.findOne({ correo_electronico });
 
-    if (usuario) {
+    console.log("usuario", usuario)
+
+    if(!usuario) {
       const error = new Error("El Usuario no existe");
       return res.status(400).json({ msg: error.message });
     }
@@ -193,7 +197,7 @@ const olvidePassword = async (req, res) => {
     emailOlvidePassword({
       email: correo_electronico,
       nombre: usuario.nombre,
-      token,
+      token: usuario.token,
     });
 
     res.json({ msg: "Hemos enviado un correo_electronico con las instrucciones" });
