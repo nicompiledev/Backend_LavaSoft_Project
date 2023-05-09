@@ -14,6 +14,7 @@ const LavaderoSchema = new mongoose.Schema({
   estado: { type: Boolean, default: true },
   confirmado: {type: Boolean, default: false,},
   token: { type: String, default: generarId() },
+  creado: { type: Date, default: Date.now() },
   imagenes: [{ type: String }], // nuevo campo de matriz de imágenes
   espacios_de_trabajo: { type: Number, required: true },
   ubicacion: {
@@ -36,8 +37,7 @@ LavaderoSchema.pre("save", async function (next) {
 
   try {
     const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(this.contrasena, salt);
-    this.contrasena = hashedPassword;
+    this.contrasena = await bcrypt.hash(this.contrasena, salt);
     next();
   } catch (error) {
     next(error);

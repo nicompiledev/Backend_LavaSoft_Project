@@ -10,7 +10,7 @@ const emailCancelado = async (datos) => {
     },
   });
 
-  const { email, lavadero, nombre, reserva, motivo } = datos;
+  const { email, lavadero, nombre, reserva, servicio, motivo } = datos;
 
   const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -32,6 +32,7 @@ const emailCancelado = async (datos) => {
     <p>Detalles de la reserva:</p>
     <ul>
     <li>Lavadero: ${capitalizeFirstLetter(lavadero)}</li>
+    <li>Servicio: ${capitalizeFirstLetter(servicio)}</li>
     <li>Fecha de la reserva: ${reserva}</li>
     </ul>
     <p>Motivo de la cancelación:</p>

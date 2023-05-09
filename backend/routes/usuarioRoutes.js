@@ -23,7 +23,7 @@ router.post("/nuevo-password/:token", nuevoPassword);
 
 // Area privada
 router.get("/perfil", checkAuth, perfil);
-router.put("/perfil/:id", checkAuth, actualizarPerfil);
+router.put("/actualizar_perfil", checkAuth, actualizarPerfil);
 router.put("/actualizar-password", checkAuth, actualizarPassword);
 
 module.exports = router;

@@ -1,4 +1,4 @@
-const conectarDB = require("../config/mysql.js");
+// const conectarDB = require("../config/mysql.js"); PENDIENTE ELIMINAR
 const generarJWT = require("../helpers/generarJWT.js");
 const generarId = require("../helpers/generarId.js");
 const emailConfirmado = require("../helpers/lavaderos/emailConfirmado.js");
@@ -56,27 +56,6 @@ const loguearAdmin = async (req, res) => {
     }
   }
 };
-/*
-const LavaderoSchema = new mongoose.Schema({
-  nombre: { type: String, required: true },
-  ciudad: { type: String, required: true },
-  direccion: { type: String, required: true },
-  telefono: { type: String, required: true },
-  correo_electronico: { type: String, required: true, unique: true },
-  contrasena: { type: String, required: true },
-  hora_apertura: { type: String, required: true },
-  hora_cierre: { type: String, required: true },
-  estado: { type: Boolean, default: true },
-  confirmado: {type: Boolean, default: false,},
-  token: { type: String, default: generarId() },
-  imagenes: [{ type: String }], // nuevo campo de matriz de imágenes
-  espacios_de_trabajo: { type: Number, required: true },
-  ubicacion: {
-    type: { type: String, default: "Point" },
-    coordinates: { type: [Number], required: true },
-  }
-});
- */
 
 const getLavederos = async (req, res) => {
   try {

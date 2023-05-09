@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const Usuario = require("../models/Usuario.js");
+const Lavadero = require("../models/lavadero.js");
 
 const checkAuth = async (req, res, next) => {
   let token;
@@ -16,7 +16,7 @@ const checkAuth = async (req, res, next) => {
       console.log(decoded)
 
 
-      req.usuario = await Usuario.findById(decoded.id).select(
+      req.lavadero = await Lavadero.findById(decoded.id).select(
         "-contrasena -token -confirmado -creado"
       );
 

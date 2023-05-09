@@ -29,6 +29,7 @@ const {
   putCancelarReserva,
   servicioTerminado,
 } = require('../controllers/lavaderoController.js');
+const checkAuth = require('../middleware/authMiddlewareLavadero.js')
 
 
 // área publica
@@ -36,8 +37,8 @@ router.post("/peticion", upload.array('images'), registrarLavadero);
 router.post("/login", autenticarLavadero)
 
 // Area Privada
-router.get("/reservas/:id_lavadero", getReservasNoAtendidas);
-router.delete("/reservas/:id_reserve", putCancelarReserva);
-router.put("/reservas", servicioTerminado)
+router.get("/reservas", checkAuth, getReservasNoAtendidas);
+router.delete("/reservas", checkAuth, putCancelarReserva);
+router.put("/reservas", checkAuth, servicioTerminado)
 
 module.exports = router;

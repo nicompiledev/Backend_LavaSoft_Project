@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const conectarDB = require("../config/mysql.js");
+// const conectarDB = require("../config/mysql.js"); PENDIENTE ELIMINAR
 
 const checkAuth = async (req, res, next) => {
   let token;

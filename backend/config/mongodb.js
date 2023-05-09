@@ -42,6 +42,30 @@ const conectarMongoDB = async () => {
     lavadero.servicios.push(servicio2._id);
     await lavadero.save(); */
 
+/*     const Lavadero = require("../models/lavadero.js");
+
+    const lavadero1 = new Lavadero({
+      nombre: 'Lavadero 1',
+    ciudad: 'Bogota',
+    direccion: 'Calle 1 # 1 - 1',
+    telefono: '1234567890',
+    correo_electronico: 'slash2130kevin@gmail.com',
+    contrasena: 'contrasena123',
+    hora_apertura: '08:00',
+    hora_cierre: '18:00',
+    imagenes: ['https://res.cloudinary.com/djx5h4cjt/image/upload/v1629789853/IMAGENES_LAVADEROS/1_1_1.png'],
+    espacios_de_trabajo: 5,
+    ubicacion: {
+      type: 'Point',
+      coordinates: [-74.08175, 4.60971]
+    },
+    servicios: []
+  });
+
+  lavadero1.confirmado = true;
+
+  await lavadero1.save();
+ */
     console.log("Conexión a la base de datos MongoDB exitosa");
   } catch (error) {
     console.error(`Error al conectarse a la base de datos MongoDB: ${error.message}`);

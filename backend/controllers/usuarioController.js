@@ -1,4 +1,4 @@
-const conectarDB = require("../config/mysql.js");
+const conectarDB = "ELIMINAR PENDIENTE"
 const generarJWT = require("../helpers/generarJWT.js");
 const generarId = require("../helpers/generarId.js");
 const emailRegistro = require("../helpers/usuarios/emailRegistro.js");
@@ -6,8 +6,9 @@ const emailOlvidePassword = require("../helpers/usuarios/emailOlvidePassword.js"
 const Usuario = require("../models/Usuario.js");
 
 const registrar = async (req, res) => {
-  console.log("ENTRO AQUI")
   const { nombre, apellido, genero, fecha_nacimiento, correo_electronico, contrasena, telefono } = req.body;
+
+  let usuario;
 
   try {
 
@@ -15,10 +16,10 @@ const registrar = async (req, res) => {
 
     if (existeUsuario) {
       const error = new Error("Usuario ya registrado, no puedes crear una cuenta con este correo electrónico");
-      return res.status(400).json({ msg: error.message });
+      return res.status(409).json({ msg: error.message });
     }
 
-    const usuario = new Usuario({
+    usuario = new Usuario({
       nombre,
       apellido,
       genero,
@@ -28,24 +29,24 @@ const registrar = async (req, res) => {
       telefono,
     });
 
-    const usuarioGuardado = await usuario.save();
-
-    if(!usuarioGuardado) {
-      const error = new Error("Error al guardar el usuario");
-      return res.status(400).json({ msg: error.message });
+    try {
+      await usuario.save();
+    } catch (error) {
+      console.error("Error al guardar el usuario:", error);
+      return res.status(400).json({ msg: "Error al guardar el usuario" });
     }
-
-    // Enviar el email
-    emailRegistro({
+    // Enviar el email de confirmación y validar si se envió correctamente
+/*  TEMPORALMENTE COMENTADO POR TEST 
+    await emailRegistro({
       email: correo_electronico,
       nombre,
       token: usuario.token,
-    });
+    }); */
 
     res.status(200).json({ nombre, apellido, correo_electronico, telefono });
 
   } catch (error) {
-    console.log(error);
+    usuario.remove();
     res.status(500).json({ msg: "Error del servidor" });
   }
 };
@@ -118,7 +119,7 @@ const confirmar = async (req, res) => {
     // Si no existe el usuario
     if (!usuarioConfirmar) {
       const error = new Error("Token no válido");
-      return res.status(404).json({ msg: error.message });
+      return res.status(401).json({ msg: error.message });
     }
 
     // Si existe el usuario, modifico el usuario confirmarlo y borrar el token
@@ -156,7 +157,7 @@ const autenticar = async (req, res) => {
       // Generar el JWT y devolverlo:
       const token = generarJWT(usuario._id);
       // Autenticar
-      res.json({
+      res.status(200).json({
         _id: usuario._id,
         nombre: usuario.nombre,
         apellido: usuario.apellido,
@@ -167,7 +168,7 @@ const autenticar = async (req, res) => {
       });
     } else {
       const error = new Error("La contraseña es incorrecta");
-      return res.status(403).json({ msg: error.message });
+      return res.status(401).json({ msg: error.message });
     }
   } catch (error) {
     console.log(error);
@@ -184,7 +185,7 @@ const olvidePassword = async (req, res) => {
 
     console.log("usuario", usuario)
 
-    if(!usuario) {
+    if (!usuario) {
       const error = new Error("El Usuario no existe");
       return res.status(400).json({ msg: error.message });
     }
@@ -194,11 +195,13 @@ const olvidePassword = async (req, res) => {
     await usuario.save();
 
     // Enviar Email con instrucciones
+/*    
+TEMPORALMENTE INHABILITADO POR PRUEBAS
     emailOlvidePassword({
       email: correo_electronico,
       nombre: usuario.nombre,
       token: usuario.token,
-    });
+    }); */
 
     res.json({ msg: "Hemos enviado un correo_electronico con las instrucciones" });
   } catch (error) {
@@ -217,21 +220,16 @@ const nuevoPassword = async (req, res) => {
 
     if (!usuario) {
       const error = new Error("Token no válido");
-      return res.status(400).json({ msg: error.message })
+      return res.status(401).json({ msg: error.message })
     }
 
     // Hashear el password
     usuario.token = null;
     usuario.contrasena = contrasena;
 
-    const usuarioActualizado = await usuario.save();
+    await usuario.save();
 
-    if(!usuarioActualizado) {
-      const error = new Error("Hubo un error al actualizar el usuario");
-      return res.status(400).json({ msg: error.message });
-    }
-
-    res.json({ message: "Password modificado correctamente" });
+    res.status(200).json({ message: "Password modificado correctamente" });
 
   } catch (error) {
     console.log(error);
@@ -240,33 +238,35 @@ const nuevoPassword = async (req, res) => {
 };
 
 const actualizarPerfil = async (req, res) => {
+
+  const { nombre, apellido, genero, correo_electronico, telefono } = req.body;
+  const { _id } = req.usuario
+
   try {
-    const usuario = await Usuario.findById(req.usuario._id);
 
-    if (!usuario) {
-      const error = new Error("Hubo un error");
-      return res.status(400).json({ msg: error.message });
-    }
-
-    const { correo_electronico } = req.body;
-
-    if (usuario.correo_electronico !== req.body.correo_electronico) {
+    if (req.usuario.correo_electronico !== correo_electronico) {
       const existeEmail = await Usuario.findOne({ correo_electronico });
 
       if (existeEmail) {
-        const error = new Error("Ese correo_electronico ya esta en uso");
-        return res.status(400).json({ msg: error.message });
+        const error = new Error("Ese correo electronico ya esta en uso");
+        return res.status(409).json({ msg: error.message });
       }
     }
 
-    usuario.nombre = req.body.nombre;
-    usuario.apellido = req.body.apellido;
-    usuario.correo_electronico = req.body.correo_electronico;
-    usuario.telefono = req.body.correo_electronico;
+    // Actualizar el usuario con update
+    const usuarioActualizado = await Usuario.findByIdAndUpdate(
+      _id,
+      {
+        nombre,
+        apellido,
+        genero,
+        correo_electronico,
+        telefono,
+      },
+      { new: true }
+    );
 
-    const usuarioActualizado = await usuario.save();
-
-    res.json(usuarioActualizado);
+    res.status(200).json(usuarioActualizado);
 
   } catch (error) {
     console.log(error);
@@ -277,28 +277,29 @@ const actualizarPerfil = async (req, res) => {
 
 const actualizarPassword = async (req, res) => {
   // Leer los datos
-  const { id_usuario } = req.usuario;
+  const { _id, contrasena } = req.usuario;
   const { pwd_actual, pwd_nuevo } = req.body;
 
   try {
-    const usuario = await Usuario.findById(id_usuario);
 
-    if (!usuario) {
-      const error = new Error("Hubo un error");
-      return res.status(400).json({ msg: error.message });
-    }
+    // Comprobar usuario por ID
+    const UsuarioModificar = await Usuario.findById(_id);
 
-    if (await usuario.comprobarPassword(pwd_actual)) {
-      // Almacenar el nuevo password
+    if (await UsuarioModificar.comprobarPassword(pwd_actual)) {
 
-      usuario.contrasena = pwd_nuevo;
+      // actualizar el usuario con update ya teniendo el usuario
+      await Usuario.findByIdAndUpdate(
+        _id,
+        {
+          contrasena: pwd_nuevo,
+        },
+        { new: true }
+      );
 
-      await usuario.save();
-
-      res.json({ msg: "Password Almacenado Correctamente" });
+      res.status(200).json({ msg: "Contraseña Actualizada Correctamente" });
     } else {
-      const error = new Error("El Password Actual es Incorrecto");
-      return res.status(400).json({ msg: error.message });
+      const error = new Error("La contraseña actual es incorrecta");
+      res.status(401).json({ msg: error.message });
     }
 
   } catch (error) {

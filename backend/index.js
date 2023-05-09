@@ -2,7 +2,7 @@ const express = require('express');
 const responseTime = require("response-time");
 const dotenv = require('dotenv');
 const cors = require('cors');
-const { conectarMySqlDB, conectarMongoDB } = require('./config/index.js');
+const { conectarMongoDB } = require('./config/index.js');
 const usuarioRoutes = require('./routes/usuarioRoutes.js');
 const adminRouter = require('./routes/adminRoutes.js');
 const lavaderoRouter = require('./routes/lavaderoRoutes.js');
@@ -26,7 +26,6 @@ const io = socketIO(server, {
 dotenv.config();
 initSockets(io)
 
-conectarMySqlDB();
 conectarMongoDB()
   .then(async () => {
     server.listen(PORT, () => {
@@ -37,6 +36,7 @@ conectarMongoDB()
     console.error("Error al conectar a la base de datos", error);
     process.exit(1);
   });
+
 
 // Middleware
 
@@ -68,6 +68,8 @@ app.use((error, req, res, next) => {
   next();
 });
 
+const PORT = process.env.PORT || 4000;
+
 // Rutas
 
 app.use("/api/usuarios", usuarioRoutes);
@@ -75,4 +77,4 @@ app.use("/api/admins", adminRouter);
 app.use("/api/lavaderos", lavaderoRouter);
 app.use("/api/anonimo", anonimoRouter);
 
-const PORT = process.env.PORT || 4000;
+module.exports = app;
