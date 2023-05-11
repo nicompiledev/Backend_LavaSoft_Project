@@ -8,6 +8,7 @@ subscriber.on('message', (channel, message) => {
 });
 
 const getLavaderos = async (req, res) => {
+
   try {
     const PAGE_SIZE = 10; // Tamaño de la página
     const page = req.query.page; // Obtener el número de página de la solicitud
@@ -15,19 +16,16 @@ const getLavaderos = async (req, res) => {
 
     // Verificar si hay datos en el caché para esta página
     const cachedData = await getAsync(cacheKey);
+
     if (cachedData) {
-      console.log("Datos desde Redis");
       return res.status(200).json(JSON.parse(cachedData));
     }
 
     // Si no hay datos en el caché para esta página, hacer la consulta a la base de datos
     const startIndex = (page - 1) * PAGE_SIZE; // Calcular el índice de inicio para la página actual
-    const lavaderos = await Lavadero.find({}, { contrasena: 0, estado: 0, confirmado: 0 })
-      .skip(startIndex)
-      .limit(PAGE_SIZE);
+    const lavaderos = await Lavadero.find({ estado: true }, { contrasena: 0, estado: 0, confirmado: 0 })
 
     res.status(200).json(lavaderos);
-
     // Guardar los datos en el caché para esta página
     await setAsync(cacheKey, JSON.stringify(lavaderos));
 
@@ -50,7 +48,6 @@ const getLavaderoID = async (req, res) => {
       console.log("Datos desde Redis");
       return res.status(200).json(JSON.parse(cachedData));
     }
-
     // Traer lavadero por id
     try{
       const lavadero = await Lavadero.findById(id, { contrasena: 0, estado: 0, confirmado: 0 }).populate('servicios');

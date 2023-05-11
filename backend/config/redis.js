@@ -13,19 +13,19 @@ const subscriber = redis.createClient({
 });
 
 publisher.on("error", (error) => {
-  console.error(`Error al conectarse a Redis: ${error.message}`);
+  console.error(`Error al conectarse a Redis: ${error.message} con publisher`);
 });
 
 subscriber.on("error", (error) => {
-  console.error(`Error al conectarse a Redis: ${error.message}`);
+  console.error(`Error al conectarse a Redis: ${error.message} con subscriber`);
 });
 
 publisher.on("connect", () => {
-  console.log("Conexión a Redis exitosa");
+  console.log("Conexión a Redis exitosa con publisher");
 });
 
 subscriber.on("connect", () => {
-  console.log("Conexión a Redis exitosa");
+  console.log("Conexión a Redis exitosa con subscriber");
 });
 
 module.exports = {

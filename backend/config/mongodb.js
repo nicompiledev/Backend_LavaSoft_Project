@@ -4,12 +4,12 @@ mongoose.set("strictQuery", false);
 
 const conectarMongoDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI, {
+     await mongoose.connect(process.env.MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
 
-    const {Servicio} = require("../models/Servicio.js");
+/*     const {Servicio} = require("../models/Servicio.js");
     const Lavadero = require("../models/lavadero.js");
 
     for (let i = 0; i < 10; i++) {
@@ -20,8 +20,8 @@ const conectarMongoDB = async () => {
       telefono: '123456789' + i,
       correo_electronico: 'lavadero' + i + '@gmail.com',
       contrasena: 'contraseña' + i,
-      hora_apertura: '08:00',
-      hora_cierre: '18:00',
+      hora_apertura: '8:00 AM',
+      hora_cierre: '5:00 PM',
       imagenes: ['https://plazaimperialcc.com.co/images/servicios/78/slides/medium_banner_2.jpg', 'https://elestimulo.com/wp-content/uploads/2015/07/carro1.jpg', 'https://d2yoo3qu6vrk5d.cloudfront.net/images/20211220091840/carro1.jpg'],
       espacios_de_trabajo: 5,
       ubicacion: {
@@ -55,7 +55,7 @@ const conectarMongoDB = async () => {
       telefono: '1234567890',
       confirmado: true
     });
-    await usuario1.save();
+    await usuario1.save();  */
 
     console.log("Conexión a la base de datos MongoDB exitosa");
   } catch (error) {
