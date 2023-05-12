@@ -12,7 +12,7 @@ const conectarMongoDB = async () => {
 /*     const {Servicio} = require("../models/Servicio.js");
     const Lavadero = require("../models/lavadero.js");
 
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 25; i++) {
     const lavadero1 = new Lavadero({
       nombre: 'Lavadero' + i,
       ciudad: 'Ciudad' + i,

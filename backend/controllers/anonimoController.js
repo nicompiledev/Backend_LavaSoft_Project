@@ -23,7 +23,8 @@ const getLavaderos = async (req, res) => {
 
     // Si no hay datos en el caché para esta página, hacer la consulta a la base de datos
     const startIndex = (page - 1) * PAGE_SIZE; // Calcular el índice de inicio para la página actual
-    const lavaderos = await Lavadero.find({ estado: true }, { contrasena: 0, estado: 0, confirmado: 0 })
+    // Trae los primero 10 lavaderos de la página actual
+    const lavaderos = await Lavadero.find({ estado: true }, { contrasena: 0, estado: 0, confirmado: 0 }).skip(startIndex).limit(PAGE_SIZE);
 
     res.status(200).json(lavaderos);
     // Guardar los datos en el caché para esta página

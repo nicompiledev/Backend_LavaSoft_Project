@@ -12,9 +12,10 @@ module.exports = function (io) {
       // Verificar el token aquí
       try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        socket.usuario = await Usuario.findById(decoded.id).select(
-          "-contrasena -token -confirmado -creado"
-        );
+        if(!decoded) {
+          next(new Error('Token no válido'));
+        }
+        socket.decoded = decoded;
         next();
       } catch (error) {
         next(new Error('Token no válido'));
@@ -176,7 +177,7 @@ module.exports = function (io) {
     });
 
     // Mandar las horas disponibles
-    socket.on("horasDisponibles", async (datos) => {
+    socket.on("horasDisponibles", async (datos) => {;
       const { id_lavadero, fecha, id_servicio } = datos;
       const horasLibres = await horasDisponibles(id_lavadero, fecha, id_servicio);
       socket.emit("horasLibres", horasLibres);
