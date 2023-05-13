@@ -50,13 +50,13 @@ const conectarMongoDB = async () => {
       apellido: 'Apellido 1',
       genero: 'Masculino',
       fecha_nacimiento: '1990-01-01',
-      correo_electronico: 'slash2130kevin@gmail.com',
+      correo_electronico: 'prueba@gmail.com',
       contrasena: 'contrasena123',
       telefono: '1234567890',
       confirmado: true
     });
-    await usuario1.save();  */
-
+    await usuario1.save(); 
+ */
     console.log("Conexión a la base de datos MongoDB exitosa");
   } catch (error) {
     console.error(`Error al conectarse a la base de datos MongoDB: ${error.message}`);
