@@ -5,55 +5,35 @@ const emailConfirmado = require("../helpers/lavaderos/emailConfirmado.js");
 //const emailOlvidePassword = require("../helpers/emailOlvidePassword.js");
 const bcrypt = require("bcrypt");
 const lavadero = require("../models/lavadero.js");
+const Admin = require("../models/Admin.js")
 
 const loguearAdmin = async (req, res) => {
   const { correo_electronico, contrasena } = req.body;
-  let conexion;
   try {
 
-    conexion = await conectarDB();
+    const ExisteAdmin = await Admin.findOne({ correo_electronico });
 
-    const [row] = await conexion.execute(
-      `SELECT id_administrador, contrasena FROM administradores WHERE correo_electronico = ?`,
-      [correo_electronico]
-    );
-
-    if (row.length === 0) {
-      res.status(400).json({ msg: "El usuario no existe" });
-      return;
+    if (!ExisteAdmin) {
+      return res.status(400).json({ msg: "El ADMINISTRADOR no existe" });
     }
 
-    const usuarioAdmin = row[0];
-
-    const validPassword = await bcrypt.compare(contrasena, usuarioAdmin.contrasena);
-
-    if (!validPassword) {
-      res.status(400).json({ msg: "Contraseña incorrecta" });
-      return;
+    if (!ExisteAdmin.confirmado) {
+      return res.status(400).json({ msg: "El usuario no ha confirmado su cuenta" });
     }
 
-    // Generar el JWT y devolverlo:
-    const token = generarJWT(usuarioAdmin.id_administrador);
-    // Autenticar
-    res.json({
-      id_usuario: usuarioAdmin.id_administrador,
-      correo_electronico: usuarioAdmin.correo_electronico,
-      token: token,
-    });
+    if (await ExisteAdmin.comprobarPassword(contrasena)) {
 
-    res.status(200).json({ msg: "Usuario logueado correctamente" });
+      // Generate JWT token
+      const token = generarJWT(ExisteAdmin._id);
+
+      res.status(200).json({msg: 'LOGUEADO', token });
+    } else {
+      return res.status(401).json({ msg: "La contraseña es incorrecta" });
+    }
 
   } catch (error) {
     console.log(error);
     res.status(500).json({ msg: "Hubo un error" });
-  } finally {
-    if (conexion) {
-      try {
-        await conexion.close();
-      } catch (error) {
-        console.log('Error al cerrar la conexión:', error);
-      }
-    }
   }
 };
 

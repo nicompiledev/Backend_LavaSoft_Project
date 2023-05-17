@@ -10,10 +10,10 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 // Crear funcion y exportar respuesta
-module.exports = async (nombre, direccion, correo_electronico, telefono) => {
+module.exports = async (nombreLavadero, direccion, correo_electronico, telefono) => {
   try {
     const prompt = `Dado el siguiente formulario:
-  Nombre: ${nombre}
+  Nombre: ${nombreLavadero}
   Dirección: ${direccion}
   Correo: ${correo_electronico}
   Teléfono: ${telefono}

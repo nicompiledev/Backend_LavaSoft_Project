@@ -3,7 +3,9 @@ const bcrypt = require("bcrypt");
 const generarId = require("../helpers/generarId.js");
 
 const LavaderoSchema = new mongoose.Schema({
-  nombre: { type: String, required: true },
+  nombreLavadero: { type: String, required: true },
+  nombreDueño: { type: String, required: true },
+  decripcion: {type: String, require: true},
   ciudad: { type: String, required: true },
   direccion: { type: String, required: true },
   telefono: { type: String, required: true },
@@ -11,10 +13,13 @@ const LavaderoSchema = new mongoose.Schema({
   contrasena: { type: String, required: true },
   hora_apertura: { type: String, required: true },
   hora_cierre: { type: String, required: true },
-  estado: { type: Boolean, default: true },
+  tipoVehiculos: { type: [String], enum: ['Motos', 'Vehículos particulares', 'Camionetas', 'Buses', 'Camiones'], required: true },
+  // Estados
+  estado: { type: Boolean, default: false },
   confirmado: {type: Boolean, default: false,},
   token: { type: String, default: generarId() },
   creado: { type: Date, default: Date.now() },
+  siNoLoRecogen: {type: String, require: true },
   imagenes: [{ type: String }], // nuevo campo de matriz de imágenes
   espacios_de_trabajo: { type: Number, required: true },
   ubicacion: {

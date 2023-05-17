@@ -13,10 +13,10 @@ const { Reserva } = require("../models/Reserva.js");
 const registrarLavadero = async (req, res) => {
   try {
 
-    const { nombre, ciudad, direccion, telefono, correo_electronico, contrasena, hora_apertura, hora_cierre, espacios_de_trabajo, longitud, latitud } = req.body;
+    const { nombreLavadero, nombreDueño, decripcion, ciudad, direccion, telefono, correo_electronico, hora_apertura, hora_cierre, espacios_de_trabajo, longitud, latitud, siNoLoRecogen, tipoVehiculos } = req.body;
 
     // Si open ai está bien configurado, se puede ejecutar el codigo de abajo
-    const respuestaOpenAI = await openai(nombre, direccion, correo_electronico, telefono);
+    const respuestaOpenAI = await openai(nombreLavadero, direccion, correo_electronico, telefono);
 
     switch (respuestaOpenAI) {
       case "falso":
@@ -35,12 +35,16 @@ const registrarLavadero = async (req, res) => {
     }
 
     const lavadero = new Lavadero({
-      nombre,
+      nombreLavadero,
+      nombreDueño,
+      decripcion,
       ciudad,
       direccion,
       telefono,
       correo_electronico,
       contrasena,
+      siNoLoRecogen,
+      tipoVehiculos,
       hora_apertura,
       hora_cierre,
       imagenes: [], // inicializa el campo imagenes
@@ -108,13 +112,18 @@ const autenticarLavadero = async (req, res) => {
 
       res.status(200).json({
         _id: existeLavadero._id,
-        nombre: existeLavadero.nombre,
+        nombre: existeLavadero.nombreLavadero,
+        nombreDueño: existeLavadero.nombreDueño,
+        descripcion: existeLavadero.descripcion,
         ciudad: existeLavadero.ciudad,
         direccion: existeLavadero.direccion,
         telefono: existeLavadero.telefono,
         correo_electronico: existeLavadero.correo_electronico,
+        tipoVehiculos: existeLavadero.tipoVehiculos,
+        siNoLoRecogen: existeLavadero.siNoLoRecogen,
         hora_apertura: existeLavadero.hora_apertura,
         hora_cierre: existeLavadero.hora_cierre,
+        tipoVehiculos: existeLavadero.tipoVehiculos,
         token,
         imagenes: existeLavadero.imagenes,
       });
@@ -167,6 +176,11 @@ const putCancelarReserva = async (req, res) => {
         servicio: servicio.nombre,
         motivo: motivo
       }); */
+
+      reserva.estado = "cancelado";
+      reserva.motivoCancelacion = motivo;
+
+      await reserva.save;
     }catch(error){
       return res.status(404).json({ msg: 'La reserva o el usuario no existe' })
     }
