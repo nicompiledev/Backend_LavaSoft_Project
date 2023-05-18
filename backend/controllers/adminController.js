@@ -3,7 +3,6 @@ const generarJWT = require("../helpers/generarJWT.js");
 const generarId = require("../helpers/generarId.js");
 const emailConfirmado = require("../helpers/lavaderos/emailConfirmado.js");
 //const emailOlvidePassword = require("../helpers/emailOlvidePassword.js");
-const bcrypt = require("bcrypt");
 const lavadero = require("../models/lavadero.js");
 const Admin = require("../models/Admin.js")
 
@@ -24,9 +23,10 @@ const loguearAdmin = async (req, res) => {
     if (await ExisteAdmin.comprobarPassword(contrasena)) {
 
       // Generate JWT token
-      const token = generarJWT(ExisteAdmin._id);
+      const token = generarJWT(ExisteAdmin._id, "admin");
 
-      res.status(200).json({msg: 'LOGUEADO', token });
+      res.status(200).json({ nombre: ExisteAdmin.nombreAdmin, token, rol: "admin" });
+
     } else {
       return res.status(401).json({ msg: "La contraseña es incorrecta" });
     }

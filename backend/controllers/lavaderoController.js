@@ -13,7 +13,7 @@ const { Reserva } = require("../models/Reserva.js");
 const registrarLavadero = async (req, res) => {
   try {
 
-    const { nombreLavadero, nombreDueño, decripcion, ciudad, direccion, telefono, correo_electronico, hora_apertura, hora_cierre, espacios_de_trabajo, longitud, latitud, siNoLoRecogen, tipoVehiculos } = req.body;
+    const { nombreLavadero, NIT, decripcion, ciudad, direccion, telefono, correo_electronico, hora_apertura, hora_cierre, espacios_de_trabajo, longitud, latitud, siNoLoRecogen, tipoVehiculos } = req.body;
 
     // Si open ai está bien configurado, se puede ejecutar el codigo de abajo
     const respuestaOpenAI = await openai(nombreLavadero, direccion, correo_electronico, telefono);
@@ -36,7 +36,7 @@ const registrarLavadero = async (req, res) => {
 
     const lavadero = new Lavadero({
       nombreLavadero,
-      nombreDueño,
+      NIT,
       decripcion,
       ciudad,
       direccion,
@@ -108,12 +108,12 @@ const autenticarLavadero = async (req, res) => {
     if (await existeLavadero.comprobarPassword(contrasena)) {
 
       // Generate JWT token
-      const token = generarJWT(existeLavadero._id);
+      const token = generarJWT(existeLavadero._id, "lavadero");
 
       res.status(200).json({
         _id: existeLavadero._id,
         nombre: existeLavadero.nombreLavadero,
-        nombreDueño: existeLavadero.nombreDueño,
+        NIT: existeLavadero.NIT,
         descripcion: existeLavadero.descripcion,
         ciudad: existeLavadero.ciudad,
         direccion: existeLavadero.direccion,
@@ -125,6 +125,7 @@ const autenticarLavadero = async (req, res) => {
         hora_cierre: existeLavadero.hora_cierre,
         tipoVehiculos: existeLavadero.tipoVehiculos,
         token,
+        rol: "lavadero",
         imagenes: existeLavadero.imagenes,
       });
     } else {
@@ -180,7 +181,7 @@ const putCancelarReserva = async (req, res) => {
       reserva.estado = "cancelado";
       reserva.motivoCancelacion = motivo;
 
-      await reserva.save;
+      await reserva.save();
     }catch(error){
       return res.status(404).json({ msg: 'La reserva o el usuario no existe' })
     }
@@ -209,7 +210,7 @@ const servicioTerminado = async (req, res) => {
 
       await reserva.save()
 
-/*    TEMPORALMENTE DESACTIVADO
+/*  TEMPORALMENTE DESACTIVADO
       await emailServicioTerminada({
         email: usuario.correo_electronico,
         nombre: usuario.nombre,

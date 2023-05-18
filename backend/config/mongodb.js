@@ -23,7 +23,7 @@ const conectarMongoDB = async () => {
       hora_apertura: '8:00 AM',
       hora_cierre: '5:00 PM',
       imagenes: ['https://plazaimperialcc.com.co/images/servicios/78/slides/medium_banner_2.jpg', 'https://elestimulo.com/wp-content/uploads/2015/07/carro1.jpg', 'https://d2yoo3qu6vrk5d.cloudfront.net/images/20211220091840/carro1.jpg'],
-      espacios_de_trabajo: 5,
+      espacios_de_trabajo: 1,
       ubicacion: {
         type: "Point",
         coordinates: [0, 0]
@@ -55,7 +55,7 @@ const conectarMongoDB = async () => {
       telefono: '1234567890',
       confirmado: true
     });
-    await usuario1.save(); 
+    await usuario1.save();
  */
     console.log("Conexión a la base de datos MongoDB exitosa");
   } catch (error) {

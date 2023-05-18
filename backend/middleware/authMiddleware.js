@@ -3,22 +3,38 @@ const Usuario = require("../models/Usuario.js");
 
 const checkAuth = async (req, res, next) => {
   let token;
-    // Verificar si hay un token en el encabezado de autorización
-    if (
-      req.headers.authorization &&
-      req.headers.authorization.startsWith("Bearer")
-    ) {
-      // Obtener el token del encabezado de autorización y decodificarlo
-      try {
+  // Verificar si hay un token en el encabezado de autorización
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    // Obtener el token del encabezado de autorización y decodificarlo
+    try {
       token = req.headers.authorization.split(" ")[1];
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-      console.log(decoded)
+      let id = decoded.id;
+      let rol = decoded.rol;
 
-
-      req.usuario = await Usuario.findById(decoded.id).select(
-        "-contrasena -token -confirmado -creado"
-      );
+      switch (rol) {
+        case "usuario":
+          req.usuario = await Usuario.findById(id).select(
+            "-contrasena -token -confirmado -creado"
+          );
+          break;
+        case "admin":
+          req.admin = await Admin.findById(id).select(
+            "-contrasena -token -creado"
+          );
+          break;
+        case "lavadero":
+          req.lavadero = await Lavadero.findById(id).select(
+            "-contrasena -token -confirmado -creado"
+          );
+          break;
+        default:
+          break;
+      }
 
       return next();
     } catch (error) {

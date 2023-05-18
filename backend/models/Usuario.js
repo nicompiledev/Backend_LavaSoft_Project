@@ -51,6 +51,7 @@ const usuarioSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  vehiculos: [{ type: mongoose.Schema.Types.ObjectId, ref: "VehiculoUsuario" }],
 })
 
 usuarioSchema.pre("save", async function (next) {

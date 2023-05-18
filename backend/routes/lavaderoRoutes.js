@@ -29,7 +29,7 @@ const {
   putCancelarReserva,
   servicioTerminado,
 } = require('../controllers/lavaderoController.js');
-const checkAuth = require('../middleware/authMiddlewareLavadero.js')
+const checkAuth = require('../middleware/authMiddleware.js')
 
 
 // área publica

@@ -1,4 +1,3 @@
-const conectarDB = "ELIMINAR PENDIENTE"
 const generarJWT = require("../helpers/generarJWT.js");
 const generarId = require("../helpers/generarId.js");
 const emailRegistro = require("../helpers/usuarios/emailRegistro.js");
@@ -108,7 +107,6 @@ const perfil = async (req, res) => {
   },
 }) */
 
-
 const confirmar = async (req, res) => {
   // Obtener el token de la URL
   const { token } = req.params;
@@ -155,7 +153,7 @@ const autenticar = async (req, res) => {
     // Revisar el password
     if (await usuario.comprobarPassword(contrasena)) {
       // Generar el JWT y devolverlo:
-      const token = generarJWT(usuario._id);
+      const token = generarJWT(usuario._id, "usuario");
       // Autenticar
       res.status(200).json({
         _id: usuario._id,
@@ -165,6 +163,7 @@ const autenticar = async (req, res) => {
         correo_electronico: usuario.correo_electronico,
         telefono: usuario.telefono,
         token,
+        rol: "usuario",
       });
     } else {
       const error = new Error("La contraseña es incorrecta");
@@ -195,7 +194,7 @@ const olvidePassword = async (req, res) => {
     await usuario.save();
 
     // Enviar Email con instrucciones
-/*    
+/*
 TEMPORALMENTE INHABILITADO POR PRUEBAS
     emailOlvidePassword({
       email: correo_electronico,
