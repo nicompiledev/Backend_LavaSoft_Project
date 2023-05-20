@@ -13,8 +13,21 @@ const { Reserva } = require("../models/Reserva.js");
 const registrarLavadero = async (req, res) => {
   try {
 
-    const { nombreLavadero, NIT, decripcion, ciudad, direccion, telefono, correo_electronico, hora_apertura, hora_cierre, espacios_de_trabajo, longitud, latitud, siNoLoRecogen, tipoVehiculos } = req.body;
-
+    const { nombreLavadero, NIT, descripcion, ciudad, direccion, telefono, correo_electronico, hora_apertura, hora_cierre, espacios_de_trabajo, longitud, latitud, siNoLoRecogen, tipoVehiculos } = req.body;
+console.log("1", nombreLavadero)
+console.log("2", NIT);
+console.log("3", descripcion);
+console.log("4", ciudad);
+console.log("5", direccion);
+console.log("6", telefono);
+console.log("7", correo_electronico);
+console.log("8", hora_apertura);
+console.log("9", hora_cierre);
+console.log("10", espacios_de_trabajo);
+console.log("11", longitud);
+console.log("12", latitud);
+console.log("13", siNoLoRecogen);
+console.log("14", tipoVehiculos);
     // Si open ai está bien configurado, se puede ejecutar el codigo de abajo
     const respuestaOpenAI = await openai(nombreLavadero, direccion, correo_electronico, telefono);
 
@@ -34,19 +47,20 @@ const registrarLavadero = async (req, res) => {
       return res.status(400).json({ msg: "El lavadero ya existe" });
     }
 
+    console.log("YA PASO DESPUES DE EXISTE")
+
     const lavadero = new Lavadero({
       nombreLavadero,
       NIT,
-      decripcion,
+      descripcion,
       ciudad,
       direccion,
       telefono,
       correo_electronico,
-      contrasena,
       siNoLoRecogen,
-      tipoVehiculos,
       hora_apertura,
       hora_cierre,
+      tipoVehiculos: tipoVehiculos, // Inicializa el campo TopoVehiculos
       imagenes: [], // inicializa el campo imagenes
       espacios_de_trabajo,
       ubicacion: {
@@ -57,6 +71,9 @@ const registrarLavadero = async (req, res) => {
 
     // Save the user to the database
     const lavaderoGuardado = await lavadero.save();
+
+    console.log("LAVADERO")
+
     try {
       // Save images
       if (!req.files) {
@@ -69,11 +86,11 @@ const registrarLavadero = async (req, res) => {
       await lavaderoGuardado.save(); // guarda las URLs de las imágenes en el lavadero
 
       // Send email
-      await emailRegistro({
+/*       await emailRegistro({
         email: correo_electronico,
         nombre
       });
-
+ */
       res.status(200).json({ msg: "Lavadero registrado correctamente" });
 
     } catch (error) {
@@ -85,7 +102,7 @@ const registrarLavadero = async (req, res) => {
     }
 
   } catch (error) {
-    res.status(500).send("Hubo un error al registrar el usuario");
+    res.status(500).send(error);
   }
 };
 
