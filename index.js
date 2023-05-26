@@ -8,11 +8,20 @@ const adminRouter = require('./routes/adminRoutes.js');
 const lavaderoRouter = require('./routes/lavaderoRoutes.js');
 const anonimoRouter = require('./routes/anonimoRoutes.js');
 const initSockets = require('./socket/sockets.js');
+const chatSocket = require('./socket/chat.js');
 const socketIO = require('socket.io');
+
+//JWT:
+const jwt = require('jsonwebtoken');
+
+// Model Requerido para el middleware de sockets
+const Usuario = require('./models/Usuario.js');
 
 // Imports
 const app = express();
-const server = require("http").createServer(app);
+const http = require("http");
+const server = http.createServer(app);
+
 const io = socketIO(server, {
   cors: {
     origin: true,
@@ -21,10 +30,57 @@ const io = socketIO(server, {
   },
 });
 
-// Configuración de express y socket
+io.use(async (socket, next) => {
+  if (socket.handshake.headers.rol === 'admin') {
+    return next()
+  } else if (socket.handshake.headers && socket.handshake.headers.authorization) {
+    const token = socket.handshake.headers.authorization.split(' ')[1];
+    // Verificar el token aquí
+    try {
 
-dotenv.config();
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+      let id = decoded.id;
+      let rol = decoded.rol;
+
+      switch (rol) {
+        case "usuario":
+          socket.usuario = await Usuario.findById(id).select(
+            "-contrasena -token -confirmado -creado"
+          );
+          break;
+        case "admin":
+          socket.admin = await Admin.findById(id).select(
+            "-contrasena -token -creado"
+          );
+          break;
+        case "lavadero":
+          socket.lavadero = await Lavadero.findById(id).select(
+            "-contrasena -token -confirmado -creado"
+          );
+          break;
+        default:
+          break;
+      }
+
+    return next();
+    } catch (error) {
+      console.error(error);
+      next(new Error('Token no válido'));
+    }
+  } else {
+    console.log('No hay token');
+    next(new Error('Token no válido o inexistente'));
+  }
+});
+
+chatSocket(io)
 initSockets(io)
+
+
+// Configuración de variables de entorno
+dotenv.config();
+
 
 conectarMongoDB()
   .then(async () => {

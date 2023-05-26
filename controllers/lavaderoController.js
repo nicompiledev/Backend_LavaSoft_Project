@@ -14,20 +14,7 @@ const registrarLavadero = async (req, res) => {
   try {
 
     const { nombreLavadero, NIT, descripcion, ciudad, direccion, telefono, correo_electronico, hora_apertura, hora_cierre, espacios_de_trabajo, longitud, latitud, siNoLoRecogen, tipoVehiculos } = req.body;
-console.log("1", nombreLavadero)
-console.log("2", NIT);
-console.log("3", descripcion);
-console.log("4", ciudad);
-console.log("5", direccion);
-console.log("6", telefono);
-console.log("7", correo_electronico);
-console.log("8", hora_apertura);
-console.log("9", hora_cierre);
-console.log("10", espacios_de_trabajo);
-console.log("11", longitud);
-console.log("12", latitud);
-console.log("13", siNoLoRecogen);
-console.log("14", tipoVehiculos);
+
     // Si open ai está bien configurado, se puede ejecutar el codigo de abajo
     const respuestaOpenAI = await openai(nombreLavadero, direccion, correo_electronico, telefono);
 

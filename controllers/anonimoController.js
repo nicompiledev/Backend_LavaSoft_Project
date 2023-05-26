@@ -8,7 +8,6 @@ subscriber.on('message', (channel, message) => {
 });
 
 const getLavaderos = async (req, res) => {
-
   try {
     const PAGE_SIZE = 10; // Tamaño de la página
     const page = req.query.page; // Obtener el número de página de la solicitud

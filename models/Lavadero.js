@@ -5,7 +5,7 @@ const generarId = require("../helpers/generarId.js");
 const LavaderoSchema = new mongoose.Schema({
   nombreLavadero: { type: String, required: true },
   NIT: { type: String, required: true },
-  decripcion: {type: String, require: true},
+  decripcion: {type: String, required: true},
   ciudad: { type: String, required: true },
   direccion: { type: String, required: true },
   telefono: { type: String, required: true },
@@ -19,7 +19,7 @@ const LavaderoSchema = new mongoose.Schema({
   confirmado: {type: Boolean, default: false,},
   token: { type: String, default: generarId() },
   creado: { type: Date, default: Date.now() },
-  siNoLoRecogen: {type: String, require: true },
+  siNoLoRecogen: {type: String, required: true },
   imagenes: [{ type: String }], // nuevo campo de matriz de imágenes
   espacios_de_trabajo: { type: Number, required: true },
   ubicacion: {

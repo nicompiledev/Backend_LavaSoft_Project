@@ -1,70 +1,52 @@
 const { Reserva } = require('../models/Reserva.js');
 const Lavadero = require('../models/lavadero.js');
 const { Servicio } = require('../models/Servicio.js');
-const Usuario = require('../models/Usuario.js');
 const moment = require('moment');
-const jwt = require('jsonwebtoken');
 
-module.exports = function (io) {
-  io.use(async (socket, next) => {
-    if (socket.handshake.headers && socket.handshake.headers.authorization) {
-      const token = socket.handshake.headers.authorization.split(' ')[1];
-      // Verificar el token aquí
-      try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        if (!decoded.id) {
-          throw new Error('Token no válido');
-        }
-        socket.decoded = decoded.id;
-        next();
-      } catch (error) {
-        next(new Error('Token no válido'));
-      }
-    } else {
-      next(new Error('Token no válido o inexistente'));
-    }
-  });
-
+module.exports = (io) => {
   io.on("connection", async (socket) => {
     socket.on("reservar", async (reservaData) => {
-      try {
-        const id_usuario = socket.decoded;
+      const usuario = socket.usuario;
+      const { fecha, hora_agendada, id_lavadero, id_servicio } = reservaData;
 
-        await validarLavadero(reservaData.id_lavadero);
-        await validarServicio(reservaData.id_servicio);
-        await validarUsuario(id_usuario);
+      // Obtener información del lavadero y del servicio
+      const lavadero = await Lavadero.findById(id_lavadero);
+      const servicio = await Servicio.findById(id_servicio);
 
-        const { hora_agendada, fecha } = reservaData;
+      // Obtener reservas existentes para el lavadero y la fecha seleccionada
+      const reservas = await Reserva.find({
+        id_lavadero: id_lavadero,
+        fecha: fecha,
+        estado: { $ne: 'cancelado' }
+      });
 
-        const hora_agendada_moment = moment(hora_agendada, "h:mm A");
-        const servicio = await Servicio.findById(reservaData.id_servicio);
-        const hora_fin = hora_agendada_moment.clone().add(servicio.duracion, "minutes");
-
-        await verificarDisponibilidad(reservaData.id_lavadero, fecha, hora_agendada_moment, hora_fin);
-
-        const reserva = new Reserva({
-          id_lavadero: reservaData.id_lavadero,
-          id_usuario,
-          id_servicio: reservaData.id_servicio,
-          fecha,
-          hora_inicio: hora_agendada_moment.format("h:mm A"),
-          hora_fin: hora_fin.format("h:mm A"),
-        });
-
-        const reservaGuardada = await reserva.save();
-        if (!reservaGuardada) {
-          throw new Error("Error al guardar la reserva");
-        } else {
-          const horasLibres = await horasDisponibles(
-            reservaData.id_lavadero,
-            fecha,
-            reservaData.id_servicio
-          );
-          socket.nsp.emit("horasLibres", horasLibres);
+      // Asignar un espacio de trabajo disponible
+      let espacioDisponible = 1;
+      while (espacioDisponible <= lavadero.espacios_de_trabajo) {
+        let reservasEspacio = reservas.filter(r => r.espacio_de_trabajo === espacioDisponible && r.hora_inicio === hora_agendada);
+        if (reservasEspacio.length === 0) {
+          break;
         }
-      } catch (error) {
-        return socket.emit("reservaCreada", { error: error.message });
+        espacioDisponible++;
       }
+
+      if (espacioDisponible > lavadero.espacios_de_trabajo) {
+        // No hay espacios disponibles
+        return;
+      }
+
+      // Crear nueva reserva
+      const nuevaReserva = new Reserva({
+        id_lavadero: id_lavadero,
+        id_usuario: usuario._id,
+        id_servicio: id_servicio,
+        fecha: fecha,
+        hora_inicio: hora_agendada,
+        hora_fin: moment(hora_agendada, 'h:mm A').add(servicio.duracion / 60, 'hours').format('h:mm A'),
+        espacio_de_trabajo: espacioDisponible
+      });
+
+      await nuevaReserva.save();
     });
 
     socket.on("horasDisponibles", async (datos) => {
@@ -75,111 +57,39 @@ module.exports = function (io) {
   });
 };
 
-const validarLavadero = async (id_lavadero) => {
+const horasDisponibles = async (id_lavadero, fecha, id_servicio) => {
+  // Obtener información del lavadero y del servicio
   const lavadero = await Lavadero.findById(id_lavadero);
-  if (!lavadero) {
-    throw new Error("El lavadero no existe");
-  }
-};
-
-const validarServicio = async (id_servicio) => {
   const servicio = await Servicio.findById(id_servicio);
-  if (!servicio) {
-    throw new Error("El servicio no existe");
-  }
-};
 
-const validarUsuario = async (id_usuario) => {
-  const usuario = await Usuario.findById(id_usuario);
-  if (!usuario) {
-    throw new Error("El usuario no existe");
-  }
-};
-
-const verificarDisponibilidad = async (id_lavadero, fecha, hora_inicio, hora_fin) => {
+  // Obtener reservas existentes para el lavadero y la fecha seleccionada
   const reservas = await Reserva.find({
-    id_lavadero,
-    fecha,
-    estado: { $ne: "cancelado" }, // Excluir reservas canceladas
+    id_lavadero: id_lavadero,
+    fecha: fecha,
+    estado: { $ne: 'cancelado' }
   });
 
-  const lavadero = await Lavadero.findById(id_lavadero);
-  const hora_apertura = moment(lavadero.hora_apertura, "h:mm A");
-  const hora_cierre = moment(lavadero.hora_cierre, "h:mm A");
-
-  if (
-    hora_inicio.isBefore(hora_apertura) ||
-    hora_fin.isAfter(hora_cierre)
-  ) {
-    throw new Error("El lavadero no está abierto");
-  }
-
-  if (reservas.length >= lavadero.espacios_de_trabajo) {
-    throw new Error("El lavadero no tiene espacios de trabajo disponibles");
-  }
-
-  for (let reserva of reservas) {
-    let reservaInicio = moment(reserva.hora_inicio, 'h:mm A');
-    let reservaFin = moment(reserva.hora_fin, 'h:mm A');
-
-    if (
-      (hora_inicio.isBetween(reservaInicio, reservaFin) || hora_fin.isBetween(reservaInicio, reservaFin))
-    ) {
-      throw new Error("Horario superpuesto con otra reserva");
-    }
-  }
-};
-
-const horasDisponibles = async (id_lavadero, fecha, id_servicio) => {
-  const lavadero = await Lavadero.findById(id_lavadero);
-  const horaApertura = moment(lavadero.hora_apertura, 'h:mm A');
-  const horaCierre = moment(lavadero.hora_cierre, 'h:mm A');
-  const servicio = await Servicio.findById(id_servicio);
-  const duracionServicio = servicio.duracion;
-  const intervalo = Math.ceil(duracionServicio / 15) * 15;
-  const reservas = await Reserva.find({ id_lavadero, fecha });
+  // Crear un arreglo con todas las horas disponibles
+  let horaInicio = moment(lavadero.hora_apertura, 'h:mm A');
+  let horaCierre = moment(lavadero.hora_cierre, 'h:mm A');
+  let duracionServicio = servicio.duracion;
+  let intervalo = duracionServicio / 60;
   let horasDisponibles = [];
-  let horaActual = horaApertura.clone();
 
-  while (horaActual.isBefore(horaCierre)) {
-    let horaFin = horaActual.clone().add(duracionServicio, 'minutes');
-    let disponible = true;
-
-    for (let reserva of reservas) {
-      let reservaInicio = moment(reserva.hora_inicio, 'h:mm A');
-      let reservaFin = moment(reserva.hora_fin, 'h:mm A');
-
-      if (
-        (horaActual.isBetween(reservaInicio, reservaFin) || horaFin.isBetween(reservaInicio, reservaFin)) &&
-        reserva.estado !== 'cancelado'
-      ) {
-        disponible = false;
-        break;
-      }
-    }
-
-    if (disponible) {
-      let espaciosOcupados = reservas.filter(reserva => {
-        let reservaInicio = moment(reserva.hora_inicio, 'h:mm A');
-        let reservaFin = moment(reserva.hora_fin, 'h:mm A');
-
-        return (
-          (horaActual.isBetween(reservaInicio, reservaFin) || horaFin.isBetween(reservaInicio, reservaFin)) &&
-          reserva.estado !== 'cancelado'
-        );
-      }).length;
-
-      if (espaciosOcupados >= lavadero.espacios_de_trabajo) {
-        disponible = false;
-      }
-    }
-
-    if (disponible) {
-      horasDisponibles.push(horaActual.format('h:mm A'));
-    }
-
-    horaActual.add(intervalo, 'minutes');
+  while (horaInicio.isBefore(horaCierre)) {
+    horasDisponibles.push(horaInicio.format('h:mm A'));
+    horaInicio.add(intervalo, 'hours');
   }
+
+  // Excluir horas ocupadas
+  reservas.forEach(reserva => {
+    let horaReservaInicio = moment(reserva.hora_inicio, 'h:mm A');
+    let horaReservaFin = moment(reserva.hora_fin, 'h:mm A');
+    horasDisponibles = horasDisponibles.filter(hora => {
+      let horaDisponible = moment(hora, 'h:mm A');
+      return !horaDisponible.isBetween(horaReservaInicio, horaReservaFin);
+    });
+  });
 
   return horasDisponibles;
-};
+}

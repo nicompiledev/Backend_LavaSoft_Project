@@ -9,12 +9,13 @@ const conectarMongoDB = async () => {
       useUnifiedTopology: true,
     });
 
-/*     const {Servicio} = require("../models/Servicio.js");
+ /*    const {Servicio} = require("../models/Servicio.js");
     const Lavadero = require("../models/lavadero.js");
 
     for (let i = 0; i < 25; i++) {
     const lavadero1 = new Lavadero({
-      nombre: 'Lavadero' + i,
+      NIT: '123456789' + i,
+      nombreLavadero: 'Lavadero' + i,
       ciudad: 'Ciudad' + i,
       direccion: 'Dirección' + i,
       telefono: '123456789' + i,
@@ -22,6 +23,7 @@ const conectarMongoDB = async () => {
       contrasena: 'contraseña' + i,
       hora_apertura: '8:00 AM',
       hora_cierre: '5:00 PM',
+      estado: true,
       imagenes: ['https://plazaimperialcc.com.co/images/servicios/78/slides/medium_banner_2.jpg', 'https://elestimulo.com/wp-content/uploads/2015/07/carro1.jpg', 'https://d2yoo3qu6vrk5d.cloudfront.net/images/20211220091840/carro1.jpg'],
       espacios_de_trabajo: 1,
       ubicacion: {
