@@ -39,17 +39,9 @@ const loguearAdmin = async (req, res) => {
 
 const getLavederos = async (req, res) => {
   try {
-    const lavaderos = await lavadero.find({ estado: true });
-    res.status(200).json({
-      nombre: lavaderos.nombre,
-      ciudad: lavaderos.ciudad,
-      direccion: lavaderos.direccion,
-      telefono: lavaderos.telefono,
-      correo_electronico: lavaderos.correo_electronico,
-      hora_apertura: lavaderos.hora_apertura,
-      hora_cierre: lavaderos.hora_cierre,
-      espacio_de_trabajo: lavaderos.espacio_de_trabajo,
-    });
+    const lavaderos = await lavadero.find({ estado: false });
+    res.status(200).json(lavaderos);
+
   } catch (error) {
     console.log(error);
     res.status(500).json({ msg: "Hubo un error" });

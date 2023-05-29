@@ -17,7 +17,7 @@ const checkAuth = require('../middleware/authMiddleware.js')
 router.post("/login", loguearAdmin);
 
 // area privada
-router.get("/lavaderos", checkAuth, getLavederos);
+router.get("/lavaderos", getLavederos);
 router.get("/lavaderos/:id_lavadero", checkAuth, getLavadero);
 router.put("/lavaderos/:id_lavadero", checkAuth, modificarLavadero);
 router.delete("/lavaderos/:id_lavadero", checkAuth, eliminarLavadero);

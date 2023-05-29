@@ -9,13 +9,15 @@ const conectarMongoDB = async () => {
       useUnifiedTopology: true,
     });
 
- /*    const {Servicio} = require("../models/Servicio.js");
+  /* const {Servicio} = require("../models/Servicio.js");
     const Lavadero = require("../models/lavadero.js");
 
-    for (let i = 0; i < 25; i++) {
+    for (let i = 0; i < 10; i++) {
     const lavadero1 = new Lavadero({
       NIT: '123456789' + i,
       nombreLavadero: 'Lavadero' + i,
+      descripcion: 'Descripción' + i,
+      siNoLoRecogen: "asdasd",
       ciudad: 'Ciudad' + i,
       direccion: 'Dirección' + i,
       telefono: '123456789' + i,
@@ -45,6 +47,31 @@ const conectarMongoDB = async () => {
     lavadero.servicios.push(servicio2._id);
     await lavadero.save();
   }
+
+  for (let i = 0; i < 10; i++) {
+    const lavadero1 = new Lavadero({
+      NIT: '123456789A' + i,
+      nombreLavadero: 'lavaderoNoLISTO' + i,
+      ciudad: 'Ciudad' + i,
+      descripcion: 'Descripción' + i,
+      siNoLoRecogen: "asdasd",
+      direccion: 'Dirección' + i,
+      telefono: '123456789' + i,
+      correo_electronico: 'lavaderoNoLISTO' + i + '@gmail.com',
+      contrasena: 'contraseña' + i,
+      hora_apertura: '8:00 AM',
+      hora_cierre: '5:00 PM',
+      estado: false,
+      imagenes: ['https://plazaimperialcc.com.co/images/servicios/78/slides/medium_banner_2.jpg', 'https://elestimulo.com/wp-content/uploads/2015/07/carro1.jpg', 'https://d2yoo3qu6vrk5d.cloudfront.net/images/20211220091840/carro1.jpg'],
+      espacios_de_trabajo: 1,
+      ubicacion: {
+        type: "Point",
+        coordinates: [0, 0]
+      }
+    });
+    await lavadero1.save();
+  }
+
 
     const Usuario = require("../models/Usuario.js");
     const usuario1 = new Usuario({
