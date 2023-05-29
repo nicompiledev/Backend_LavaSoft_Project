@@ -13,11 +13,7 @@ const loguearAdmin = async (req, res) => {
     const ExisteAdmin = await Admin.findOne({ correo_electronico });
 
     if (!ExisteAdmin) {
-      return res.status(400).json({ msg: "El ADMINISTRADOR no existe" });
-    }
-
-    if (!ExisteAdmin.confirmado) {
-      return res.status(400).json({ msg: "El usuario no ha confirmado su cuenta" });
+      return res.status(400).json({ msg: "El correo electrónico no existe" });
     }
 
     if (await ExisteAdmin.comprobarPassword(contrasena)) {

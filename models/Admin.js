@@ -1,12 +1,11 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
-const generarId = require("../helpers/generarId.js");
 
 const adminSchema = new mongoose.Schema({
   nombreAdmin: {type: String, required: true },
   correo_electronico: { type: String, required: true, unique: true },
   contrasena: { type: String, required: true },
-  token: { type: String, default: generarId() },
+  token: { type: String, required: false },
   creado: { type: Date, default: Date.now() },
 });
 

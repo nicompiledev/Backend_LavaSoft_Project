@@ -86,6 +86,18 @@ const conectarMongoDB = async () => {
     });
     await usuario1.save();
  */
+
+    // crear administrador
+/*     const Admin = require("../models/Admin.js");
+
+    const admin1 = new Admin({
+      nombreAdmin: 'Admin 1',
+      correo_electronico: 'admin@gmail.com',
+      contrasena: 'contrasena123',
+    });
+    await admin1.save(); */
+
+
     console.log("Conexión a la base de datos MongoDB exitosa");
   } catch (error) {
     console.error(`Error al conectarse a la base de datos MongoDB: ${error.message}`);
