@@ -6,9 +6,11 @@ require('dotenv').config();
 const {
   loguearAdmin,
   getLavederos,
-  getLavadero,
   modificarLavadero,
   eliminarLavadero,
+  activarLavadero,
+  noActivarLavadero,
+  LavaderosNoConfirmados,
 } = require('../controllers/adminController.js');
 const checkAuth = require('../middleware/authMiddleware.js')
 
@@ -17,9 +19,12 @@ const checkAuth = require('../middleware/authMiddleware.js')
 router.post("/login", loguearAdmin);
 
 // area privada
-router.get("/lavaderos", getLavederos);
-router.get("/lavaderos/:id_lavadero", checkAuth, getLavadero);
+router.get("/getAlllavadero", checkAuth, getLavederos);
 router.put("/lavaderos/:id_lavadero", checkAuth, modificarLavadero);
 router.delete("/lavaderos/:id_lavadero", checkAuth, eliminarLavadero);
+router.post("/lavaderos/activar", checkAuth, activarLavadero);
+router.post("/lavaderos/no-activar", checkAuth, noActivarLavadero);
+router.get("/lavaderos/no-confirmados", checkAuth, LavaderosNoConfirmados);
+
 
 module.exports = router;

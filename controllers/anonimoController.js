@@ -25,9 +25,12 @@ const getLavaderos = async (req, res) => {
     // Trae los primero 10 lavaderos de la página actual
     const lavaderos = await Lavadero.find({ estado: true }, { contrasena: 0, estado: 0, confirmado: 0 }).skip(startIndex).limit(PAGE_SIZE);
 
-    res.status(200).json(lavaderos);
+    // Enviar los datos al cliente
+    const totalPages = await Lavadero.countDocuments({ estado: true }) / PAGE_SIZE;
+
+    res.status(200).json({ lavaderos, totalPages });
     // Guardar los datos en el caché para esta página
-    await setAsync(cacheKey, JSON.stringify(lavaderos));
+    await setAsync(cacheKey, JSON.stringify({ lavaderos, totalPages }));
 
         // SI HAY CAMBIOS:
     // await publisher.publish('canal-de-datos', JSON.stringify(lavaderos));

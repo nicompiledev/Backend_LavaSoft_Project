@@ -10,7 +10,7 @@ const emailConfirmado = async (datos) => {
     },
   });
 
-  const { correo_electronico, nombre, contrasena } = datos;
+  const { correo_electronico, nombre, motivo } = datos;
 
   const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -21,24 +21,22 @@ const emailConfirmado = async (datos) => {
   const info = await transporter.sendMail({
     from: "LavaSoft - Administrador de Lavaderos de LavaSoft <admin@lavasoft.com>",
     to: correo_electronico,
-    subject: "Tu cuenta ha sido aceptada en LavaSoft",
+    subject: "Tu cuenta ha sido rechazada en LavaSoft",
     html: `
     <div style="background-color: #f2f2f2; padding: 20px; font-family: Arial;">
     <div style="text-align: center;">
-        <h2 style="color: #007bff;">¡Felicitaciones, ${capitalizeFirstLetter(nombre)}!</h2>
-        <p style="font-size: 18px;">Te informamos que has sido aceptado exitosamente como lavadero de vehículos en LavaSoft.</p>
+        <h2 style="color: #007bff;">Lo sentimos, ${capitalizeFirstLetter(nombre)}..</h2>
+        <p style="font-size: 18px;">Te informamos que tu solicitud de formar parte de LavaSoft ha sido rechazada.</p>
     </div>
     <div style="background-color: white; padding: 20px; margin: 20px; max-width: 600px; margin: 20px auto;">
-        <p>Para comenzar a utilizar nuestra plataforma, por favor sigue estos pasos:</p>
+        <p>Estos son los motivos por los que tu solicitud ha sido rechazada:</p>
         <ol>
-            <li>Accede a tu cuenta en nuestra página web: <a href="https://lavasoft.com.co" style="color: #007bff;">lavasoft.com.co</a></li>
-            <li>Completa tu perfil y agrega información sobre tus servicios y precios para que tu cuenta aparezca en nuestra plataforma.</li>
-            <li>Comienza a recibir solicitudes de lavado de vehículos.</li>
+            <li>${motivo}</li>
         </ol>
-        <p>Tu contraseña para acceder a tu cuenta es: <strong>${contrasena}</strong></p>
-        <p>Te recomendamos cambiar tu contraseña una vez hayas accedido a tu cuenta.</p>
+        <p>Ya que no fue aceptada, tu petición ha sido eliminada de nuestra base de datos.</p>
+        <p>Si deseas volver a intentarlo, puedes hacerlo en cualquier momento. Estaremos encantados de tenerte en nuestra plataforma.</p>
         <hr>
-        <p>Si necesitas ayuda con alguno de estos pasos, por favor contáctanos a través de:</p>
+        <p>Si crees que esto es un error, por favor contáctanos a través de:</p>
         <ul>
             <li>Correo electrónico: soporte@lavasoft.com</li>
             <li>Teléfono: +57 3026009175</li>

@@ -2,7 +2,9 @@
 const generarJWT = require("../helpers/generarJWT.js");
 const generarId = require("../helpers/generarId.js");
 const emailConfirmado = require("../helpers/lavaderos/emailConfirmado.js");
+const emailNoConfirmado = require("../helpers/lavaderos/emailNoConfirmado.js");
 //const emailOlvidePassword = require("../helpers/emailOlvidePassword.js");
+
 const lavadero = require("../models/lavadero.js");
 const Admin = require("../models/Admin.js")
 
@@ -34,28 +36,10 @@ const loguearAdmin = async (req, res) => {
 };
 
 const getLavederos = async (req, res) => {
+  console.log("ENTRO AQUI");
   try {
-    const lavaderos = await lavadero.find({ estado: false });
+    const lavaderos = await lavadero.find({ estado: true });
     res.status(200).json(lavaderos);
-
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ msg: "Hubo un error" });
-  }
-};
-
-const getLavadero = async (req, res) => {
-  const { id_lavadero } = req.params;
-  try {
-
-    // Traer el lavadero, que estado sea true y que el id sea el que viene en los parámetros
-    const lavadero = await lavadero.findOne({ estado: true, _id: id_lavadero });
-
-    if (!lavadero) {
-      return res.status(400).json({ msg: "El lavadero no existe" });
-    }
-
-    res.status(200).json(lavadero);
 
   } catch (error) {
     console.log(error);
@@ -126,19 +110,18 @@ const eliminarLavadero = async (req, res) => {
   }
 };
 
-const getLavaderosNoConfirmados = async (req, res) => {
+const LavaderosNoConfirmados = async (req, res) => {
   try {
-    const lavaderos = await lavadero.find({ estado: false });
-    res.status(200).json({
-      nombre: lavaderos.nombre,
-      ciudad: lavaderos.ciudad,
-      direccion: lavaderos.direccion,
-      telefono: lavaderos.telefono,
-      correo_electronico: lavaderos.correo_electronico,
-      hora_apertura: lavaderos.hora_apertura,
-      hora_cierre: lavaderos.hora_cierre,
-      espacio_de_trabajo: lavaderos.espacio_de_trabajo,
+    lavadero.countDocuments({}, function (err, count) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("Total Count:", count);
+      }
     });
+
+    const lavaderos = await lavadero.find({ estado: false });
+    res.status(200).json(lavaderos);
   } catch (error) {
     console.log(error);
     res.status(500).json({ msg: "Hubo un error" });
@@ -146,7 +129,8 @@ const getLavaderosNoConfirmados = async (req, res) => {
 };
 
 const activarLavadero = async (req, res) => {
-  const { id_lavadero } = req.params;
+
+  const { id_lavadero } = req.body;
 
   try {
 
@@ -161,6 +145,7 @@ const activarLavadero = async (req, res) => {
       {
         $set: {
           estado: true,
+          contrasena: lavadero.nit,
         },
       }
     );
@@ -169,6 +154,7 @@ const activarLavadero = async (req, res) => {
     await emailConfirmado({
       correo_electronico: lavadero.correo_electronico,
       nombre: lavadero.nombre,
+      contrasena: lavadero.nit,
     });
 
     res.status(200).json({ msg: "Lavadero activado correctamente" });
@@ -179,13 +165,42 @@ const activarLavadero = async (req, res) => {
   }
 };
 
+const noActivarLavadero = async (req, res) => {
+  const { id_lavadero, motivo } = req.body;
+
+  try {
+
+    const lavadero = await lavadero.findOne({ estado: false, _id: id_lavadero });
+
+    if (!lavadero) {
+      return res.status(400).json({ msg: "El lavadero no existe" });
+    }
+
+    await emailNoConfirmado({
+      correo_electronico: lavadero.correo_electronico,
+      nombre: lavadero.nombre,
+      motivo: motivo,
+    });
+
+    res.status(200).json({ msg: "Lavadero no aceptado correctamente" });
+
+    // eliminar lavadero
+    await lavadero.deleteOne({ _id: id_lavadero });
+  }
+  catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: "Hubo un error" });
+  }
+};
+
 module.exports = {
   loguearAdmin,
   getLavederos,
-  getLavadero,
   modificarLavadero,
   eliminarLavadero,
   activarLavadero,
+  noActivarLavadero,
+  LavaderosNoConfirmados,
 };
 
 

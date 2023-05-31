@@ -1,9 +1,10 @@
 const jwt = require("jsonwebtoken");
 const Usuario = require("../models/Usuario.js");
+const Admin = require("../models/Admin.js");
+const Lavadero = require("../models/lavadero.js");
 
 const checkAuth = async (req, res, next) => {
   let token;
-  // Verificar si hay un token en el encabezado de autorización
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer")
@@ -13,8 +14,12 @@ const checkAuth = async (req, res, next) => {
       token = req.headers.authorization.split(" ")[1];
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
+      console.log(decoded);
+
       let id = decoded.id;
       let rol = decoded.rol;
+
+      console.log(id, rol);
 
       switch (rol) {
         case "usuario":
@@ -31,8 +36,6 @@ const checkAuth = async (req, res, next) => {
           req.lavadero = await Lavadero.findById(id).select(
             "-contrasena -token -confirmado -creado"
           );
-          break;
-        default:
           break;
       }
 
