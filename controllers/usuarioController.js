@@ -2,7 +2,9 @@ const generarJWT = require("../helpers/generarJWT.js");
 const generarId = require("../helpers/generarId.js");
 const emailRegistro = require("../helpers/usuarios/emailRegistro.js");
 const emailOlvidePassword = require("../helpers/usuarios/emailOlvidePassword.js");
+
 const Usuario = require("../models/Usuario.js");
+const { VehiculoUsuario } = require("../models/Vehiculos.js");
 
 const registrar = async (req, res) => {
   const { nombre, apellido, genero, fecha_nacimiento, correo_electronico, contrasena, telefono } = req.body;
@@ -53,59 +55,12 @@ const registrar = async (req, res) => {
 const perfil = async (req, res) => {
   const usuario = req.usuario;
   try {
-    res.status(200).json({ usuario });
+    res.status(200).json(usuario);
   } catch (error) {
     console.log(error);
     res.status(500).json({ msg: "Error del servidor" });
   }
 };
-
-/*  const usuarioSchema = new mongoose.Schema({
-  nombre: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  apellido: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  genero: {
-    type: String,
-    enum: ["Masculino", "Femenino"],
-    required: true,
-    trim: true,
-  },
-  correo_electronico: {
-    type: String,
-    required: true,
-    trim: true,
-    unique: true,
-  },
-  contrasena: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  telefono: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  token: {
-    type: String,
-    default: generarId(), // Se usa un helper para generar un ID aleatorio por defecto
-  },
-  creado: {
-    type: Date,
-    default: Date.now(),
-  },
-  confirmado: {
-    type: Boolean,
-    default: false,
-  },
-}) */
 
 const confirmar = async (req, res) => {
   // Obtener el token de la URL
@@ -228,7 +183,7 @@ const nuevoPassword = async (req, res) => {
 
     await usuario.save();
 
-    res.status(200).json({ message: "Password modificado correctamente" });
+    res.status(200).json({ msg: "Password modificado correctamente" });
 
   } catch (error) {
     console.log(error);
@@ -238,8 +193,10 @@ const nuevoPassword = async (req, res) => {
 
 const actualizarPerfil = async (req, res) => {
 
-  const { nombre, apellido, genero, correo_electronico, telefono } = req.body;
+  const { nombre, apellido, genero, fecha_nacimiento, correo_electronico, telefono } = req.body;
   const { _id } = req.usuario
+
+  let mensaje = "";
 
   try {
 
@@ -250,6 +207,8 @@ const actualizarPerfil = async (req, res) => {
         const error = new Error("Ese correo electronico ya esta en uso");
         return res.status(409).json({ msg: error.message });
       }
+
+      mensaje = "Como cambiaste tu correo electronico, debes confirmar la cuenta nuevamente, te hemos enviado al nuevo correo electronico un link de confirmacion";
     }
 
     // Actualizar el usuario con update
@@ -259,13 +218,14 @@ const actualizarPerfil = async (req, res) => {
         nombre,
         apellido,
         genero,
-        correo_electronico,
         telefono,
+        fecha_nacimiento,
       },
       { new: true }
     );
 
-    res.status(200).json(usuarioActualizado);
+
+    res.status(200).json({ usuario: usuarioActualizado, msg: mensaje, resultado: 'Haz actualizado tu perfil correctamente' });
 
   } catch (error) {
     console.log(error);
@@ -274,9 +234,75 @@ const actualizarPerfil = async (req, res) => {
 };
 
 
+const confirmarCorreoElectronico = async (req, res) => {
+  const { token, correo_electronico } = req.params;
+
+  try {
+    // Comprobar si el token es válido y si existe un usuario con ese token
+    const usuario = await Usuario.findOne({ token });
+
+    if (!usuario) {
+      const error = new Error("Token no válido");
+      return res.status(401).json({ msg: error.message })
+    }
+
+    usuario.token = null;
+    usuario.correo_electronico = correo_electronico;
+
+    await usuario.save();
+
+    res.status(200).json({ msg: "Correo electronico confirmado correctamente" });
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: "Error del servidor" });
+  }
+};
+
+const agregarVehiculo = async (req, res) => {
+  const { placa, marca, modelo, tipo_vehiculo } = req.body;
+
+  let vehiculoGuardado;
+
+  try {
+
+    const vehiculo = new VehiculoUsuario({
+      placa,
+      marca,
+      modelo,
+      tipo_vehiculo,
+    });
+
+    vehiculoGuardado = await vehiculo.save();
+
+    console.log(vehiculoGuardado);
+
+    await Usuario.findByIdAndUpdate(
+      req.usuario._id,
+      {
+        $push: {
+          vehiculos: vehiculoGuardado._id,
+        },
+      },
+      { new: true }
+    );
+
+    res.status(200).json({ msg: "Vehiculo agregado correctamente" });
+
+  } catch (error) {
+
+    if (vehiculoGuardado) {
+    await VehiculoUsuario.findByIdAndDelete(vehiculoGuardado._id);
+    }
+    console.log(error);
+    res.status(500).json({ msg: error });
+  }
+
+}
+
 const actualizarPassword = async (req, res) => {
   // Leer los datos
-  const { _id, contrasena } = req.usuario;
+  const { _id } = req.usuario;
   const { pwd_actual, pwd_nuevo } = req.body;
 
   try {
@@ -316,4 +342,6 @@ module.exports = {
   nuevoPassword,
   actualizarPerfil,
   actualizarPassword,
+  confirmarCorreoElectronico,
+  agregarVehiculo
 };

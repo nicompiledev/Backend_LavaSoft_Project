@@ -10,6 +10,8 @@ const {
   nuevoPassword,
   actualizarPerfil,
   actualizarPassword,
+  confirmarCorreoElectronico,
+  agregarVehiculo
 } = require('../controllers/usuarioController.js');
 const checkAuth = require('../middleware/authMiddleware.js')
 
@@ -20,10 +22,12 @@ router.get("/confirmar/:token", confirmar);
 router.post("/login", autenticar);
 router.post("/olvide-password", olvidePassword);
 router.post("/nuevo-password/:token", nuevoPassword);
+router.post("/confirmar-correo/:token/:otroValor", confirmarCorreoElectronico);
 
 // Area privada
 router.get("/perfil", checkAuth, perfil);
 router.put("/actualizar_perfil", checkAuth, actualizarPerfil);
 router.put("/actualizar-password", checkAuth, actualizarPassword);
+router.post("/agregar-vehiculo", checkAuth, agregarVehiculo);
 
 module.exports = router;

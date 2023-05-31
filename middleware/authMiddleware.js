@@ -23,9 +23,10 @@ const checkAuth = async (req, res, next) => {
 
       switch (rol) {
         case "usuario":
+          // mandar con sus vehiculos
           req.usuario = await Usuario.findById(id).select(
-            "-contrasena -token -confirmado -creado"
-          );
+            "-contrasena -token -creado"
+          ).populate("vehiculos");
           break;
         case "admin":
           req.admin = await Admin.findById(id).select(
