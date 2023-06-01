@@ -19,8 +19,6 @@ const checkAuth = async (req, res, next) => {
       let id = decoded.id;
       let rol = decoded.rol;
 
-      console.log(id, rol);
-
       switch (rol) {
         case "usuario":
           // mandar con sus vehiculos
@@ -41,9 +39,9 @@ const checkAuth = async (req, res, next) => {
       }
 
       return next();
-    } catch (error) {
-      const e = new Error("Token no Válido");
-      return res.status(403).json({ msg: e.message });
+    } catch (e) {
+      const error = new Error("Token no Válido");
+      return res.status(403).json({ msg: error.message });
     }
   }
 

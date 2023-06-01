@@ -11,7 +11,8 @@ const {
   actualizarPerfil,
   actualizarPassword,
   confirmarCorreoElectronico,
-  agregarVehiculo
+  agregarVehiculo,
+  eliminarVehiculo
 } = require('../controllers/usuarioController.js');
 const checkAuth = require('../middleware/authMiddleware.js')
 
@@ -27,7 +28,8 @@ router.post("/confirmar-correo/:token/:otroValor", confirmarCorreoElectronico);
 // Area privada
 router.get("/perfil", checkAuth, perfil);
 router.put("/actualizar_perfil", checkAuth, actualizarPerfil);
-router.put("/actualizar-password", checkAuth, actualizarPassword);
+router.put("/actualizar-contrasena", checkAuth, actualizarPassword);
 router.post("/agregar-vehiculo", checkAuth, agregarVehiculo);
+router.post("/eliminar-vehiculo", checkAuth, eliminarVehiculo);
 
 module.exports = router;

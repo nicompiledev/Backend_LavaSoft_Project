@@ -9,7 +9,7 @@ subscriber.on('message', (channel, message) => {
 
 const getLavaderos = async (req, res) => {
   try {
-    const PAGE_SIZE = 10; // Tamaño de la página
+    const PAGE_SIZE = 8; // Tamaño de la página
     const page = req.query.page; // Obtener el número de página de la solicitud
     const cacheKey = `lavaderos_${page}`; // Clave para almacenar y recuperar datos en el caché para esta página
 
@@ -26,7 +26,8 @@ const getLavaderos = async (req, res) => {
     const lavaderos = await Lavadero.find({ estado: true }, { contrasena: 0, estado: 0, confirmado: 0 }).skip(startIndex).limit(PAGE_SIZE);
 
     // Enviar los datos al cliente
-    const totalPages = await Lavadero.countDocuments({ estado: true }) / PAGE_SIZE;
+    const totalPages = Math.ceil(await Lavadero.countDocuments({ estado: true }) / PAGE_SIZE);
+    
 
     res.status(200).json({ lavaderos, totalPages });
     // Guardar los datos en el caché para esta página

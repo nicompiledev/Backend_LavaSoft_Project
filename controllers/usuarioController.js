@@ -37,12 +37,12 @@ const registrar = async (req, res) => {
       return res.status(400).json({ msg: "Error al guardar el usuario" });
     }
     // Enviar el email de confirmación y validar si se envió correctamente
-/*  TEMPORALMENTE COMENTADO POR TEST 
-    await emailRegistro({
-      email: correo_electronico,
-      nombre,
-      token: usuario.token,
-    }); */
+    /*  TEMPORALMENTE COMENTADO POR TEST 
+        await emailRegistro({
+          email: correo_electronico,
+          nombre,
+          token: usuario.token,
+        }); */
 
     res.status(200).json({ nombre, apellido, correo_electronico, telefono });
 
@@ -149,13 +149,13 @@ const olvidePassword = async (req, res) => {
     await usuario.save();
 
     // Enviar Email con instrucciones
-/*
-TEMPORALMENTE INHABILITADO POR PRUEBAS
-    emailOlvidePassword({
-      email: correo_electronico,
-      nombre: usuario.nombre,
-      token: usuario.token,
-    }); */
+    /*
+    TEMPORALMENTE INHABILITADO POR PRUEBAS
+        emailOlvidePassword({
+          email: correo_electronico,
+          nombre: usuario.nombre,
+          token: usuario.token,
+        }); */
 
     res.json({ msg: "Hemos enviado un correo_electronico con las instrucciones" });
   } catch (error) {
@@ -260,6 +260,7 @@ const confirmarCorreoElectronico = async (req, res) => {
 };
 
 const agregarVehiculo = async (req, res) => {
+
   const { placa, marca, modelo, tipo_vehiculo } = req.body;
 
   let vehiculoGuardado;
@@ -277,7 +278,7 @@ const agregarVehiculo = async (req, res) => {
 
     console.log(vehiculoGuardado);
 
-    await Usuario.findByIdAndUpdate(
+    const usuarioConVehiculo = await Usuario.findByIdAndUpdate(
       req.usuario._id,
       {
         $push: {
@@ -285,19 +286,44 @@ const agregarVehiculo = async (req, res) => {
         },
       },
       { new: true }
-    );
+    ).populate("vehiculos");
 
-    res.status(200).json({ msg: "Vehiculo agregado correctamente" });
+    res.status(200).json({ usuario: usuarioConVehiculo, msg: "Vehiculo agregado correctamente" });
 
   } catch (error) {
 
     if (vehiculoGuardado) {
-    await VehiculoUsuario.findByIdAndDelete(vehiculoGuardado._id);
+      await VehiculoUsuario.findByIdAndDelete(vehiculoGuardado._id);
     }
     console.log(error);
     res.status(500).json({ msg: error });
   }
 
+}
+
+
+const eliminarVehiculo = async (req, res) => {
+  const { id_vehiculo } = req.body;
+  const usuario = req.usuario;
+
+  try {
+
+    const vehiculo = usuario.vehiculos.find(vehiculo => vehiculo._id.toString() === id_vehiculo);
+    if (!vehiculo) {
+      return res.status(404).json({ msg: "Vehículo no encontrado" });
+    }
+  
+    usuario.vehiculos.pull(vehiculo);
+    await usuario.save();
+  
+    await VehiculoUsuario.findByIdAndRemove(id_vehiculo);
+  
+    return res.json({ usuario: usuario, msg: "Vehículo eliminado correctamente" });
+  } catch (error) {
+
+    console.log(error);
+    res.status(500).json({ error: error, msg: "No se pudo eliminar el vehiculo" });
+  }
 }
 
 const actualizarPassword = async (req, res) => {
@@ -343,5 +369,6 @@ module.exports = {
   actualizarPerfil,
   actualizarPassword,
   confirmarCorreoElectronico,
-  agregarVehiculo
+  agregarVehiculo,
+  eliminarVehiculo
 };

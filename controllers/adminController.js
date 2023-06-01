@@ -36,7 +36,6 @@ const loguearAdmin = async (req, res) => {
 };
 
 const getLavederos = async (req, res) => {
-  console.log("ENTRO AQUI");
   try {
     const lavaderos = await lavadero.find({ estado: true });
     res.status(200).json(lavaderos);
