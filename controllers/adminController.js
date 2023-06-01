@@ -10,12 +10,14 @@ const Admin = require("../models/Admin.js")
 
 const loguearAdmin = async (req, res) => {
   const { correo_electronico, contrasena } = req.body;
+  let error = "";
   try {
 
     const ExisteAdmin = await Admin.findOne({ correo_electronico });
 
     if (!ExisteAdmin) {
-      return res.status(400).json({ msg: "El correo electrónico no existe" });
+      error = new Error("El correo electrónico no existe");
+      return res.status(400).json({ msg: error.message });
     }
 
     if (await ExisteAdmin.comprobarPassword(contrasena)) {
@@ -26,23 +28,26 @@ const loguearAdmin = async (req, res) => {
       res.status(200).json({ nombre: ExisteAdmin.nombreAdmin, token, rol: "admin" });
 
     } else {
-      return res.status(401).json({ msg: "La contraseña es incorrecta" });
+      error = new Error("La contraseña es incorrecta");
+      return res.status(401).json({ msg: error.message });
     }
 
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ msg: "Hubo un error" });
+  } catch (e) {
+    error = new Error("Hubo un error en el servidor");
+    res.status(500).json({ msg: error.message });
   }
 };
 
 const getLavederos = async (req, res) => {
+
+  let error = "";
   try {
     const lavaderos = await lavadero.find({ estado: true });
     res.status(200).json(lavaderos);
 
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ msg: "Hubo un error" });
+  } catch (e) {
+    error = new Error("Hubo un error en el servidor");
+    res.status(500).json({ msg: error.message });
   }
 };
 
@@ -50,12 +55,14 @@ const modificarLavadero = async (req, res) => {
   const { id_lavadero } = req.params;
   const { nombre, ciudad, direccion, telefono, correo_electronico, hora_apertura, hora_cierre } = req.body;
 
+  let error = "";
   try {
 
     const lavadero = await lavadero.findOne({ estado: true, _id: id_lavadero });
 
     if (!lavadero) {
-      return res.status(400).json({ msg: "El lavadero no existe" });
+      error = new Error("El lavadero no existe");
+      return res.status(400).json({ msg: error.message });
     }
 
     await lavadero.updateOne(
@@ -75,21 +82,23 @@ const modificarLavadero = async (req, res) => {
 
     res.status(200).json({ msg: "Lavadero modificado correctamente" });
 
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ msg: "Hubo un error" });
+  } catch (e) {
+    error = new Error("Hubo un error en el servidor");
+    res.status(500).json({ msg: error.message });
   }
 };
 
 const eliminarLavadero = async (req, res) => {
   const { id_lavadero } = req.params;
 
+  let error = "";
   try {
 
     const lavadero = await lavadero.findOne({ estado: true, _id: id_lavadero });
 
     if (!lavadero) {
-      return res.status(400).json({ msg: "El lavadero no existe" });
+      error = new Error("El lavadero no existe");
+      return res.status(400).json({ msg: error.message });
     }
 
     await lavadero.updateOne(
@@ -103,27 +112,20 @@ const eliminarLavadero = async (req, res) => {
 
     res.status(200).json({ msg: "Lavadero eliminado correctamente" });
 
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ msg: "Hubo un error" });
+  } catch (e) {
+    error = new Error("Hubo un error en el servidor");
+    res.status(500).json({ msg: error.message });
   }
 };
 
 const LavaderosNoConfirmados = async (req, res) => {
+  let error = "";
   try {
-    lavadero.countDocuments({}, function (err, count) {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log("Total Count:", count);
-      }
-    });
-
     const lavaderos = await lavadero.find({ estado: false });
     res.status(200).json(lavaderos);
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ msg: "Hubo un error" });
+  } catch (e) {
+    error = new Error("Hubo un error en el servidor");
+    res.status(500).json({ msg: error.message });
   }
 };
 
@@ -131,12 +133,14 @@ const activarLavadero = async (req, res) => {
 
   const { id_lavadero } = req.body;
 
+  let error = "";
   try {
 
     const lavadero = await lavadero.findOne({ estado: false, _id: id_lavadero });
 
     if (!lavadero) {
-      return res.status(400).json({ msg: "El lavadero no existe" });
+      error = new Error("El lavadero no existe");
+      return res.status(400).json({ msg: error.message });
     }
 
     await lavadero.updateOne(
@@ -158,21 +162,23 @@ const activarLavadero = async (req, res) => {
 
     res.status(200).json({ msg: "Lavadero activado correctamente" });
 
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ msg: "Hubo un error" });
+  } catch (e) {
+    error = new Error("Hubo un error en el servidor");
+    res.status(500).json({ msg: error.message });
   }
 };
 
 const noActivarLavadero = async (req, res) => {
   const { id_lavadero, motivo } = req.body;
 
+  let error = "";
   try {
 
     const lavadero = await lavadero.findOne({ estado: false, _id: id_lavadero });
 
     if (!lavadero) {
-      return res.status(400).json({ msg: "El lavadero no existe" });
+      error = new Error("El lavadero no existe");
+      return res.status(400).json({ msg: error.message });
     }
 
     await emailNoConfirmado({
@@ -186,9 +192,9 @@ const noActivarLavadero = async (req, res) => {
     // eliminar lavadero
     await lavadero.deleteOne({ _id: id_lavadero });
   }
-  catch (error) {
-    console.log(error);
-    res.status(500).json({ msg: "Hubo un error" });
+  catch (e) {
+    error = new Error("Hubo un error en el servidor");
+    res.status(500).json({ msg: error.message });
   }
 };
 

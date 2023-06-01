@@ -11,8 +11,8 @@ const {Servicio} = require("../models/Servicio.js");
 const { Reserva } = require("../models/Reserva.js");
 
 const registrarLavadero = async (req, res) => {
+  let error = "";
   try {
-
     const { nombreLavadero, NIT, descripcion, ciudad, direccion, telefono, correo_electronico, hora_apertura, hora_cierre, espacios_de_trabajo, longitud, latitud, siNoLoRecogen, tipoVehiculos } = req.body;
 
     // Si open ai está bien configurado, se puede ejecutar el codigo de abajo
@@ -20,7 +20,8 @@ const registrarLavadero = async (req, res) => {
 
     switch (respuestaOpenAI) {
       case "falso":
-        return res.status(400).json({ msg: "La información ingresada es falsa" });
+        error = new Error("La información ingresada es falsa");
+        return res.status(400).json({ msg: error.message });
       case "verdadero":
         //continuar el codigo
         break;
@@ -31,10 +32,9 @@ const registrarLavadero = async (req, res) => {
 
     const existeLavadero = await Lavadero.findOne({ correo_electronico });
     if (existeLavadero) {
-      return res.status(400).json({ msg: "El lavadero ya existe" });
+      error = new Error("El correo electrónico ya está registrado para otro lavadero");
+      return res.status(400).json({ msg: error.message });
     }
-
-    console.log("YA PASO DESPUES DE EXISTE")
 
     const lavadero = new Lavadero({
       nombreLavadero,
@@ -59,12 +59,11 @@ const registrarLavadero = async (req, res) => {
     // Save the user to the database
     const lavaderoGuardado = await lavadero.save();
 
-    console.log("LAVADERO")
-
     try {
       // Save images
       if (!req.files) {
-        return res.status(500).send("Hubo un error al subir las imágenes");
+        error = new Error("No se subieron imágenes");
+        return res.status(500).json({ msg: error.message });
       }
 
       const imageUrls = await req.files.map((file) => file.path);
@@ -80,21 +79,24 @@ const registrarLavadero = async (req, res) => {
  */
       res.status(200).json({ msg: "Lavadero registrado correctamente" });
 
-    } catch (error) {
+    } catch (e) {
       // Si se produce un error al insertar las imágenes, cancela el registro del usuario
       await lavaderoGuardado.remove(); // elimina el lavadero recién creado
 
       // Envía la respuesta de error
-      res.status(500).send("Hubo un error al subir las imágenes");
+      error = new Error("Hubo un error al subir las imágenes");
+      res.status(500).json({ msg: error.message });
     }
 
-  } catch (error) {
-    res.status(500).send(error);
+  } catch (e) {
+    error = new Error("Hubo un error al registrar el lavadero");
+    res.status(400).json({ msg: error.message });
   }
 };
 
 
 const autenticarLavadero = async (req, res) => {
+  let error = "";
   try {
     const { correo_electronico, contrasena } = req.body;
 
@@ -102,11 +104,13 @@ const autenticarLavadero = async (req, res) => {
     const existeLavadero = await Lavadero.findOne({ correo_electronico });
 
     if (!existeLavadero) {
-      return res.status(400).json({ msg: "El usuario no existe" });
+      error = new Error("El usuario no existe");
+      return res.status(400).json({ msg: error.message });
     }
 
     if (!existeLavadero.confirmado) {
-      return res.status(400).json({ msg: "El usuario no ha confirmado su cuenta" });
+      error = new Error("El usuario no ha confirmado su cuenta");
+      return res.status(400).json({ msg: error.message });
     }
 
     if (await existeLavadero.comprobarPassword(contrasena)) {
@@ -133,38 +137,38 @@ const autenticarLavadero = async (req, res) => {
         imagenes: existeLavadero.imagenes,
       });
     } else {
-      return res.status(401).json({ msg: "La contraseña es incorrecta" });
+      error = new Error("La contraseña es incorrecta");
+      return res.status(401).json({ msg: error.message });
     }
 
-  } catch (error) {
-    console.log(error);
+  } catch (e) {
+    error = new Error("Hubo un error al autenticar el lavadero");
     res.status(500).json({ msg: "Hubo un error" });
   }
 };
 
 const getReservasNoAtendidas = async (req, res) => {
+  let error = "";
   try {
     const { _id } = req.lavadero;
 
     const reservas = await Reserva.find({ id_lavadero: _id, estado: "pendiente" });
 
-    if (reservas.length === 0) {
-      return res.status(204).json({ msg: "No hay reservas pendientes" });
-    }
-
     res.status(200).json({ reservas });
 
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ msg: "Hubo un error" });
+  } catch (e) {
+    error = new Error("Hubo un error al obtener las reservas");
+    res.status(500).json({ msg: error.message });
   }
 }
 
 const putCancelarReserva = async (req, res) => {
+
+  let error = "";
+
   try {
     const { id_reserve, id_usuario, id_servicio, motivo } = req.body
     const { nombre } = req.lavadero
-
 
     try{
       const [reserva, usuario, servicio] = await Promise.all([
@@ -186,20 +190,23 @@ const putCancelarReserva = async (req, res) => {
       reserva.motivoCancelacion = motivo;
 
       await reserva.save();
-    }catch(error){
-      return res.status(404).json({ msg: 'La reserva o el usuario no existe' })
+    }catch (e){
+      error = new Error("Hubo un error al cancelar la reserva");
+      return res.status(404).json({ msg: error.message });
     }
 
     res.status(200).json({ msg: 'Se cancelo con exito' })
 
   }
-  catch (error) {
-    console.log(error);
-    res.status(500).json({ msg: error });
+  catch (e) {
+    error = new Error("Hubo un error al cancelar la reserva");
+    res.status(500).json({ msg: error.message });
   }
 }
 
 const servicioTerminado = async (req, res) => {
+
+  let error = "";
   try {
     const { id_reserve, id_usuario } = req.body
     const { nombre } = req.lavadero
@@ -220,16 +227,17 @@ const servicioTerminado = async (req, res) => {
         nombre: usuario.nombre,
         lavadero: nombre,
       }); */
-    } catch (error) {
-      return res.status(404).json({ msg: 'La reserva o el usuario no existe' })
+    } catch (e) {
+      error = new Error("Hubo un error al terminar el servicio");
+      return res.status(404).json({ msg: error.message });
     }
 
     res.status(200).json({ msg: 'Se cambio el estado con exito' })
 
   }
-  catch (error) {
-    console.log(error);
-    res.status(500).json({ msg: "Hubo un error" });
+  catch (e) {
+    error = new Error("Hubo un error al terminar el servicio");
+    res.status(500).json({ msg: error.message });
   }
 }
 

@@ -9,7 +9,7 @@ const conectarMongoDB = async () => {
       useUnifiedTopology: true,
     });
 
-  /* const {Servicio} = require("../models/Servicio.js");
+/*    const {Servicio} = require("../models/Servicio.js");
     const Lavadero = require("../models/lavadero.js");
 
     for (let i = 0; i < 10; i++) {
@@ -36,10 +36,10 @@ const conectarMongoDB = async () => {
 
     await lavadero1.save();
 
-    const servicio1 = new Servicio({ nombre: 'Servicio 1', detalle: 'Detalle del servicio 1', costo: 100, duracion: 30 });
+    const servicio1 = new Servicio({ nombre: 'Servicio 1', tipoVehiculo: "Carro", categoria: 'lavado', detalle: 'Detalle del servicio 1', costo: 100, duracion: 30 });
     await servicio1.save();
 
-    const servicio2 = new Servicio({ nombre: 'Servicio 2', detalle: 'Detalle del servicio 2', costo: 200, duracion: 60 });
+    const servicio2 = new Servicio({ nombre: 'Servicio 2', tipoVehiculo: "Moto", categoria: 'lavado', detalle: 'Detalle del servicio 2', costo: 200, duracion: 60 });
     await servicio2.save();
 
     const lavadero = await Lavadero.findById(lavadero1._id);
@@ -85,17 +85,17 @@ const conectarMongoDB = async () => {
       confirmado: true
     });
     await usuario1.save();
- */
+
 
     // crear administrador
-/*     const Admin = require("../models/Admin.js");
+     const Admin = require("../models/Admin.js");
 
     const admin1 = new Admin({
       nombreAdmin: 'Admin 1',
       correo_electronico: 'admin@gmail.com',
       contrasena: 'contrasena123',
     });
-    await admin1.save(); */
+    await admin1.save();  */
 
 
     console.log("Conexión a la base de datos MongoDB exitosa");

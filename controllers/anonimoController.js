@@ -8,6 +8,7 @@ subscriber.on('message', (channel, message) => {
 });
 
 const getLavaderos = async (req, res) => {
+  let error = "";
   try {
     const PAGE_SIZE = 8; // Tamaño de la página
     const page = req.query.page; // Obtener el número de página de la solicitud
@@ -27,7 +28,6 @@ const getLavaderos = async (req, res) => {
 
     // Enviar los datos al cliente
     const totalPages = Math.ceil(await Lavadero.countDocuments({ estado: true }) / PAGE_SIZE);
-    
 
     res.status(200).json({ lavaderos, totalPages });
     // Guardar los datos en el caché para esta página
@@ -36,9 +36,9 @@ const getLavaderos = async (req, res) => {
         // SI HAY CAMBIOS:
     // await publisher.publish('canal-de-datos', JSON.stringify(lavaderos));
 
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ msg: "Hubo un error" });
+  } catch (e) {
+    error = new Error("Hubo un error en el servidor en el servidor");
+    res.status(500).json({ msg: error.message });
   }
 }
 
@@ -46,6 +46,8 @@ const getLavaderos = async (req, res) => {
 const getLavaderoID = async (req, res) => {
 
   const { id } = req.params;
+
+  let error = "";
   try {
     const cachedData = await getAsync(`lavadero-${id}`);
     if (cachedData) {
@@ -61,13 +63,14 @@ const getLavaderoID = async (req, res) => {
       // Guardar en Redis
       await setAsync(`lavadero-${id}`, JSON.stringify(lavadero));
 
-    } catch (error) {
-      return res.status(404).json({ msg: "No existe el lavadero" });
+    } catch (e) {
+      error = new Error("No existe el lavadero");
+      return res.status(404).json({ msg: error.message });
     }
 
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ msg: "Hubo un error" });
+  } catch (e) {
+    error = new Error("Hubo un error en el servidor");
+    res.status(500).json({ msg: error.message });
   }
 }
 
