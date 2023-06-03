@@ -108,8 +108,8 @@ const autenticarLavadero = async (req, res) => {
       return res.status(400).json({ msg: error.message });
     }
 
-    if (!existeLavadero.confirmado) {
-      error = new Error("El usuario no ha confirmado su cuenta");
+    if (!existeLavadero.estado) {
+      error = new Error("La cuenta no ha sido aceptada por administrador, por favor sé paciente");
       return res.status(400).json({ msg: error.message });
     }
 

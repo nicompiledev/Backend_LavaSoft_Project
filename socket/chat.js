@@ -47,7 +47,9 @@ module.exports = function (io) {
         // ELIMINAR ROOM BOT
         delete roomsBot[socket.roomBot];
 
-        const room = "usuario" + token;
+        let tipoUsuario = socket.usuario ? "usuario" : "lavadero";
+
+        const room = tipoUsuario + token;
         socket.join(room);
         socket.room = room;
         socket.currentRoom = room;

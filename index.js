@@ -16,6 +16,7 @@ const jwt = require('jsonwebtoken');
 
 // Model Requerido para el middleware de sockets
 const Usuario = require('./models/Usuario.js');
+const Lavadero = require('./models/lavadero.js')
 
 // Imports
 const app = express();
@@ -47,11 +48,6 @@ io.use(async (socket, next) => {
         case "usuario":
           socket.usuario = await Usuario.findById(id).select(
             "-contrasena -token -confirmado -creado"
-          );
-          break;
-        case "admin":
-          socket.admin = await Admin.findById(id).select(
-            "-contrasena -token -creado"
           );
           break;
         case "lavadero":

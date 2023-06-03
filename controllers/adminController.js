@@ -10,6 +10,7 @@ const Admin = require("../models/Admin.js")
 
 const loguearAdmin = async (req, res) => {
   const { correo_electronico, contrasena } = req.body;
+  console.log(correo_electronico, contrasena);
   let error = "";
   try {
 
