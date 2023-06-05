@@ -5,8 +5,10 @@ const emailConfirmado = require("../helpers/lavaderos/emailConfirmado.js");
 const emailNoConfirmado = require("../helpers/lavaderos/emailNoConfirmado.js");
 //const emailOlvidePassword = require("../helpers/emailOlvidePassword.js");
 
-const lavadero = require("../models/lavadero.js");
-const Admin = require("../models/Admin.js")
+const lavadero = require("../models/type_users/lavadero.js");
+const Admin = require("../models/type_users/Admin.js")
+
+const { Reportes } = require("../models/Reportes.js");
 
 const loguearAdmin = async (req, res) => {
   const { correo_electronico, contrasena } = req.body;
@@ -198,6 +200,79 @@ const noActivarLavadero = async (req, res) => {
     res.status(500).json({ msg: error.message });
   }
 };
+
+
+const getReportes = async (req, res) => {
+  let error = "";
+  const PAGE_SIZE = 10;
+  const page = req.query.page || 1;
+  const startIndex = (page - 1) * PAGE_SIZE;
+  try {
+    const reportes = await Reportes.find({ estado: true }).limit(PAGE_SIZE).skip(startIndex).sort({ fecha: 1 });
+    const total = await Reportes.countDocuments({ estado: true });
+    res.status(200).json({ reportes, totalPages: Math.ceil(total / PAGE_SIZE), currentPage: page });
+  }
+  catch (e) {
+    error = new Error("Hubo un error en el servidor");
+    res.status(500).json({ msg: error.message });
+  }
+};
+
+getAceptarReporte = async (req, res) => {
+  const { id_reporte } = req.params;
+  let error = "";
+  try {
+    const reporte = await Reportes.findOne({ estado: true, _id: id_reporte });
+    if (!reporte) {
+      error = new Error("El reporte no existe");
+      return res.status(400).json({ msg: error.message });
+    }
+
+    // Borrar reporte y al lavadero ponerle un strike
+    await Reportes.deleteOne({ _id: id_reporte });
+    const lavaderoStrikes = await lavadero.updateOne({ _id: reporte.id_lavadero }, { $inc: { strikes: 1 } });
+    // Si el lavadero tiene 3 strikes, se desactiva
+    if (lavaderoStrikes.strikes == 5) {
+      const lavaderoDesactivado = await lavadero.updateOne({ _id: reporte.id_lavadero }, { $set: { estado: false } });
+      if (!lavaderoDesactivado) {
+        error = new Error("El lavadero no existe");
+        return res.status(400).json({ msg: error.message });
+      }
+    }
+
+    // Mandar correo al lavadero avisando que se le ha puesto un strike.
+
+    res.status(200).json({ msg: "Reporte aceptado correctamente" });
+  }
+  catch (e) {
+    error = new Error("Hubo un error en el servidor");
+    res.status(500).json({ msg: error.message });
+  }
+};
+
+getRechazarReporte = async (req, res) => {
+  const { id_reporte } = req.params;
+  let error = "";
+  try {
+    const reporte = await Reportes.findOne({ estado: true, _id: id_reporte });
+    if (!reporte) {
+      error = new Error("El reporte no existe");
+      return res.status(400).json({ msg: error.message });
+    }
+
+    // Borrar reporte
+    await Reportes.deleteOne({ _id: id_reporte });
+
+    // Mandar correo al usuario avisando que ya hemos revisado su reporte, gracias por su colaboración.
+    
+    res.status(200).json({ msg: "Reporte rechazado correctamente" });
+  }
+  catch (e) {
+    error = new Error("Hubo un error en el servidor");
+    res.status(500).json({ msg: error.message });
+  }
+};
+
 
 module.exports = {
   loguearAdmin,

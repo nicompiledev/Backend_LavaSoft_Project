@@ -1,4 +1,4 @@
-const Lavadero = require("../models/lavadero.js");
+const Lavadero = require("../models/type_users/lavadero.js");
 const { publisher, subscriber, getAsync, setAsync } = require("../config/index.js");
 subscriber.subscribe('canal-de-datos');
 

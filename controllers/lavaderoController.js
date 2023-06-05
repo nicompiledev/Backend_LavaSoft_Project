@@ -5,8 +5,8 @@ const emailCancelado = require("../helpers/lavaderos/emailCancelado.js")
 const emailServicioTerminada = require("../helpers/lavaderos/emailServicioTerminada.js")
 const emailOlvidePassword = require("../helpers/usuarios/emailOlvidePassword.js");
 const { AILavaderoREAL } = require("./openai/openai.js");
-const Usuario = require("../models/Usuario.js");
-const Lavadero = require("../models/lavadero.js");
+const Usuario = require("../models/type_users/Usuario.js");
+const Lavadero = require("../models/type_users/lavadero.js");
 const {Servicio} = require("../models/Servicio.js");
 const { Reserva } = require("../models/Reserva.js");
 
@@ -168,7 +168,7 @@ const putCancelarReserva = async (req, res) => {
 
   try {
     const { id_reserve, id_usuario, id_servicio, motivo } = req.body
-    const { nombre } = req.lavadero
+    const { nombreLavadero } = req.lavadero
 
     try{
       const [reserva, usuario, servicio] = await Promise.all([
@@ -179,7 +179,7 @@ const putCancelarReserva = async (req, res) => {
 /*    TEMPORALMENTE COMENTADO
       await emailCancelado({
         email: usuario.correo_electronico,
-        lavadero: nombre,
+        lavadero: nombreLavadero,
         nombre: usuario.nombre,
         reserva: reserva.fecha,
         servicio: servicio.nombre,
@@ -209,7 +209,7 @@ const servicioTerminado = async (req, res) => {
   let error = "";
   try {
     const { id_reserve, id_usuario } = req.body
-    const { nombre } = req.lavadero
+    const { nombreLavadero } = req.lavadero
 
     try {
       const [reserva, usuario ] = await Promise.all([
@@ -225,7 +225,7 @@ const servicioTerminado = async (req, res) => {
       await emailServicioTerminada({
         email: usuario.correo_electronico,
         nombre: usuario.nombre,
-        lavadero: nombre,
+        lavadero: nombreLavadero,
       }); */
     } catch (e) {
       error = new Error("Hubo un error al terminar el servicio");

@@ -12,7 +12,8 @@ const {
   actualizarPassword,
   confirmarCorreoElectronico,
   agregarVehiculo,
-  eliminarVehiculo
+  eliminarVehiculo,
+  reportarLavadero
 } = require('../controllers/usuarioController.js');
 const checkAuth = require('../middleware/authMiddleware.js')
 
@@ -31,5 +32,6 @@ router.put("/actualizar_perfil", checkAuth, actualizarPerfil);
 router.put("/actualizar-contrasena", checkAuth, actualizarPassword);
 router.post("/agregar-vehiculo", checkAuth, agregarVehiculo);
 router.post("/eliminar-vehiculo", checkAuth, eliminarVehiculo);
+router.post("/reportar-lavadero:id_lavadero", checkAuth, reportarLavadero);
 
 module.exports = router;

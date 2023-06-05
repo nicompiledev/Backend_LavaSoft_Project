@@ -4,8 +4,10 @@ const emailRegistro = require("../helpers/usuarios/emailRegistro.js");
 const emailOlvidePassword = require("../helpers/usuarios/emailOlvidePassword.js");
 const emailCambiarCorreo = require("../helpers/usuarios/emailCambiarCorreo.js");
 
-const Usuario = require("../models/Usuario.js");
+const Usuario = require("../models/type_users/Usuario.js");
+const Lavadero = require("../models/type_users/lavadero.js");
 const { VehiculoUsuario } = require("../models/Vehiculos.js");
+const { Reportes } = require("../models/Reportes.js");
 
 const {AIPlavaVehiculoREAL} = require("./openai/openai.js");
 
@@ -402,6 +404,50 @@ const actualizarPassword = async (req, res) => {
   }
 };
 
+const reportarLavadero = async (req, res) => {
+  const { id_lavadero } = req.params;
+  const { razon, tipo, descripcion } = req.body;
+  const { _id } = req.usuario;
+
+
+
+  let error = "";
+  try {
+
+    // Validar que el lavadero exista:
+    const lavadero = await Lavadero.findById(id_lavadero);
+    if (!lavadero) {
+      error = new Error("Lavadero no encontrado");
+      return res.status(404).json({ msg: error.message });
+    }
+
+    // Validar que el usuario no haya reportado el lavadero
+    const reporteExistente = await Reportes.findOne({ id_usuario: _id, id_lavadero });
+    if (reporteExistente) {
+      error = new Error("Ya has reportado este lavadero, por favor espera a que se resuelva tu reporte");
+      return res.status(400).json({ msg: error.message });
+    }
+
+    const reporte = new Reportes({
+      id_usuario: _id,
+      id_lavadero,
+      razon,
+      tipo,
+      descripcion,
+    });
+
+    await reporte.save();
+
+    res.status(200).json({ msg: "Reporte enviado correctamente" });
+
+  } catch (e) {
+
+    error = new Error("Error del servidor");
+    res.status(500).json({ msg: error.message });
+  }
+}
+
+
 module.exports = {
   registrar,
   perfil,
@@ -413,5 +459,6 @@ module.exports = {
   actualizarPassword,
   confirmarCorreoElectronico,
   agregarVehiculo,
-  eliminarVehiculo
+  eliminarVehiculo,
+  reportarLavadero
 };
