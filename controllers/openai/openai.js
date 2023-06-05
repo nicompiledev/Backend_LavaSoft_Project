@@ -10,7 +10,7 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 // Crear funcion y exportar respuesta
-module.exports = async (nombreLavadero, direccion, correo_electronico, telefono) => {
+const AILavaderoREAL = async (nombreLavadero, direccion, correo_electronico, telefono) => {
   try {
     const prompt = `Dado el siguiente formulario:
   Nombre: ${nombreLavadero}
@@ -41,5 +41,49 @@ module.exports = async (nombreLavadero, direccion, correo_electronico, telefono)
   } catch (error) {
     return error.response.data.error.code;
   };
+};
+
+const AIPlavaVehiculoREAL = async (placa, marca, modelo, tipo_vehiculo) => {
+  try {
+    const prompt = `Dado el siguiente formulario:
+  Placa: ${placa}
+  Marca: ${marca}
+  Modelo: ${modelo}
+  Tipo de vehículo: ${tipo_vehiculo}
+  Pais: Colombia
+
+  Por favor, indica si este formulario es verdadero o falso. Para considerarlo verdadero, se deben cumplir las siguientes condiciones:
+
+  La placa debe tener un formato válido para el país del formulario.
+  La marca debe ser una marca real y común en el idioma del formulario.
+  El modelo debe ser un modelo real y común en el idioma del formulario.
+  El tipo de vehículo debe ser un tipo de vehículo real y común en el idioma del formulario.
+  Por favor, proporciona la respuesta en una sola palabra: "verdadero" o "falso".
+  Respuesta:`;
+
+    const response = await openai.createCompletion({
+      model: "text-davinci-003",
+      prompt: prompt,
+      temperature: 0.5,
+      max_tokens: 10,
+      top_p: 1.0,
+      frequency_penalty: 0.5,
+      presence_penalty: 0.5,
+    });
+
+    return response.data.choices[0].text;
+
+  } catch (error) {
+    return error.response.data.error.code;
+  };
+};
+
+
+
+
+
+module.exports = {
+  AILavaderoREAL,
+  AIPlavaVehiculoREAL
 };
 

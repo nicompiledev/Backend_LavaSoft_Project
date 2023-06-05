@@ -13,10 +13,10 @@ const LavaderoSchema = new mongoose.Schema({
   contrasena: { type: String },
   hora_apertura: { type: String, required: true },
   hora_cierre: { type: String, required: true },
-  tipoVehiculos: { type: [String], enum: ['Moto', 'Carro', 'Camioneta', 'Bus', 'Camion'] },
+  tipoVehiculos: [{ type: String, enum: ['Moto', 'Carro', 'Camioneta', 'Bus', 'Camion'], required: true}],
   // Estados
   estado: { type: Boolean, default: false },
-  confirmado: {type: Boolean, default: false,},
+  visualizado: {type: Boolean, default: false,},
   token: { type: String, default: generarId() },
   creado: { type: Date, default: Date.now() },
   siNoLoRecogen: {type: String, required: true },

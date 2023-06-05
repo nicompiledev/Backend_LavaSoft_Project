@@ -4,7 +4,7 @@ const emailRegistro = require("../helpers/lavaderos/emailRegistro.js");
 const emailCancelado = require("../helpers/lavaderos/emailCancelado.js")
 const emailServicioTerminada = require("../helpers/lavaderos/emailServicioTerminada.js")
 const emailOlvidePassword = require("../helpers/usuarios/emailOlvidePassword.js");
-const openai = require("./openai/openai.js");
+const { AILavaderoREAL } = require("./openai/openai.js");
 const Usuario = require("../models/Usuario.js");
 const Lavadero = require("../models/lavadero.js");
 const {Servicio} = require("../models/Servicio.js");
@@ -16,7 +16,7 @@ const registrarLavadero = async (req, res) => {
     const { nombreLavadero, NIT, descripcion, ciudad, direccion, telefono, correo_electronico, hora_apertura, hora_cierre, espacios_de_trabajo, longitud, latitud, siNoLoRecogen, tipoVehiculos } = req.body;
 
     // Si open ai está bien configurado, se puede ejecutar el codigo de abajo
-    const respuestaOpenAI = await openai(nombreLavadero, direccion, correo_electronico, telefono);
+    const respuestaOpenAI = await AILavaderoREAL(nombreLavadero, direccion, correo_electronico, telefono);
 
     switch (respuestaOpenAI) {
       case "falso":

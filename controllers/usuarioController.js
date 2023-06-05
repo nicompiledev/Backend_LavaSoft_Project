@@ -7,6 +7,8 @@ const emailCambiarCorreo = require("../helpers/usuarios/emailCambiarCorreo.js");
 const Usuario = require("../models/Usuario.js");
 const { VehiculoUsuario } = require("../models/Vehiculos.js");
 
+const {AIPlavaVehiculoREAL} = require("./openai/openai.js");
+
 const registrar = async (req, res) => {
   const { nombre, apellido, genero, fecha_nacimiento, correo_electronico, contrasena, telefono } = req.body;
 
@@ -292,6 +294,21 @@ const agregarVehiculo = async (req, res) => {
   let error = "";
 
   try {
+
+    const respuestaOpenAI = await AIPlavaVehiculoREAL(placa, marca, modelo, tipo_vehiculo);
+
+    switch (respuestaOpenAI) {
+      case "falso":
+        error = new Error("Nuestra IA no pudo verificar los datos del vehiculo, por favor verifica que los datos sean correctos");
+        return res.status(400).json({ msg: error.message });
+      case "verdadero":
+        //continuar el codigo
+        break;
+      default:
+        //return res.status(401).json({ msg: respuestaOpenAI });
+        break;
+    }
+
 
     const vehiculo = new VehiculoUsuario({
       placa,

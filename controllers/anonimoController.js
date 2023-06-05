@@ -8,31 +8,71 @@ subscriber.on('message', (channel, message) => {
 });
 
 const getLavaderos = async (req, res) => {
-  let error = "";
+   let error = "";
   try {
-    const PAGE_SIZE = 8; // Tamaño de la página
-    const page = req.query.page; // Obtener el número de página de la solicitud
-    const cacheKey = `lavaderos_${page}`; // Clave para almacenar y recuperar datos en el caché para esta página
+    const PAGE_SIZE = 10;
+    const page = req.query.page || 1;
+    const ciudad = req.query.ciudad || "";
+    const tipoVehiculo = req.query.tipoVehiculo || "";
+    const orderByPopularity = req.query.orderByPopularity || false;
+    const nombre = req.query.nombre || "";
+    const cacheKey = `lavaderos_${page}_${ciudad}_${tipoVehiculo}_${orderByPopularity}_${nombre}`;
 
-    // Verificar si hay datos en el caché para esta página
     const cachedData = await getAsync(cacheKey);
-
     if (cachedData) {
       return res.status(200).json(JSON.parse(cachedData));
     }
 
-    // Si no hay datos en el caché para esta página, hacer la consulta a la base de datos
-    const startIndex = (page - 1) * PAGE_SIZE; // Calcular el índice de inicio para la página actual
-    // Trae los primero 10 lavaderos de la página actual
-    const lavaderos = await Lavadero.find({ estado: true }, { contrasena: 0, estado: 0, confirmado: 0 }).skip(startIndex).limit(PAGE_SIZE);
+    const startIndex = (page - 1) * PAGE_SIZE;
 
-    // Enviar los datos al cliente
-    const totalPages = Math.ceil(await Lavadero.countDocuments({ estado: true }) / PAGE_SIZE);
+    const filter = {
+      estado: true,
+    };
+
+    if (ciudad) {
+      filter.ciudad = ciudad;
+    }
+
+    if (tipoVehiculo) {
+      filter.tipoVehiculos = { $in: tipoVehiculo };
+    }
+
+    if (nombre) {
+      // Agregar búsqueda por nombre no exacto utilizando expresiones regulares
+      filter.nombreLavadero = { $regex: new RegExp(nombre, "i") };
+    }
+
+    let lavaderosQuery = Lavadero.find(filter, { contrasena: 0, estado: 0, visualizado: 0 });
+
+    if (orderByPopularity) {
+      lavaderosQuery = lavaderosQuery.aggregate([
+        {
+          $lookup: {
+            from: "reservas",
+            localField: "_id",
+            foreignField: "id_lavadero",
+            as: "reservas",
+          },
+        },
+        {
+          $addFields: {
+            reservasCount: { $size: "$reservas" },
+          },
+        },
+        {
+          $sort: {
+            reservasCount: -1,
+          },
+        },
+      ]);
+    }
+
+    const lavaderos = await lavaderosQuery.skip(startIndex).limit(PAGE_SIZE);
+
+    const totalPages = Math.ceil(await Lavadero.countDocuments(filter) / PAGE_SIZE);
 
     res.status(200).json({ lavaderos, totalPages });
-    // Guardar los datos en el caché para esta página
     await setAsync(cacheKey, JSON.stringify({ lavaderos, totalPages }));
-
         // SI HAY CAMBIOS:
     // await publisher.publish('canal-de-datos', JSON.stringify(lavaderos));
 
@@ -56,7 +96,7 @@ const getLavaderoID = async (req, res) => {
     }
     // Traer lavadero por id
     try{
-      const lavadero = await Lavadero.findById(id, { contrasena: 0, estado: 0, confirmado: 0 }).populate('servicios');
+      const lavadero = await Lavadero.findById(id, { contrasena: 0, estado: 0, visualizado: 0 }).populate('servicios');
 
       res.status(200).json(lavadero);
 
