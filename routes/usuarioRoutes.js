@@ -32,6 +32,6 @@ router.put("/actualizar_perfil", checkAuth, actualizarPerfil);
 router.put("/actualizar-contrasena", checkAuth, actualizarPassword);
 router.post("/agregar-vehiculo", checkAuth, agregarVehiculo);
 router.post("/eliminar-vehiculo", checkAuth, eliminarVehiculo);
-router.post("/reportar-lavadero:id_lavadero", checkAuth, reportarLavadero);
+router.post("/reportar-lavadero/:id_lavadero", checkAuth, reportarLavadero);
 
 module.exports = router;

@@ -11,6 +11,9 @@ const {
   activarLavadero,
   noActivarLavadero,
   LavaderosNoConfirmados,
+  getReportes,
+  AceptarReporte,
+  RechazarReporte
 } = require('../controllers/adminController.js');
 const checkAuth = require('../middleware/authMiddleware.js')
 
@@ -25,6 +28,7 @@ router.delete("/lavaderos/:id_lavadero", checkAuth, eliminarLavadero);
 router.post("/lavaderos/activar", checkAuth, activarLavadero);
 router.post("/lavaderos/no-activar", checkAuth, noActivarLavadero);
 router.get("/lavaderos/no-confirmados", checkAuth, LavaderosNoConfirmados);
-
+router.get("/reportes", checkAuth, getReportes);
+router.post("/reportes/aceptar", checkAuth, AceptarReporte);
 
 module.exports = router;

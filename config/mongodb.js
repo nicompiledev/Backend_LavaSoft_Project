@@ -130,6 +130,8 @@ const conectarMongoDB = async () => {
           coordinates: [faker.address.longitude(), faker.address.latitude()],
         },
       });
+
+      await lavadero1.save()
     }
 
 

@@ -405,13 +405,18 @@ const actualizarPassword = async (req, res) => {
 };
 
 const reportarLavadero = async (req, res) => {
+
+  let error = "";
+
+  if(req.usuario === undefined){
+    error = new Error("No se ha iniciado sesión");
+    return res.status(401).json({ msg: error.message });
+  }
+
   const { id_lavadero } = req.params;
   const { razon, tipo, descripcion } = req.body;
   const { _id } = req.usuario;
 
-
-
-  let error = "";
   try {
 
     // Validar que el lavadero exista:
@@ -430,7 +435,9 @@ const reportarLavadero = async (req, res) => {
 
     const reporte = new Reportes({
       id_usuario: _id,
+      nombre_usuario: req.usuario.nombre,
       id_lavadero,
+      nombre_lavadero: lavadero.nombreLavadero,
       razon,
       tipo,
       descripcion,
@@ -438,10 +445,11 @@ const reportarLavadero = async (req, res) => {
 
     await reporte.save();
 
-    res.status(200).json({ msg: "Reporte enviado correctamente" });
+    res.status(200).json({ msg: "Reporte enviado correctamente, gracias por ayudarnos a mejorar" });
 
   } catch (e) {
 
+    console.log(e);
     error = new Error("Error del servidor");
     res.status(500).json({ msg: error.message });
   }

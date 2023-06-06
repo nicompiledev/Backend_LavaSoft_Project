@@ -208,8 +208,8 @@ const getReportes = async (req, res) => {
   const page = req.query.page || 1;
   const startIndex = (page - 1) * PAGE_SIZE;
   try {
-    const reportes = await Reportes.find({ estado: true }).limit(PAGE_SIZE).skip(startIndex).sort({ fecha: 1 });
-    const total = await Reportes.countDocuments({ estado: true });
+    const reportes = await Reportes.find().limit(PAGE_SIZE).skip(startIndex).sort({ fecha: 1 });
+    const total = await Reportes.countDocuments();
     res.status(200).json({ reportes, totalPages: Math.ceil(total / PAGE_SIZE), currentPage: page });
   }
   catch (e) {
@@ -218,8 +218,8 @@ const getReportes = async (req, res) => {
   }
 };
 
-getAceptarReporte = async (req, res) => {
-  const { id_reporte } = req.params;
+const AceptarReporte = async (req, res) => {
+  const { id_reporte } = req.body;
   let error = "";
   try {
     const reporte = await Reportes.findOne({ estado: true, _id: id_reporte });
@@ -250,7 +250,7 @@ getAceptarReporte = async (req, res) => {
   }
 };
 
-getRechazarReporte = async (req, res) => {
+const RechazarReporte = async (req, res) => {
   const { id_reporte } = req.params;
   let error = "";
   try {
@@ -282,6 +282,9 @@ module.exports = {
   activarLavadero,
   noActivarLavadero,
   LavaderosNoConfirmados,
+  getReportes,
+  AceptarReporte,
+  RechazarReporte
 };
 
 

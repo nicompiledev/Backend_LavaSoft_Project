@@ -79,9 +79,6 @@ const AIPlavaVehiculoREAL = async (placa, marca, modelo, tipo_vehiculo) => {
 };
 
 
-
-
-
 module.exports = {
   AILavaderoREAL,
   AIPlavaVehiculoREAL
