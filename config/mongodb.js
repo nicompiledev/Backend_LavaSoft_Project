@@ -14,7 +14,7 @@ const conectarMongoDB = async () => {
     });
 
 /*     const { Servicio } = require("../models/Servicio.js");
-    const Lavadero = require("../models/lavadero.js");
+    const Lavadero = require("../models/type_users/lavadero.js");
 
 
     for (let i = 0; i < 50; i++) {
@@ -133,7 +133,7 @@ const conectarMongoDB = async () => {
     }
 
 
-    const Usuario = require("../models/Usuario.js");
+    const Usuario = require("../models/type_users/Usuario.js");
     const usuario1 = new Usuario({
       nombre: 'Usuario 1',
       apellido: 'Apellido 1',
@@ -148,15 +148,15 @@ const conectarMongoDB = async () => {
 
 
     // crear administrador
-    const Admin = require("../models/Admin.js");
+    const Admin = require("../models/type_users/Admin.js");
 
     const admin1 = new Admin({
       nombreAdmin: 'Admin 1',
       correo_electronico: 'admin@gmail.com',
       contrasena: 'contrasena123',
     });
-    await admin1.save();
- */
+    await admin1.save(); */
+
 
     console.log("Conexión a la base de datos MongoDB exitosa");
   } catch (error) {

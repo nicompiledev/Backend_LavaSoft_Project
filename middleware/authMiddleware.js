@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
-const Usuario = require("../models/Usuario.js");
-const Admin = require("../models/Admin.js");
-const Lavadero = require("../models/lavadero.js");
+const Usuario = require("../models/type_users/Usuario.js");
+const Admin = require("../models/type_users/Admin.js");
+const Lavadero = require("../models/type_users/lavadero.js");
 
 const checkAuth = async (req, res, next) => {
   let token;
@@ -33,7 +33,7 @@ const checkAuth = async (req, res, next) => {
           break;
         case "lavadero":
           req.lavadero = await Lavadero.findById(id).select(
-            "-contrasena -token -confirmado -creado"
+            "-contrasena -token -visualizado -creado"
           );
           break;
       }

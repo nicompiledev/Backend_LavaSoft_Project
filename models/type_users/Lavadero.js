@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
-const generarId = require("../helpers/generarId.js");
+const generarId = require("../../helpers/generarId.js");
 
 const LavaderoSchema = new mongoose.Schema({
   nombreLavadero: { type: String, required: true },

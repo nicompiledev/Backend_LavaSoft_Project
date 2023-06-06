@@ -1,5 +1,5 @@
 const { Reserva } = require('../models/Reserva.js');
-const Lavadero = require('../models/lavadero.js');
+const Lavadero = require('../models/type_users/lavadero.js');
 const { Servicio } = require('../models/Servicio.js');
 const moment = require('moment');
 
