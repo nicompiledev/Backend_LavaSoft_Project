@@ -6,6 +6,7 @@ const reportesSchema = new mongoose.Schema({
   nombre_lavadero: { type: String, required: true },
   razon: { type: String, required: true },
   tipo: { type: String, enum: ["Informacion falsa", "Cambio de ubicacion", "Cierre temporal o permanente", "Mal servicio al cliente", "Incumplimiento de normas de seguridad"], required: true },
+  estado: { type: String, enum: ["Pendiente", "Aceptado", "Rechazado"], default: "Pendiente" },
   descripcion: { type: String, required: true },
   fecha: { type: String, default: Date.now() },
 });

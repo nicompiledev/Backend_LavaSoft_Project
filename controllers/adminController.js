@@ -206,10 +206,22 @@ const getReportes = async (req, res) => {
   let error = "";
   const PAGE_SIZE = 10;
   const page = req.query.page || 1;
+  const tipoReporte = req.query.tipo || "";
   const startIndex = (page - 1) * PAGE_SIZE;
+
+  const filter = {
+    estado: "Pendiente",
+  };
+
+  if(tipoReporte){
+    filter.tipo = tipoReporte;
+  }
+
+  console.log("filter", filter);
+
   try {
-    const reportes = await Reportes.find().limit(PAGE_SIZE).skip(startIndex).sort({ fecha: 1 });
-    const total = await Reportes.countDocuments();
+    const reportes = await Reportes.find(filter).limit(PAGE_SIZE).skip(startIndex).sort({ fecha: 1 });
+    const total = await Reportes.countDocuments(filter);
     res.status(200).json({ reportes, totalPages: Math.ceil(total / PAGE_SIZE), currentPage: page });
   }
   catch (e) {
@@ -222,14 +234,16 @@ const AceptarReporte = async (req, res) => {
   const { id_reporte } = req.body;
   let error = "";
   try {
-    const reporte = await Reportes.findOne({ estado: true, _id: id_reporte });
+    const reporte = await Reportes.findOne({ estado: "Pendiente", _id: id_reporte });
     if (!reporte) {
       error = new Error("El reporte no existe");
       return res.status(400).json({ msg: error.message });
     }
 
     // Borrar reporte y al lavadero ponerle un strike
-    await Reportes.deleteOne({ _id: id_reporte });
+    reporte.estado = "Aceptado";
+    await reporte.save();
+
     const lavaderoStrikes = await lavadero.updateOne({ _id: reporte.id_lavadero }, { $inc: { strikes: 1 } });
     // Si el lavadero tiene 3 strikes, se desactiva
     if (lavaderoStrikes.strikes == 5) {
@@ -254,14 +268,15 @@ const RechazarReporte = async (req, res) => {
   const { id_reporte } = req.params;
   let error = "";
   try {
-    const reporte = await Reportes.findOne({ estado: true, _id: id_reporte });
+    const reporte = await Reportes.findOne({ estado: "Pendiente", _id: id_reporte });
     if (!reporte) {
       error = new Error("El reporte no existe");
       return res.status(400).json({ msg: error.message });
     }
 
     // Borrar reporte
-    await Reportes.deleteOne({ _id: id_reporte });
+    reporte.estado = "Rechazado";
+    await reporte.save();
 
     // Mandar correo al usuario avisando que ya hemos revisado su reporte, gracias por su colaboración.
     
