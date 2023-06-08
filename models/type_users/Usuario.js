@@ -39,6 +39,10 @@ const usuarioSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
+  strikes: { 
+    type: Number,
+    default: 0
+  },
   token: {
     type: String,
     default: generarId(), // Se usa un helper para generar un ID aleatorio por defecto

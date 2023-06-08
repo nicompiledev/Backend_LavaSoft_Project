@@ -13,7 +13,7 @@ const { Reserva } = require("../models/Reserva.js");
 const registrarLavadero = async (req, res) => {
   let error = "";
   try {
-    const { nombreLavadero, NIT, descripcion, ciudad, direccion, telefono, correo_electronico, hora_apertura, hora_cierre, espacios_de_trabajo, longitud, latitud, siNoLoRecogen, tipoVehiculos } = req.body;
+    const { nombreLavadero, NIT, departamento, ciudad, sector, direccion, telefono, correo_electronico, hora_apertura, hora_cierre, espacios_de_trabajo, longitud, latitud, siNoLoRecogen, tipoVehiculos } = req.body;
 
     // Si open ai está bien configurado, se puede ejecutar el codigo de abajo
     const respuestaOpenAI = await AILavaderoREAL(nombreLavadero, direccion, correo_electronico, telefono);
@@ -39,8 +39,9 @@ const registrarLavadero = async (req, res) => {
     const lavadero = new Lavadero({
       nombreLavadero,
       NIT,
-      descripcion,
+      departamento,
       ciudad,
+      sector,
       direccion,
       telefono,
       correo_electronico,
@@ -123,7 +124,9 @@ const autenticarLavadero = async (req, res) => {
         nombre: existeLavadero.nombreLavadero,
         NIT: existeLavadero.NIT,
         descripcion: existeLavadero.descripcion,
+        departamento: existeLavadero.departamento,
         ciudad: existeLavadero.ciudad,
+        sector: existeLavadero.sector,
         direccion: existeLavadero.direccion,
         telefono: existeLavadero.telefono,
         correo_electronico: existeLavadero.correo_electronico,
@@ -176,6 +179,12 @@ const putCancelarReserva = async (req, res) => {
         Usuario.findById(id_usuario),
         Servicio.findById(id_servicio)
       ]);
+
+    
+      if(motivo == "No llego"){
+        
+      }
+
 /*    TEMPORALMENTE COMENTADO
       await emailCancelado({
         email: usuario.correo_electronico,
