@@ -4,8 +4,8 @@ const generarId = require("../../helpers/generarId.js");
 
 const LavaderoSchema = new mongoose.Schema({
   // Información Basica
-  nombreLavadero: { type: String, required: true },
   NIT: { type: String, required: true },
+  nombreLavadero: { type: String, required: true },
   descripcion: {type: String, required: false},
   telefono: { type: String, required: true },
   siNoLoRecogen: {type: String, required: true },
@@ -19,7 +19,7 @@ const LavaderoSchema = new mongoose.Schema({
     type: { type: String, default: "Point" },
     coordinates: { type: [Number], required: true },
   },
-  
+
   // Autenticacion
   correo_electronico: { type: String, required: true, unique: true },
   contrasena: { type: String },

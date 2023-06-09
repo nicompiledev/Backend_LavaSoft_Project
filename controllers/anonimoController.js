@@ -1,4 +1,4 @@
-const Lavadero = require("../models/type_users/lavadero.js");
+const Lavadero = require("../models/type_users/Lavadero.js");
 const { publisher, subscriber, getAsync, setAsync } = require("../config/index.js");
 subscriber.subscribe('canal-de-datos');
 
@@ -10,13 +10,16 @@ subscriber.on('message', (channel, message) => {
 const getLavaderos = async (req, res) => {
    let error = "";
   try {
+
     const PAGE_SIZE = 10;
     const page = req.query.page || 1;
+    const departamento = req.query.departamento || "";
     const ciudad = req.query.ciudad || "";
+    const sector = req.query.sector || "";
     const tipoVehiculo = req.query.tipoVehiculo || "";
     const orderByPopularity = req.query.orderByPopularity || false;
-    const nombre = req.query.nombre || "";
-    const cacheKey = `lavaderos_${page}_${ciudad}_${tipoVehiculo}_${orderByPopularity}_${nombre}`;
+    const cacheKey = `lavaderos_${page}_${departamento}_${ciudad}_${sector}_${tipoVehiculo}_${orderByPopularity}`;
+
 
     const cachedData = await getAsync(cacheKey);
     if (cachedData) {
@@ -27,19 +30,23 @@ const getLavaderos = async (req, res) => {
 
     const filter = {
       estado: true,
+      visualizado: true,
     };
+
+    if (departamento) {
+      filter.departamento = departamento;
+    }
 
     if (ciudad) {
       filter.ciudad = ciudad;
     }
 
-    if (tipoVehiculo) {
-      filter.tipoVehiculos = { $in: tipoVehiculo };
+    if (sector) {
+      filter.sector = sector;
     }
 
-    if (nombre) {
-      // Agregar búsqueda por nombre no exacto utilizando expresiones regulares
-      filter.nombreLavadero = { $regex: new RegExp(nombre, "i") };
+    if (tipoVehiculo) {
+      filter.tipoVehiculos = { $in: tipoVehiculo };
     }
 
     let lavaderosQuery = Lavadero.find(filter, { contrasena: 0, estado: 0, visualizado: 0 });
@@ -76,7 +83,7 @@ const getLavaderos = async (req, res) => {
         // SI HAY CAMBIOS:
     // await publisher.publish('canal-de-datos', JSON.stringify(lavaderos));
 
-  } catch (e) {
+  } catch (e) { console.log(e)
     error = new Error("Hubo un error en el servidor en el servidor");
     res.status(500).json({ msg: error.message });
   }
@@ -103,12 +110,12 @@ const getLavaderoID = async (req, res) => {
       // Guardar en Redis
       await setAsync(`lavadero-${id}`, JSON.stringify(lavadero));
 
-    } catch (e) {
+    } catch (e) { console.log(e)
       error = new Error("No existe el lavadero");
       return res.status(404).json({ msg: error.message });
     }
 
-  } catch (e) {
+  } catch (e) { console.log(e)
     error = new Error("Hubo un error en el servidor");
     res.status(500).json({ msg: error.message });
   }

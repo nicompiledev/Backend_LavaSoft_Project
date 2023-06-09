@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const Usuario = require("../models/type_users/Usuario.js");
 const Admin = require("../models/type_users/Admin.js");
-const Lavadero = require("../models/type_users/lavadero.js");
+const Lavadero = require("../models/type_users/Lavadero.js");
 
 const checkAuth = async (req, res, next) => {
   let token;

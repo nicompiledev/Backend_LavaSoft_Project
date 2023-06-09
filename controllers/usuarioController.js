@@ -5,7 +5,7 @@ const emailOlvidePassword = require("../helpers/usuarios/emailOlvidePassword.js"
 const emailCambiarCorreo = require("../helpers/usuarios/emailCambiarCorreo.js");
 
 const Usuario = require("../models/type_users/Usuario.js");
-const Lavadero = require("../models/type_users/lavadero.js");
+const Lavadero = require("../models/type_users/Lavadero.js");
 const { VehiculoUsuario } = require("../models/Vehiculos.js");
 const { Reportes } = require("../models/Reportes.js");
 
@@ -48,7 +48,7 @@ const registrar = async (req, res) => {
 
     res.status(200).json({ msg: "Usuario registrado, ahora debes confirmar tu correo electrónico" });
 
-  } catch (e) {
+  } catch (e) { console.log(e)
     usuario.remove();
     error = new Error("Error del servidor");
     res.status(500).json({ msg: error.message });
@@ -59,7 +59,7 @@ const perfil = async (req, res) => {
   const usuario = req.usuario;
   try {
     res.status(200).json(usuario);
-  } catch (e) {
+  } catch (e) { console.log(e)
     const error = new Error("Error del servidor");
     res.status(500).json({ msg: error.message });
   }
@@ -87,7 +87,7 @@ const confirmar = async (req, res) => {
     await usuarioConfirmar.save();
 
     res.json({ msg: "Usuario Confirmado Correctamente" });
-  } catch (e) {
+  } catch (e) { console.log(e)
     error = new Error("Error del servidor");
     res.status(500).json({ msg: error.message });
   }
@@ -132,7 +132,7 @@ const autenticar = async (req, res) => {
       error = new Error("La contraseña es incorrecta");
       return res.status(401).json({ msg: error.message });
     }
-  } catch (e) {
+  } catch (e) { console.log(e)
     error = new Error("Error del servidor");
     res.status(500).json({ msg: error.message });
   }
@@ -168,7 +168,7 @@ const olvidePassword = async (req, res) => {
         }); */
 
     res.json({ msg: "Hemos enviado un correo_electronico con las instrucciones" });
-  } catch (e) {
+  } catch (e) { console.log(e)
     error = new Error("Error del servidor");
     res.status(500).json({ msg: error.message });
   }
@@ -197,7 +197,7 @@ const nuevoPassword = async (req, res) => {
 
     res.status(200).json({ msg: "Password modificado correctamente" });
 
-  } catch (e) {
+  } catch (e) { console.log(e)
     error = new Error("Error del servidor");
     res.status(500).json({ msg: error.message });
   }
@@ -255,7 +255,7 @@ const actualizarPerfil = async (req, res) => {
 
     res.status(200).json({ usuario: usuarioActualizado, msg: mensaje, resultado: 'Haz actualizado tu perfil correctamente' });
 
-  } catch (e) {
+  } catch (e) { console.log(e)
     error = new Error("Error del servidor");
     res.status(500).json({ msg: error.message });
   }
@@ -282,7 +282,7 @@ const confirmarCorreoElectronico = async (req, res) => {
 
     res.status(200).json({ msg: "Correo electronico confirmado correctamente" });
 
-  } catch (e) {
+  } catch (e) { console.log(e)
     error = new Error("Error del servidor");
     res.status(500).json({ msg: error.message });
   }
@@ -334,7 +334,7 @@ const agregarVehiculo = async (req, res) => {
 
     res.status(200).json({ usuario: usuarioConVehiculo, msg: "Vehiculo agregado correctamente" });
 
-  } catch (e) {
+  } catch (e) { console.log(e)
 
     if (vehiculoGuardado) {
       await VehiculoUsuario.findByIdAndDelete(vehiculoGuardado._id);
@@ -349,6 +349,7 @@ const agregarVehiculo = async (req, res) => {
 const eliminarVehiculo = async (req, res) => {
   const { id_vehiculo } = req.body;
   const usuario = req.usuario;
+  let error = "";
 
   try {
 
@@ -363,10 +364,9 @@ const eliminarVehiculo = async (req, res) => {
     await VehiculoUsuario.findByIdAndRemove(id_vehiculo);
   
     return res.json({ usuario: usuario, msg: "Vehículo eliminado correctamente" });
-  } catch (e) {
-
-    console.log(error);
-    res.status(500).json({ error: error, msg: "No se pudo eliminar el vehiculo" });
+  } catch (e) { console.log(e)
+    error = new Error("Error del servidor");
+    res.status(500).json({ error: error.message });
   }
 }
 
@@ -398,7 +398,7 @@ const actualizarPassword = async (req, res) => {
       res.status(401).json({ msg: error.message });
     }
 
-  } catch (e) {
+  } catch (e) { console.log(e)
     error = new Error("Error del servidor");
     res.status(500).json({ msg: error.message });
   }
@@ -447,9 +447,7 @@ const reportarLavadero = async (req, res) => {
 
     res.status(200).json({ msg: "Reporte enviado correctamente, gracias por ayudarnos a mejorar" });
 
-  } catch (e) {
-
-    console.log(e);
+  } catch (e) { console.log(e)
     error = new Error("Error del servidor");
     res.status(500).json({ msg: error.message });
   }

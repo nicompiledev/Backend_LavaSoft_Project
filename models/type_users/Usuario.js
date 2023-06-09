@@ -39,7 +39,7 @@ const usuarioSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  strikes: { 
+  strikes: {
     type: Number,
     default: 0
   },

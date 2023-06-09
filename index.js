@@ -16,7 +16,7 @@ const jwt = require('jsonwebtoken');
 
 // Model Requerido para el middleware de sockets
 const Usuario = require('./models/type_users/Usuario.js');
-const Lavadero = require('./models/type_users/lavadero.js')
+const Lavadero = require('./models/type_users/Lavadero.js')
 
 // Imports
 const app = express();

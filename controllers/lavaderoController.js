@@ -5,8 +5,9 @@ const emailCancelado = require("../helpers/lavaderos/emailCancelado.js")
 const emailServicioTerminada = require("../helpers/lavaderos/emailServicioTerminada.js")
 const emailOlvidePassword = require("../helpers/usuarios/emailOlvidePassword.js");
 const { AILavaderoREAL } = require("./openai/openai.js");
+
 const Usuario = require("../models/type_users/Usuario.js");
-const Lavadero = require("../models/type_users/lavadero.js");
+const Lavadero = require("../models/type_users/Lavadero.js");
 const {Servicio} = require("../models/Servicio.js");
 const { Reserva } = require("../models/Reserva.js");
 
@@ -80,7 +81,7 @@ const registrarLavadero = async (req, res) => {
  */
       res.status(200).json({ msg: "Lavadero registrado correctamente" });
 
-    } catch (e) {
+    } catch (e) { console.log(e)
       // Si se produce un error al insertar las imágenes, cancela el registro del usuario
       await lavaderoGuardado.remove(); // elimina el lavadero recién creado
 
@@ -89,7 +90,7 @@ const registrarLavadero = async (req, res) => {
       res.status(500).json({ msg: error.message });
     }
 
-  } catch (e) {
+  } catch (e) { console.log(e)
     error = new Error("Hubo un error al registrar el lavadero");
     res.status(400).json({ msg: error.message });
   }
@@ -144,7 +145,7 @@ const autenticarLavadero = async (req, res) => {
       return res.status(401).json({ msg: error.message });
     }
 
-  } catch (e) {
+  } catch (e) { console.log(e)
     error = new Error("Hubo un error al autenticar el lavadero");
     res.status(500).json({ msg: "Hubo un error" });
   }
@@ -159,7 +160,7 @@ const getReservasNoAtendidas = async (req, res) => {
 
     res.status(200).json({ reservas });
 
-  } catch (e) {
+  } catch (e) { console.log(e)
     error = new Error("Hubo un error al obtener las reservas");
     res.status(500).json({ msg: error.message });
   }
@@ -236,7 +237,7 @@ const servicioTerminado = async (req, res) => {
         nombre: usuario.nombre,
         lavadero: nombreLavadero,
       }); */
-    } catch (e) {
+    } catch (e) { console.log(e)
       error = new Error("Hubo un error al terminar el servicio");
       return res.status(404).json({ msg: error.message });
     }

@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 const reservaSchema = new mongoose.Schema({
-  id_lavadero: { type: String, required: true },
-  id_usuario: { type: String, required: true },
-  id_servicio: { type: String, required: true },
+  id_lavadero: [{ type: mongoose.Schema.Types.ObjectId, ref: "Lavadero", required: true }],
+  id_usuario: [{ type: mongoose.Schema.Types.ObjectId, ref: "Usuario", required: true }],
+  id_servicio: [{ type: mongoose.Schema.Types.ObjectId, ref: "Servicio", required: true }],
   fecha: { type: String, required: true },
   hora_inicio: { type: String, required: true },
   hora_fin: { type: String, required: true },
