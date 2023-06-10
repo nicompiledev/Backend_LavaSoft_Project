@@ -112,7 +112,35 @@ const getLavaderoID = async (req, res) => {
   }
 }
 
+const getLavaderosRadio = async (req, res) => {
+  console.log("HOLA");
+  try {
+    const { latitud, longitud } = req.body;
+    const radio = 10000; // 5 km en metros
+
+    const lavaderos = await Lavadero.find({
+      ubicacion: {
+        $near: {
+          $geometry: {
+            type: 'Point',
+            coordinates: [longitud, latitud]
+          },
+          $maxDistance: radio
+        }
+      }
+    })
+    .limit(2)
+    .sort({ ubicacion: 'asc' });;
+
+    res.json(lavaderos);
+    console.log(lavaderos);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
 module.exports = {
   getLavaderos,
-  getLavaderoID
+  getLavaderoID,
+  getLavaderosRadio
 }
