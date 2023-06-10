@@ -14,7 +14,7 @@ const conectarMongoDB = async () => {
     });
 
 /*     const { Servicio } = require("../models/Servicio.js");
-    const Lavadero = require("../models/type_users/lavadero.js");
+    const Lavadero = require("../models/type_users/Lavadero.js");
 
 
     for (let i = 0; i < 50; i++) {
@@ -72,7 +72,9 @@ const conectarMongoDB = async () => {
         nombreLavadero: faker.company.companyName(),
         NIT: faker.datatype.number().toString(),
         descripcion: faker.lorem.sentence(),
+        departamento: "hola",
         ciudad: faker.address.city(),
+        sector: "sur",
         direccion: faker.address.streetAddress(),
         telefono: faker.phone.phoneNumber(),
         correo_electronico: "lavadero" + i + "@gmail.com",
@@ -81,9 +83,10 @@ const conectarMongoDB = async () => {
         hora_cierre: '5:00 PM',
         tipoVehiculos: tipo,
         estado: true,
+        visualizado: true,
         siNoLoRecogen: 'asdasd',
         imagenes: imagenesSeleccionadas,
-        espacios_de_trabajo: faker.datatype.number(),
+        espacios_de_trabajo: 1,
         ubicacion: {
           type: 'Point',
           coordinates: [faker.address.longitude(), faker.address.latitude()],
@@ -95,7 +98,7 @@ const conectarMongoDB = async () => {
       const servicio1 = new Servicio({ nombre: 'Servicio 1', tipoVehiculo: "Carro", categoria: 'lavado', detalle: 'Detalle del servicio 1', costo: 100, duracion: 30 });
       await servicio1.save();
 
-      const servicio2 = new Servicio({ nombre: 'Servicio 2', tipoVehiculo: "Moto", categoria: 'lavado', detalle: 'Detalle del servicio 2', costo: 200, duracion: 60 });
+      const servicio2 = new Servicio({ nombre: 'Servicio 2', tipoVehiculo: "Moto", categoria: 'lavado', detalle: 'Detalle del servicio 2', costo: 200, duracion: 120 });
       await servicio2.save();
 
       const lavadero = await Lavadero.findById(lavadero1._id);
@@ -109,7 +112,9 @@ const conectarMongoDB = async () => {
         nombreLavadero: faker.company.companyName(),
         NIT: faker.datatype.number().toString(),
         descripcion: faker.lorem.sentence(),
+        departamento: "hola",
         ciudad: faker.address.city(),
+        sector: "sur",
         direccion: faker.address.streetAddress(),
         telefono: faker.phone.phoneNumber(),
         correo_electronico: "lavaderoNoLISTO" + i + "@gmail.com",
@@ -124,7 +129,7 @@ const conectarMongoDB = async () => {
           faker.image.imageUrl(),
           faker.image.imageUrl(),
         ],
-        espacios_de_trabajo: faker.datatype.number(),
+        espacios_de_trabajo: 1,
         ubicacion: {
           type: 'Point',
           coordinates: [faker.address.longitude(), faker.address.latitude()],

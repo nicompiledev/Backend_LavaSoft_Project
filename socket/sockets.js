@@ -47,6 +47,8 @@ module.exports = (io) => {
       });
 
       await nuevaReserva.save();
+      const horasLibres = await horasDisponibles(id_lavadero, fecha, id_servicio);
+      io.emit("horasLibres", horasLibres);  
     });
 
     socket.on("horasDisponibles", async (datos) => {
@@ -69,6 +71,13 @@ const horasDisponibles = async (id_lavadero, fecha, id_servicio) => {
     estado: { $ne: 'cancelado' }
   });
 
+  // Obtener la hora de finalización del último servicio programado
+  const ultimaReserva = reservas[reservas.length - 1];
+  let horaFinUltimaReserva = moment(lavadero.hora_apertura, 'h:mm A');
+  if (ultimaReserva) {
+    horaFinUltimaReserva = moment(ultimaReserva.hora_fin, 'h:mm A');
+  }
+
   // Crear un arreglo con todas las horas disponibles
   let horaInicio = moment(lavadero.hora_apertura, 'h:mm A');
   let horaCierre = moment(lavadero.hora_cierre, 'h:mm A');
@@ -77,17 +86,25 @@ const horasDisponibles = async (id_lavadero, fecha, id_servicio) => {
   let horasDisponibles = [];
 
   while (horaInicio.isBefore(horaCierre)) {
-    horasDisponibles.push(horaInicio.format('h:mm A'));
+    if (horaInicio.isSameOrAfter(horaFinUltimaReserva)) {
+      // Verificar si hay suficiente tiempo disponible
+      let horaFin = moment(horaInicio).add(duracionServicio, 'minutes');
+      if (horaFin.isSameOrBefore(horaCierre)) {
+        horasDisponibles.push(horaInicio.format('h:mm A'));
+      }
+    }
     horaInicio.add(intervalo, 'hours');
   }
+  
 
   // Excluir horas ocupadas
   reservas.forEach(reserva => {
-    let horaReservaInicio = moment(reserva.hora_inicio, 'h:mm A');
-    let horaReservaFin = moment(reserva.hora_fin, 'h:mm A');
+    const horaReserva = moment(reserva.hora_inicio, 'h:mm A');
+    const horaFinReserva = moment(reserva.hora_fin, 'h:mm A');
+
     horasDisponibles = horasDisponibles.filter(hora => {
-      let horaDisponible = moment(hora, 'h:mm A');
-      return !horaDisponible.isBetween(horaReservaInicio, horaReservaFin);
+      const horaComparar = moment(hora, 'h:mm A');
+      return !horaComparar.isBetween(horaReserva, horaFinReserva, null, '[)');
     });
   });
 

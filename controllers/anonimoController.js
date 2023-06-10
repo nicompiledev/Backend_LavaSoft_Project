@@ -96,19 +96,10 @@ const getLavaderoID = async (req, res) => {
 
   let error = "";
   try {
-    const cachedData = await getAsync(`lavadero-${id}`);
-    if (cachedData) {
-      console.log("Datos desde Redis");
-      return res.status(200).json(JSON.parse(cachedData));
-    }
-    // Traer lavadero por id
     try{
       const lavadero = await Lavadero.findById(id, { contrasena: 0, estado: 0, visualizado: 0 }).populate('servicios');
 
       res.status(200).json(lavadero);
-
-      // Guardar en Redis
-      await setAsync(`lavadero-${id}`, JSON.stringify(lavadero));
 
     } catch (e) { console.log(e)
       error = new Error("No existe el lavadero");
