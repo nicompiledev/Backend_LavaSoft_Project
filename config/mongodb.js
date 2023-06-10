@@ -10,8 +10,8 @@ const conectarMongoDB = async () => {
       useUnifiedTopology: true,
     });
 
-    const realizarInsercion = require("./insertion/insercion.js");
-    await realizarInsercion()
+/*     const realizarInsercion = require("./insertion/insercion.js");
+    await realizarInsercion() */
 
     console.log("Conexión a la base de datos MongoDB exitosa");
   } catch (error) {
