@@ -1,8 +1,8 @@
-const faker = require('faker');
-require('faker/locale/es_MX.js');
 
 const Lavadero = require("../../models/type_users/Lavadero.js");
-const Servicio = require("../../models/Servicio.js");
+const Usuario = require("../../models/type_users/Usuario.js");
+const Admin = require("../../models/type_users/Admin.js");
+const { Servicio } = require("../../models/Servicio.js");
 
 const realizarInsercion = async () => {
 
@@ -20,7 +20,7 @@ const realizarInsercion = async () => {
             direccion: 'Carrera 14 # 9-20, La Castellana',
             ubicacion: {
                 type: 'Point',
-                coordinates: [4.550425563581399, -75.65710788617591] // Reemplaza longitude y latitude con las coordenadas reales
+                coordinates: [-75.65710788617591, 4.550425563581399] // Reemplaza longitude y latitude con las coordenadas reales
             },
 
             correo_electronico: 'admin@autolimpio.com',
@@ -60,7 +60,7 @@ const realizarInsercion = async () => {
             direccion: 'calle 21 # 20 - 18, San José',
             ubicacion: {
                 type: 'Point',
-                coordinates: [4.539558367053374, -75.67259111732837] // Reemplaza longitude y latitude con las coordenadas reales
+                coordinates: [-75.67259111732837, 4.539558367053374] // Reemplaza longitude y latitude con las coordenadas reales
             },
 
             correo_electronico: 'admin@lavacarexpress.com',
@@ -99,7 +99,7 @@ const realizarInsercion = async () => {
             direccion: 'carrera 15N # 19- 45, Laureles',
             ubicacion: {
                 type: 'Point',
-                coordinates: [4.559692022948127, -75.65597439783147] // Reemplaza longitude y latitude con las coordenadas reales
+                coordinates: [-75.65597439783147, 4.559692022948127] // Reemplaza longitude y latitude con las coordenadas reales
             },
             correo_electronico: 'admin@superlavado.com',
             contrasena: 'test1236',
@@ -136,7 +136,7 @@ const realizarInsercion = async () => {
             direccion: 'carrera 18 # 58 - 13, La Cejita',
             ubicacion: {
                 type: 'Point',
-                coordinates: [4.519524812340521, -75.68856358070731] // Reemplaza longitude y latitude con las coordenadas reales
+                coordinates: [-75.68856358070731, 4.519524812340521] // Reemplaza longitude y latitude con las coordenadas reales
             },
             correo_electronico: 'admin@clancarcenter.com',
             contrasena: 'test1237',
@@ -174,7 +174,7 @@ const realizarInsercion = async () => {
             direccion: 'carrera 19 # 48 - 21, Las Acacias',
             ubicacion: {
                 type: 'Point',
-                coordinates: [4.5213959683756855, -75.68904328859666] // Reemplaza longitude y latitude con las coordenadas reales
+                coordinates: [-75.68904328859666, 4.5213959683756855] // Reemplaza longitude y latitude con las coordenadas reales
             },
             correo_electronico: 'admin@megalavados.com',
             contrasena: 'test1238',
@@ -211,7 +211,7 @@ const realizarInsercion = async () => {
             direccion: 'calle principal, sector caseta comunal, Pinares',
             ubicacion: {
                 type: 'Point',
-                coordinates: [4.511027478268858, -75.69239612261788] // Reemplaza longitude y latitude con las coordenadas reales
+                coordinates: [-75.69239612261788, 4.511027478268858] // Reemplaza longitude y latitude con las coordenadas reales
             },
             correo_electronico: 'admin@turbolavado.com',
             contrasena: 'test1239',
@@ -248,7 +248,7 @@ const realizarInsercion = async () => {
             direccion: 'frente a la manzana 13, sector 1, Villa del Prado',
             ubicacion: {
                 type: 'Point',
-                coordinates: [4.53553068861514, -75.69810124614278] // Reemplaza longitude y latitude con las coordenadas reales
+                coordinates: [-75.69810124614278, 4.53553068861514] // Reemplaza longitude y latitude con las coordenadas reales
             },
             correo_electronico: 'admin@lavadototal.com',
             contrasena: 'test1240',
@@ -285,7 +285,7 @@ const realizarInsercion = async () => {
             direccion: 'enseguida bomba la 21 , sector bosque',
             ubicacion: {
                 type: 'Point',
-                coordinates: [4.541481538320298, -75.68167338296497] // Reemplaza longitude y latitude con las coordenadas reales
+                coordinates: [-75.68167338296497, 4.541481538320298]  // Reemplaza longitude y latitude con las coordenadas reales
             },
             correo_electronico: 'admin@lavamax.com',
             contrasena: 'test1241',
@@ -322,7 +322,7 @@ const realizarInsercion = async () => {
             direccion: 'bomba atlantis, sector avenida bolivar',
             ubicacion: {
                 type: 'Point',
-                coordinates: [4.558961985389132, -75.65554034740266] // Reemplaza longitude y latitude con las coordenadas reales
+                coordinates: [-75.65554034740266, 4.558961985389132]// Reemplaza longitude y latitude con las coordenadas reales
             },
             correo_electronico: 'admin@lavautosvip.com',
             contrasena: 'test1242',
@@ -359,7 +359,7 @@ const realizarInsercion = async () => {
             direccion: 'bombra oro negro, sector locomotora',
             ubicacion: {
                 type: 'Point',
-                coordinates: [4.573553381376996, -75.6466233691572] // Reemplaza longitude y latitude con las coordenadas reales
+                coordinates: [-75.6466233691572, 4.573553381376996] // Reemplaza longitude y latitude con las coordenadas reales
             },
             correo_electronico: 'admin@brilloauto.com',
             contrasena: 'test1243',
@@ -396,7 +396,7 @@ const realizarInsercion = async () => {
             direccion: 'avenida centenario enseguida de homecenter',
             ubicacion: {
                 type: 'Point',
-                coordinates: [4.547855856048926, -75.6554140562462] // Reemplaza longitude y latitude con las coordenadas reales
+                coordinates: [-75.6554140562462, 4.547855856048926] // Reemplaza longitude y latitude con las coordenadas reales
             },
             correo_electronico: 'admin@lavarapidoplus.com',
             contrasena: 'test1244',
@@ -434,7 +434,7 @@ const realizarInsercion = async () => {
             direccion: 'avenida centenario frente a la bomba texaco',
             ubicacion: {
                 type: 'Point',
-                coordinates: [4.563279959253109, -75.6442180407772] // Reemplaza longitude y latitude con las coordenadas reales
+                coordinates: [-75.6442180407772, 4.563279959253109] // Reemplaza longitude y latitude con las coordenadas reales
             },
             correo_electronico: 'admin@limpiacarrostop.com',
             contrasena: 'test1245',
@@ -471,7 +471,7 @@ const realizarInsercion = async () => {
             direccion: 'carrera 13 con calle 21 detras de la plaza de bolivar',
             ubicacion: {
                 type: 'Point',
-                coordinates: [4.531459502006726, -75.67256657352571] // Reemplaza longitude y latitude con las coordenadas reales
+                coordinates: [-75.67256657352571, 4.531459502006726] // Reemplaza longitude y latitude con las coordenadas reales
             },
             correo_electronico: 'admin@lavadoestelar.com',
             contrasena: 'test1246',
@@ -509,7 +509,7 @@ const realizarInsercion = async () => {
             direccion: 'frente a la cancha de la patria, sector puesto de salud',
             ubicacion: {
                 type: 'Point',
-                coordinates: [4.540022140290105, -75.70153654295042] // Reemplaza longitude y latitude con las coordenadas reales
+                coordinates: [-75.70153654295042, 4.540022140290105] // Reemplaza longitude y latitude con las coordenadas reales
             },
             correo_electronico: 'admin@lavautosprofesional.com',
             contrasena: 'test1247',
@@ -546,7 +546,7 @@ const realizarInsercion = async () => {
             direccion: 'cll 33 # 15 - 45, la pavona',
             ubicacion: {
                 type: 'Point',
-                coordinates: [4.5377786864447245, -75.70044735363707] // Reemplaza longitude y latitude con las coordenadas reales
+                coordinates: [-75.70044735363707, 4.5377786864447245] // Reemplaza longitude y latitude con las coordenadas reales
             },
             correo_electronico: 'admin@speedwash.com',
             contrasena: 'test1248',
@@ -583,7 +583,7 @@ const realizarInsercion = async () => {
             direccion: 'calle 12 # 15 - 23, Parque sucre',
             ubicacion: {
                 type: 'Point',
-                coordinates: [4.536501174170098, -75.66900998927375] // Reemplaza longitude y latitude con las coordenadas reales
+                coordinates: [-75.66900998927375, 4.536501174170098] // Reemplaza longitude y latitude con las coordenadas reales
             },
             correo_electronico: 'admin@cleanmachine.com',
             contrasena: 'test1249',
@@ -620,7 +620,7 @@ const realizarInsercion = async () => {
             direccion: 'frente al hospital del sur, entrada al barrio la villa',
             ubicacion: {
                 type: 'Point',
-                coordinates: [4.514561799515079, -75.70207685100749] // Reemplaza longitude y latitude con las coordenadas reales
+                coordinates: [-75.70207685100749, 4.514561799515079] // Reemplaza longitude y latitude con las coordenadas reales
             },
             correo_electronico: 'admin@lavadoecologico.com',
             contrasena: 'test1250',
@@ -657,7 +657,7 @@ const realizarInsercion = async () => {
             direccion: 'Avenida centenario, bomba terpel 1km antes del sena',
             ubicacion: {
                 type: 'Point',
-                coordinates: [4.569987597896954, -75.6408367833711] // Reemplaza longitude y latitude con las coordenadas reales
+                coordinates: [-75.6408367833711, 4.569987597896954] // Reemplaza longitude y latitude con las coordenadas reales
             },
             correo_electronico: 'admin2@lavamovil.com',
             contrasena: 'test1251',
@@ -694,7 +694,7 @@ const realizarInsercion = async () => {
             direccion: 'Avenida centenario, bomba terpel 1km antes del sena',
             ubicacion: {
                 type: 'Point',
-                coordinates: [4.569987597896954, -75.6408367833711] // Reemplaza longitude y latitude con las coordenadas reales
+                coordinates: [-75.6408367833711, 4.569987597896954] // Reemplaza longitude y latitude con las coordenadas reales
             },
             correo_electronico: 'admin@lavamovil.com',
             contrasena: 'test1251',
@@ -731,7 +731,7 @@ const realizarInsercion = async () => {
             direccion: 'Diagonal al archivo de la epa, barrio granada',
             ubicacion: {
                 type: 'Point',
-                coordinates: [4.544448208382292, -75.67286027157601] // Reemplaza longitude y latitude con las coordenadas reales
+                coordinates: [-75.67286027157601, 4.544448208382292] // Reemplaza longitude y latitude con las coordenadas reales
             },
             correo_electronico: 'admin@carwashdeluxe.com',
             contrasena: 'test1252',
@@ -795,10 +795,69 @@ const realizarInsercion = async () => {
         }
     ];
 
+
+    const servicio1 = new Servicio({ nombre: 'Servicio 1', tipoVehiculo: "Carro", categoria: 'lavado', detalle: 'Detalle del servicio 1', costo: 100, duracion: 30 });
+    await servicio1.save();
+
+    const servicio2 = new Servicio({ nombre: 'Servicio 2', tipoVehiculo: "Moto", categoria: 'lavado', detalle: 'Detalle del servicio 2', costo: 200, duracion: 60 });
+    await servicio2.save();
+
     for (const lavadero of lavaderos) {
         const newLavadero = new Lavadero(lavadero);
+        
+        newLavadero.servicios.push(servicio1._id);
+        newLavadero.servicios.push(servicio2._id);
+
         await newLavadero.save();
       }
+
+    const usuarios = [
+        {
+            nombre: 'Usuario 1',
+            apellido: 'Apellido 1',
+            genero: 'Masculino',
+            fecha_nacimiento: '1990-01-01',
+            correo_electronico: 'usuario@gmail.com',
+            contrasena: 'contrasena123',
+            telefono: '1234567890',
+            confirmado: true
+        },
+        {
+            nombre: 'Usuario 2',
+            apellido: 'Apellido 2',
+            genero: 'Femenino',
+            fecha_nacimiento: '1990-01-01',
+            correo_electronico: 'usuario2@gmail.com',
+            contrasena: 'contrasena123',
+            telefono: '1234567890',
+            confirmado: true
+        }
+    ];
+
+    for (const usuario of usuarios) {
+        const newUsuario = new Usuario(usuario);
+        await newUsuario.save();
+    }
+
+    const admins = [
+        {
+            nombreAdmin: 'Admin 1',
+            correo_electronico: 'admin@gmail.com',
+            contrasena: 'contrasena123',
+        },
+        {
+            nombreAdmin: 'Admin 2',
+            correo_electronico: 'admin2@gmail.com',
+            contrasena: 'contrasena123',
+        }
+    ];
+    
+    for (const admin of admins) {
+        const newAdmin = new Admin(admin);
+        await newAdmin.save();
+    }
+
+
 };
 
 module.exports = realizarInsercion;

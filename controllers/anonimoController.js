@@ -113,10 +113,9 @@ const getLavaderoID = async (req, res) => {
 }
 
 const getLavaderosRadio = async (req, res) => {
-  console.log("HOLA");
   try {
     const { latitud, longitud } = req.body;
-    const radio = 10000; // 5 km en metros
+    const radio = 5000; // 5 km en metros
 
     const lavaderos = await Lavadero.find({
       ubicacion: {
@@ -129,7 +128,6 @@ const getLavaderosRadio = async (req, res) => {
         }
       }
     })
-    .limit(2)
     .sort({ ubicacion: 'asc' });;
 
     res.json(lavaderos);

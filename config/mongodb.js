@@ -11,8 +11,8 @@ const conectarMongoDB = async () => {
     });
 
 /*     const realizarInsercion = require("./insertion/insercion.js");
-    await realizarInsercion() */
-
+    await realizarInsercion()
+ */
     console.log("Conexión a la base de datos MongoDB exitosa");
   } catch (error) {
     console.error(`Error al conectarse a la base de datos MongoDB: ${error.message}`);
