@@ -12,9 +12,11 @@ const checkAuth = async (req, res, next) => {
     // Obtener el token del encabezado de autorización y decodificarlo
     try {
       token = req.headers.authorization.split(" ")[1];
-      if(!token) {
-        const error = new Error("Token no Válido o inexistente");
-        res.status(401).json({ msg: error.message });
+
+      // Verificar si el token es nulo o vacío
+      if (!token) {
+        const error = new Error("Token no válido o inexistente");
+        return res.status(403).json({ msg: error.message });
       }
 
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -44,15 +46,14 @@ const checkAuth = async (req, res, next) => {
       return next();
     } catch (e) {
       console.log(e);
-      const error = new Error("Token no Válido");
+      const error = new Error("Token no válido");
       return res.status(403).json({ msg: error.message });
     }
   }
 
-  if (!token) {
-    const error = new Error("Token no Válido o inexistente");
-    res.status(401).json({ msg: error.message });
-  }
+  // Si el token no está presente
+  const error = new Error("Token no válido o inexistente");
+  return res.status(401).json({ msg: error.message });
 };
 
 module.exports = checkAuth;

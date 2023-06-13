@@ -108,6 +108,68 @@ const registrarLavadero = async (req, res) => {
   }
 };
 
+const editarLavadero = async (req, res) => {
+  let error = "";
+  try {
+    const { NIT, nombreLavadero, descripcion, telefono, siNoLoRecogen, departamento, ciudad, sector, direccion, latitud, longitud, correo_electronico, hora_apertura, hora_cierre, tipoVehiculos, espacios_de_trabajo } = req.body;
+
+    if(hora_apertura >= hora_cierre){
+      error = new Error("La hora de apertura debe ser menor a la hora de cierre");
+      return res.status(400).json({ msg: error.message });
+    }
+
+    // Find user by email
+    const existeLavadero = await Lavadero.findOne({ correo_electronico });
+
+    if (!existeLavadero) {
+      error = new Error("El usuario no existe");
+      return res.status(400).json({ msg: error.message });
+    }
+
+    existeLavadero.NIT = NIT;
+    existeLavadero.nombreLavadero = nombreLavadero;
+    existeLavadero.descripcion = descripcion;
+    existeLavadero.telefono = telefono;
+    existeLavadero.siNoLoRecogen = siNoLoRecogen;
+    existeLavadero.departamento = departamento;
+    existeLavadero.ciudad = ciudad;
+    existeLavadero.sector = sector;
+    existeLavadero.direccion = direccion;
+    existeLavadero.ubicacion = {
+      type: "Point",
+      coordinates: [longitud, latitud],
+    };
+    existeLavadero.hora_apertura = hora_apertura;
+    existeLavadero.hora_cierre = hora_cierre;
+    existeLavadero.tipoVehiculos = tipoVehiculos;
+    existeLavadero.espacios_de_trabajo = espacios_de_trabajo;
+
+    try {
+      if (req.files) {
+        const imageUrls = await req.files.map((file) => file.path);
+        existeLavadero.imagenes = await imageUrls; // asigna las URLs de las imágenes al campo imagenes del lavadero
+      }
+    } catch (e) {
+      console.log(e)
+      error = new Error("Hubo un error al subir las imágenes");
+      res.status(500).json({ msg: error.message });
+    }
+
+    // si todos los campos son correctos, visualizado: true
+    if(NIT && nombreLavadero && descripcion && telefono && siNoLoRecogen && departamento && ciudad && sector && direccion && latitud && longitud && correo_electronico && hora_apertura && hora_cierre && tipoVehiculos && espacios_de_trabajo && existeLavadero.imagenes.length > 0 && existeLavadero.servicios.length > 0){
+      existeLavadero.visualizado = true;
+    }
+
+    await existeLavadero.save();
+
+    res.status(200).json({ msg: "Se actualizó su información correctamente" });
+
+  } catch (e) {
+    console.log(e)
+    error = new Error("Hubo un error al editar el lavadero");
+    res.status(400).json({ msg: error.message });
+  }
+};
 
 const autenticarLavadero = async (req, res) => {
   let error = "";
@@ -357,6 +419,7 @@ const webhook = async (req, res) => {
 
 module.exports = {
   registrarLavadero,
+  editarLavadero,
   autenticarLavadero,
   getReservasNoAtendidas,
   putCancelarReserva,

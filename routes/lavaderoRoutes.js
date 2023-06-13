@@ -24,6 +24,7 @@ const upload = multer({ storage: storage });
 
 const {
   registrarLavadero,
+  editarLavadero,
   autenticarLavadero,
   getReservasNoAtendidas,
   putCancelarReserva,
@@ -39,6 +40,7 @@ router.post("/peticion", upload.array('images'), registrarLavadero);
 router.post("/login", autenticarLavadero)
 
 // Area Privada
+router.put("/lavadero", checkAuth, upload.array('images'), editarLavadero);
 router.get("/reservas", checkAuth, getReservasNoAtendidas);
 router.delete("/reservas", checkAuth, putCancelarReserva);
 router.put("/reservas", checkAuth, servicioTerminado);

@@ -30,5 +30,6 @@ router.post("/lavaderos/no-activar", checkAuth, noActivarLavadero);
 router.get("/lavaderos/no-confirmados", checkAuth, LavaderosNoConfirmados);
 router.get("/reportes", checkAuth, getReportes);
 router.post("/reportes/aceptar", checkAuth, AceptarReporte);
+router.post("/reportes/rechazar", checkAuth, RechazarReporte);
 
 module.exports = router;

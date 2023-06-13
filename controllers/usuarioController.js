@@ -450,7 +450,7 @@ const reportarLavadero = async (req, res) => {
     }
 
     // Validar que el usuario no haya reportado el lavadero
-    const reporteExistente = await Reportes.findOne({ id_usuario: _id, id_lavadero });
+    const reporteExistente = await Reportes.findOne({ id_usuario: _id, id_lavadero, estado: "Pendiente" });
     if (reporteExistente) {
       error = new Error("Ya has reportado este lavadero, por favor espera a que se resuelva tu reporte");
       return res.status(400).json({ msg: error.message });

@@ -259,7 +259,7 @@ const AceptarReporte = async (req, res) => {
 };
 
 const RechazarReporte = async (req, res) => {
-  const { id_reporte } = req.params;
+  const { id_reporte } = req.body;
   let error = "";
   try {
     const reporte = await Reportes.findOne({ estado: "Pendiente", _id: id_reporte });
