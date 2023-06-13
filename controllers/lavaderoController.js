@@ -1,4 +1,4 @@
-const generarJWT = require("../helpers/generarJWT.js");
+const {generarJWTHasPaid} = require("../helpers/generarJWT.js");
 const generarId = require("../helpers/generarId.js");
 const emailRegistro = require("../helpers/lavaderos/emailRegistro.js");
 const emailCancelado = require("../helpers/lavaderos/emailCancelado.js")
@@ -8,13 +8,23 @@ const { AILavaderoREAL } = require("./openai/openai.js");
 
 const Usuario = require("../models/type_users/Usuario.js");
 const Lavadero = require("../models/type_users/Lavadero.js");
-const {Servicio} = require("../models/Servicio.js");
+const { Servicio } = require("../models/Servicio.js");
 const { Reserva } = require("../models/Reserva.js");
+
+// Stripe
+const Stripe = require('stripe');
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const registrarLavadero = async (req, res) => {
   let error = "";
   try {
     const { nombreLavadero, NIT, departamento, ciudad, sector, direccion, telefono, correo_electronico, hora_apertura, hora_cierre, espacios_de_trabajo, longitud, latitud, siNoLoRecogen, tipoVehiculos } = req.body;
+
+    if(hora_apertura >= hora_cierre){
+      error = new Error("La hora de apertura debe ser menor a la hora de cierre");
+      return res.status(400).json({ msg: error.message });
+    }
 
     // Si open ai está bien configurado, se puede ejecutar el codigo de abajo
     const respuestaOpenAI = await AILavaderoREAL(nombreLavadero, direccion, correo_electronico, telefono);
@@ -74,14 +84,15 @@ const registrarLavadero = async (req, res) => {
       await lavaderoGuardado.save(); // guarda las URLs de las imágenes en el lavadero
 
       // Send email
-/*       await emailRegistro({
-        email: correo_electronico,
-        nombre
-      });
- */
-      res.status(200).json({ msg: "Lavadero registrado correctamente" });
+      /*       await emailRegistro({
+              email: correo_electronico,
+              nombre
+            });
+       */
+      res.status(200).json({ msg: "Tu petición se ha realizado con éxito, por favor espera a que un administrador acepte tu solicitud" });
 
-    } catch (e) { console.log(e)
+    } catch (e) {
+      console.log(e)
       // Si se produce un error al insertar las imágenes, cancela el registro del usuario
       await lavaderoGuardado.remove(); // elimina el lavadero recién creado
 
@@ -90,7 +101,8 @@ const registrarLavadero = async (req, res) => {
       res.status(500).json({ msg: error.message });
     }
 
-  } catch (e) { console.log(e)
+  } catch (e) {
+    console.log(e)
     error = new Error("Hubo un error al registrar el lavadero");
     res.status(400).json({ msg: error.message });
   }
@@ -118,7 +130,7 @@ const autenticarLavadero = async (req, res) => {
     if (await existeLavadero.comprobarPassword(contrasena)) {
 
       // Generate JWT token
-      const token = generarJWT(existeLavadero._id, "lavadero");
+      const token = generarJWTHasPaid(existeLavadero._id, "lavadero", existeLavadero.hasPaid, existeLavadero.visualizado);
 
       res.status(200).json({
         _id: existeLavadero._id,
@@ -137,7 +149,6 @@ const autenticarLavadero = async (req, res) => {
         hora_cierre: existeLavadero.hora_cierre,
         tipoVehiculos: existeLavadero.tipoVehiculos,
         token,
-        rol: "lavadero",
         imagenes: existeLavadero.imagenes,
       });
     } else {
@@ -145,7 +156,8 @@ const autenticarLavadero = async (req, res) => {
       return res.status(401).json({ msg: error.message });
     }
 
-  } catch (e) { console.log(e)
+  } catch (e) {
+    console.log(e)
     error = new Error("Hubo un error al autenticar el lavadero");
     res.status(500).json({ msg: "Hubo un error" });
   }
@@ -160,7 +172,8 @@ const getReservasNoAtendidas = async (req, res) => {
 
     res.status(200).json({ reservas });
 
-  } catch (e) { console.log(e)
+  } catch (e) {
+    console.log(e)
     error = new Error("Hubo un error al obtener las reservas");
     res.status(500).json({ msg: error.message });
   }
@@ -174,33 +187,33 @@ const putCancelarReserva = async (req, res) => {
     const { id_reserve, id_usuario, id_servicio, motivo } = req.body
     const { nombreLavadero } = req.lavadero
 
-    try{
+    try {
       const [reserva, usuario, servicio] = await Promise.all([
         Reserva.findById(id_reserve),
         Usuario.findById(id_usuario),
         Servicio.findById(id_servicio)
       ]);
 
-    
-      if(motivo == "No llego"){
-        
+
+      if (motivo == "No llego") {
+
       }
 
-/*    TEMPORALMENTE COMENTADO
-      await emailCancelado({
-        email: usuario.correo_electronico,
-        lavadero: nombreLavadero,
-        nombre: usuario.nombre,
-        reserva: reserva.fecha,
-        servicio: servicio.nombre,
-        motivo: motivo
-      }); */
+      /*    TEMPORALMENTE COMENTADO
+            await emailCancelado({
+              email: usuario.correo_electronico,
+              lavadero: nombreLavadero,
+              nombre: usuario.nombre,
+              reserva: reserva.fecha,
+              servicio: servicio.nombre,
+              motivo: motivo
+            }); */
 
       reserva.estado = "cancelado";
       reserva.motivoCancelacion = motivo;
 
       await reserva.save();
-    }catch (e){
+    } catch (e) {
       error = new Error("Hubo un error al cancelar la reserva");
       return res.status(404).json({ msg: error.message });
     }
@@ -222,7 +235,7 @@ const servicioTerminado = async (req, res) => {
     const { nombreLavadero } = req.lavadero
 
     try {
-      const [reserva, usuario ] = await Promise.all([
+      const [reserva, usuario] = await Promise.all([
         Reserva.findById(id_reserve),
         Usuario.findById(id_usuario),
       ]);
@@ -231,13 +244,14 @@ const servicioTerminado = async (req, res) => {
 
       await reserva.save()
 
-/*  TEMPORALMENTE DESACTIVADO
-      await emailServicioTerminada({
-        email: usuario.correo_electronico,
-        nombre: usuario.nombre,
-        lavadero: nombreLavadero,
-      }); */
-    } catch (e) { console.log(e)
+      /*  TEMPORALMENTE DESACTIVADO
+            await emailServicioTerminada({
+              email: usuario.correo_electronico,
+              nombre: usuario.nombre,
+              lavadero: nombreLavadero,
+            }); */
+    } catch (e) {
+      console.log(e)
       error = new Error("Hubo un error al terminar el servicio");
       return res.status(404).json({ msg: error.message });
     }
@@ -251,10 +265,102 @@ const servicioTerminado = async (req, res) => {
   }
 }
 
+const crearSesionPago = async (req, res) => {
+  const { item } = req.body;
+  // id en string
+  const _id = req.lavadero._id.toString();
+
+  const session = await stripe.checkout.sessions.create({
+    client_reference_id: _id,
+    payment_method_types: ['card'],
+    line_items: [
+      {
+        price: item,
+        quantity: 1,
+      }
+    ],
+    mode: 'subscription',
+    success_url: 'http://localhost:4200/inicio',
+    cancel_url: 'http://localhost:4200/dashboard-lavadero/subscripcion',
+    subscription_data: {
+      trial_period_days: 14,
+    },
+  });
+  res.json(session);
+}
+
+const webhook = async (req, res) => {
+  let event;
+  try {
+    event = req.body; // Obtener el evento
+  } catch (err) {
+    res.status(400).send(`Webhook Error: ${err.message}`);
+  }
+  switch (event.type) {
+    case 'checkout.session.completed':
+      const session = event.data.object;
+
+      // Obtener el ID del usuario del client_reference_id
+      const LavaderoID = session.client_reference_id;
+
+      // Actualizar el estado del usuario en la base de datos para reflejar que ha pagado
+      await Lavadero.findByIdAndUpdate(LavaderoID, { hasPaid: true });
+
+      // Obtener el ID de la suscripción de Stripe
+      const subscriptionId = session.subscription;
+
+      // Almacenar el ID de la suscripción en la base de datos
+      await Lavadero.findByIdAndUpdate(LavaderoID, { subscriptionId });
+
+      // Obtener el ID del cliente de Stripe
+      const customerId = session.customer;
+
+      // Almacenar el ID del cliente en la base de datos
+      await Lavadero.findByIdAndUpdate(LavaderoID, { customerId });
+
+      console.log(`🔔 Lavadero ${LavaderoID} just subscribed!`);
+
+      break;
+
+    case 'customer.subscription.updated':
+      const updatedSubscription = event.data.object;
+      const updatedCustomerId = updatedSubscription.customer;
+
+      // Buscar al usuario en la base de datos utilizando el ID del cliente de Stripe
+      const updatedLavadero = await Lavadero.findOne({ customerId: updatedCustomerId });
+
+      // Actualizar el estado de la suscripción en la base de datos
+      await Lavadero.findByIdAndUpdate(updatedLavadero._id, { subscriptionStatus: updatedSubscription.status });
+
+      console.log(`🔔 Subscription updated! Customer: ${updatedCustomerId}`);
+      break;
+    case 'customer.subscription.deleted':
+      const deletedSubscription = event.data.object;
+      const deletedCustomerId = deletedSubscription.customer;
+
+      // Buscar al usuario en la base de datos utilizando el ID del cliente de Stripe
+      const deletedLavadero = await Lavadero.findOne({ customerId: deletedCustomerId });
+
+      // Actualizar el estado del usuario en la base de datos para reflejar que su membresía ha expirado
+      await Lavadero.findByIdAndUpdate(deletedLavadero._id, { haPagado: false, subscriptionStatus: 'canceled' });
+
+      console.log(`🔔 Subscription canceled! Customer: ${deletedCustomerId}`);
+      break;
+
+
+    default:
+      console.log(`Unhandled event type ${event.type}`);
+  }
+  res.json({ received: true });  // Eso quiere decir que recibimos el evento
+}
+
+
 module.exports = {
   registrarLavadero,
   autenticarLavadero,
   getReservasNoAtendidas,
   putCancelarReserva,
-  servicioTerminado
+  servicioTerminado,
+  crearSesionPago,
+  webhook
 };

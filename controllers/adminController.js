@@ -1,9 +1,8 @@
 // const conectarDB = require("../config/mysql.js"); PENDIENTE ELIMINAR
-const generarJWT = require("../helpers/generarJWT.js");
+const {generarJWT} = require("../helpers/generarJWT.js");
 const generarId = require("../helpers/generarId.js");
 const emailConfirmado = require("../helpers/lavaderos/emailConfirmado.js");
 const emailNoConfirmado = require("../helpers/lavaderos/emailNoConfirmado.js");
-//const emailOlvidePassword = require("../helpers/emailOlvidePassword.js");
 
 const Lavadero = require("../models/type_users/Lavadero.js");
 const Admin = require("../models/type_users/Admin.js")
@@ -146,20 +145,15 @@ const activarLavadero = async (req, res) => {
       return res.status(400).json({ msg: error.message });
     }
 
-    await Lavadero.updateOne(
-      { _id: id_lavadero },
-      {
-        $set: {
-          estado: true,
-          contrasena: lavadero.NIT,
-        },
-      }
-    );
+    lavadero.estado = true;
+    lavadero.contrasena = lavadero.NIT;
+
+    await lavadero.save();
 
     // Enviar correo de confirmación
     await emailConfirmado({
       correo_electronico: lavadero.correo_electronico,
-      nombre: lavadero.nombre,
+      nombre: lavadero.nombreLavadero,
       contrasena: lavadero.NIT,
     });
 

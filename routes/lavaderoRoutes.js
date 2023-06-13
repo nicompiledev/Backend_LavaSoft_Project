@@ -28,6 +28,8 @@ const {
   getReservasNoAtendidas,
   putCancelarReserva,
   servicioTerminado,
+  crearSesionPago,
+  webhook
 } = require('../controllers/lavaderoController.js');
 const checkAuth = require('../middleware/authMiddleware.js')
 
@@ -39,6 +41,10 @@ router.post("/login", autenticarLavadero)
 // Area Privada
 router.get("/reservas", checkAuth, getReservasNoAtendidas);
 router.delete("/reservas", checkAuth, putCancelarReserva);
-router.put("/reservas", checkAuth, servicioTerminado)
+router.put("/reservas", checkAuth, servicioTerminado);
+router.post("/irapagar", checkAuth, crearSesionPago);
+
+// Webhooks
+router.post("/webhook", webhook);
 
 module.exports = router;

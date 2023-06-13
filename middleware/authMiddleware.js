@@ -7,11 +7,16 @@ const checkAuth = async (req, res, next) => {
   let token;
   if (
     req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer")
+    req.headers.authorization.startsWith("Bearer ")
   ) {
     // Obtener el token del encabezado de autorización y decodificarlo
     try {
       token = req.headers.authorization.split(" ")[1];
+      if(!token) {
+        const error = new Error("Token no Válido o inexistente");
+        res.status(401).json({ msg: error.message });
+      }
+
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
       let id = decoded.id;

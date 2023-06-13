@@ -24,6 +24,13 @@ const LavaderoSchema = new mongoose.Schema({
   correo_electronico: { type: String, required: true, unique: true },
   contrasena: { type: String },
 
+    // Suscripción
+  customerId: { type: String },
+  subscriptionId: { type: String },
+  hasPaid: { type: Boolean, default: false },
+  subscriptionStatus: { type: String },
+
+
   // Informacion
   hora_apertura: { type: String, required: true },
   hora_cierre: { type: String, required: true },
@@ -46,15 +53,14 @@ LavaderoSchema.index({ ubicacion: "2dsphere" });
 
 // pre-save hook
 LavaderoSchema.pre("save", async function (next) {
-  // Hash the password only if it has been modified or is new
   if (!this.isModified("contrasena")) {
-    next();
-    return;
+    return next();
   }
 
   try {
     const salt = await bcrypt.genSalt(10);
-    this.contrasena = await bcrypt.hash(this.contrasena, salt);
+    const hashedPassword = await bcrypt.hash(this.contrasena, salt);
+    this.contrasena = hashedPassword;
     next();
   } catch (error) {
     next(error);

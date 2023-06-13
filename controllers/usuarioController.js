@@ -1,4 +1,4 @@
-const generarJWT = require("../helpers/generarJWT.js");
+const {generarJWT} = require("../helpers/generarJWT.js");
 const generarId = require("../helpers/generarId.js");
 const emailRegistro = require("../helpers/usuarios/emailRegistro.js");
 const emailOlvidePassword = require("../helpers/usuarios/emailOlvidePassword.js");

@@ -27,7 +27,8 @@
     "openai": "^3.2.1",
     "redis": "^3.1.2",
     "response-time": "^2.3.2",
-    "socket.io": "^4.6.1"
+    "socket.io": "^4.6.1",
+    "stripe": "^12.9.0"
   },
   "devDependencies": {
     "jest": "^29.5.0",
