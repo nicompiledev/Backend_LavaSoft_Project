@@ -8,7 +8,7 @@ subscriber.on('message', (channel, message) => {
 });
 
 const getLavaderos = async (req, res) => {
-   let error = "";
+  let error = "";
   try {
 
     const PAGE_SIZE = 10;
@@ -31,6 +31,7 @@ const getLavaderos = async (req, res) => {
     const filter = {
       estado: true,
       visualizado: true,
+      hasPaid: true,
     };
 
     if (departamento) {
@@ -49,10 +50,13 @@ const getLavaderos = async (req, res) => {
       filter.tipoVehiculos = { $in: tipoVehiculo };
     }
 
-    let lavaderosQuery = Lavadero.find(filter, { contrasena: 0, estado: 0, visualizado: 0 });
+    let lavaderosQuery = Lavadero.find(filter, { contrasena: 0, estado: 0, visualizado: 0, hasPaid: 0 });
 
     if (orderByPopularity) {
-      lavaderosQuery = lavaderosQuery.aggregate([
+      lavaderosQuery = Lavadero.aggregate([
+        {
+          $match: filter,
+        },
         {
           $lookup: {
             from: "reservas",
@@ -67,12 +71,40 @@ const getLavaderos = async (req, res) => {
           },
         },
         {
+          $lookup: {
+            from: "reservas",
+            let: { lavaderoId: "$_id" },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      { $eq: ["$id_lavadero", "$$lavaderoId"] },
+                      { $eq: ["$estado", "terminado"] },
+                    ],
+                  },
+                },
+              },
+              {
+                $sort: {
+                  fecha: -1,
+                },
+              },
+              {
+                $limit: 1,
+              },
+            ],
+            as: "ultimaReserva",
+          },
+        },
+        {
           $sort: {
-            reservasCount: -1,
+            "ultimaReserva.fecha": -1,
           },
         },
       ]);
     }
+    
 
     const lavaderos = await lavaderosQuery.skip(startIndex).limit(PAGE_SIZE);
 

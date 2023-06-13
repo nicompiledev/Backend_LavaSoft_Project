@@ -1,4 +1,4 @@
-const {generarJWT} = require("../helpers/generarJWT.js");
+const { generarJWT } = require("../helpers/generarJWT.js");
 const generarId = require("../helpers/generarId.js");
 const emailRegistro = require("../helpers/usuarios/emailRegistro.js");
 const emailOlvidePassword = require("../helpers/usuarios/emailOlvidePassword.js");
@@ -9,7 +9,7 @@ const Lavadero = require("../models/type_users/Lavadero.js");
 const { VehiculoUsuario } = require("../models/Vehiculos.js");
 const { Reportes } = require("../models/Reportes.js");
 
-const {AIPlavaVehiculoREAL} = require("./openai/openai.js");
+const { AIPlavaVehiculoREAL } = require("./openai/openai.js");
 
 const registrar = async (req, res) => {
   const { nombre, apellido, genero, fecha_nacimiento, correo_electronico, contrasena, telefono } = req.body;
@@ -18,6 +18,18 @@ const registrar = async (req, res) => {
   let error = "";
 
   try {
+
+    const fechaActual = new Date();
+    const fechaNacimiento = new Date(fecha_nacimiento);
+    const edad = fechaActual.getFullYear() - fechaNacimiento.getFullYear();
+    const mes = fechaActual.getMonth() - fechaNacimiento.getMonth();
+    if (mes < 0 || (mes === 0 && fechaActual.getDate() < fechaNacimiento.getDate())) {
+      edad--;
+    }
+    if (edad < 15 || edad > 100) {
+      error = new Error("La edad debe estar entre 15 y 100 años");
+      return res.status(400).json({ msg: error.message });
+    }
 
     const existeUsuario = await Usuario.findOne({ correo_electronico });
 
@@ -48,7 +60,8 @@ const registrar = async (req, res) => {
 
     res.status(200).json({ msg: "Usuario registrado, ahora debes confirmar tu correo electrónico" });
 
-  } catch (e) { console.log(e)
+  } catch (e) {
+    console.log(e)
     usuario.remove();
     error = new Error("Error del servidor");
     res.status(500).json({ msg: error.message });
@@ -59,7 +72,8 @@ const perfil = async (req, res) => {
   const usuario = req.usuario;
   try {
     res.status(200).json(usuario);
-  } catch (e) { console.log(e)
+  } catch (e) {
+    console.log(e)
     const error = new Error("Error del servidor");
     res.status(500).json({ msg: error.message });
   }
@@ -87,7 +101,8 @@ const confirmar = async (req, res) => {
     await usuarioConfirmar.save();
 
     res.json({ msg: "Usuario Confirmado Correctamente" });
-  } catch (e) { console.log(e)
+  } catch (e) {
+    console.log(e)
     error = new Error("Error del servidor");
     res.status(500).json({ msg: error.message });
   }
@@ -132,7 +147,8 @@ const autenticar = async (req, res) => {
       error = new Error("La contraseña es incorrecta");
       return res.status(401).json({ msg: error.message });
     }
-  } catch (e) { console.log(e)
+  } catch (e) {
+    console.log(e)
     error = new Error("Error del servidor");
     res.status(500).json({ msg: error.message });
   }
@@ -168,7 +184,8 @@ const olvidePassword = async (req, res) => {
         }); */
 
     res.json({ msg: "Hemos enviado un correo_electronico con las instrucciones" });
-  } catch (e) { console.log(e)
+  } catch (e) {
+    console.log(e)
     error = new Error("Error del servidor");
     res.status(500).json({ msg: error.message });
   }
@@ -197,7 +214,8 @@ const nuevoPassword = async (req, res) => {
 
     res.status(200).json({ msg: "Password modificado correctamente" });
 
-  } catch (e) { console.log(e)
+  } catch (e) {
+    console.log(e)
     error = new Error("Error del servidor");
     res.status(500).json({ msg: error.message });
   }
@@ -224,16 +242,16 @@ const actualizarPerfil = async (req, res) => {
 
       mensaje = "Como cambiaste tu correo electronico, debes confirmar la cuenta nuevamente, te hemos enviado al nuevo correo electronico un link de confirmacion";
 
-      try{
+      try {
 
         tokenOpcional = generarId();
 
-      await emailCambiarCorreo({
-        email: correo_electronico,
-        nombre,
-        token: tokenOpcional,
-      });
-      }catch (e){
+        await emailCambiarCorreo({
+          email: correo_electronico,
+          nombre,
+          token: tokenOpcional,
+        });
+      } catch (e) {
         error = new Error("Error al enviar el correo electronico");
         res.status(500).json({ msg: error.message });
       }
@@ -255,7 +273,8 @@ const actualizarPerfil = async (req, res) => {
 
     res.status(200).json({ usuario: usuarioActualizado, msg: mensaje, resultado: 'Haz actualizado tu perfil correctamente' });
 
-  } catch (e) { console.log(e)
+  } catch (e) {
+    console.log(e)
     error = new Error("Error del servidor");
     res.status(500).json({ msg: error.message });
   }
@@ -282,7 +301,8 @@ const confirmarCorreoElectronico = async (req, res) => {
 
     res.status(200).json({ msg: "Correo electronico confirmado correctamente" });
 
-  } catch (e) { console.log(e)
+  } catch (e) {
+    console.log(e)
     error = new Error("Error del servidor");
     res.status(500).json({ msg: error.message });
   }
@@ -334,7 +354,8 @@ const agregarVehiculo = async (req, res) => {
 
     res.status(200).json({ usuario: usuarioConVehiculo, msg: "Vehiculo agregado correctamente" });
 
-  } catch (e) { console.log(e)
+  } catch (e) {
+    console.log(e)
 
     if (vehiculoGuardado) {
       await VehiculoUsuario.findByIdAndDelete(vehiculoGuardado._id);
@@ -357,14 +378,15 @@ const eliminarVehiculo = async (req, res) => {
     if (!vehiculo) {
       return res.status(404).json({ msg: "Vehículo no encontrado" });
     }
-  
+
     usuario.vehiculos.pull(vehiculo);
     await usuario.save();
-  
+
     await VehiculoUsuario.findByIdAndRemove(id_vehiculo);
-  
+
     return res.json({ usuario: usuario, msg: "Vehículo eliminado correctamente" });
-  } catch (e) { console.log(e)
+  } catch (e) {
+    console.log(e)
     error = new Error("Error del servidor");
     res.status(500).json({ error: error.message });
   }
@@ -398,7 +420,8 @@ const actualizarPassword = async (req, res) => {
       res.status(401).json({ msg: error.message });
     }
 
-  } catch (e) { console.log(e)
+  } catch (e) {
+    console.log(e)
     error = new Error("Error del servidor");
     res.status(500).json({ msg: error.message });
   }
@@ -408,7 +431,7 @@ const reportarLavadero = async (req, res) => {
 
   let error = "";
 
-  if(req.usuario === undefined){
+  if (req.usuario === undefined) {
     error = new Error("No se ha iniciado sesión");
     return res.status(401).json({ msg: error.message });
   }
@@ -447,7 +470,8 @@ const reportarLavadero = async (req, res) => {
 
     res.status(200).json({ msg: "Reporte enviado correctamente, gracias por ayudarnos a mejorar" });
 
-  } catch (e) { console.log(e)
+  } catch (e) {
+    console.log(e)
     error = new Error("Error del servidor");
     res.status(500).json({ msg: error.message });
   }
