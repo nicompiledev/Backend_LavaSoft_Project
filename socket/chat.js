@@ -123,41 +123,28 @@ module.exports = function (io) {
     });
 
     // Manejar la desconexión de un usuario
-    /*     socket.on("disconnectUser", (data) => {
-          const { room, tipo } = data;
-    
-          console.log("ENTRA A DISCONNECT USER");
-          console.log("ROOMS", rooms);
-          console.log("ROOM", room);
-          console.log("TIPO", tipo);
-    
-          if (rooms > 0) {
-            if (tipo === "usuario") {
-              rooms[room].push({
-                message: "El usuario ha abandonado en chat",
-                from: "sistema",
-              });
-              io.to(room).emit("actualizarChat", rooms[room]);
-            } else if (tipo === "asesor") {
-              rooms[room].push({
-                message: "El admimnistrador ha decido cerrar el chat",
-                from: "sistema",
-              });
-              io.to(room).emit("actualizarChat", rooms[room]);
-            }
+        socket.on("disconnectAdmin", (data) => {
+          const { room } = data;
+          // mandar mensaje al usuario que el asesor se desconecto
+          if (rooms[room]) {
+            rooms[room].push({
+              message: "El administrador se ha desconectado",
+              from: "sistema",
+            });
+            io.to(room).emit("actualizarChat", rooms[room]);
+
+            // salir de la sala
+            socket.leave(room);
+            // eliminar room
+            delete rooms[room];
+            roomsAtendidos[room] = false;
+            actualizarRooms();
           }
-    
-    
-          // Eliminar room
-          delete rooms[room];
-    
-          // Mandarle al asesor la lista de usuarios en la sala
-          actualizarRooms();
-        }); */
+        });
 
     // disconect
     socket.on("disconnect", () => {
-      if (socket.currentRoom) {
+      if (socket.currentRoom && rooms[socket.currentRoom]) {
         rooms[socket.currentRoom].push({
           message: "El usuario ha abandonado en chat",
           from: "sistema",
