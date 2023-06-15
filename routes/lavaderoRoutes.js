@@ -23,12 +23,23 @@ const storage = new CloudinaryStorage({
 const upload = multer({ storage: storage });
 
 const {
+  // basico
   registrarLavadero,
   editarLavadero,
   autenticarLavadero,
+  // lavadero
   getReservasNoAtendidas,
+  getReservasProceso,
+  getReservasTerminadas,
+
+  confirmarReserva,
   putCancelarReserva,
   servicioTerminado,
+
+  // refreshToken
+  refrescarToken,
+
+  // pago
   crearSesionPago,
   webhook
 } = require('../controllers/lavaderoController.js');
@@ -42,8 +53,16 @@ router.post("/login", autenticarLavadero)
 // Area Privada
 router.put("/lavadero", checkAuth, upload.array('images'), editarLavadero);
 router.post("/reservas", checkAuth, getReservasNoAtendidas);
-router.delete("/reservas", checkAuth, putCancelarReserva);
-router.put("/reservas", checkAuth, servicioTerminado);
+router.get("/reservas/proceso", checkAuth, getReservasProceso);
+router.post("/reservas/terminadas", checkAuth, getReservasTerminadas);
+
+router.put("/reservas/confirmar", checkAuth, confirmarReserva);
+router.put("/reservas/cancelar", checkAuth, putCancelarReserva);
+router.put("/reservas/terminar", checkAuth, servicioTerminado);
+router.get("/refreshToken", checkAuth, refrescarToken);
+
+
+
 router.post("/irapagar", checkAuth, crearSesionPago);
 
 // Webhooks

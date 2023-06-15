@@ -10,7 +10,7 @@ const emailServicioTerminada = async (datos) => {
     },
   });
 
-  const { email, nombre, lavadero } = datos;
+  const { email, nombre, lavadero, direccion, fecha, SiNoLoRecoge } = datos;
 
   const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -30,7 +30,10 @@ const emailServicioTerminada = async (datos) => {
           <p style="font-size: 18px;">Te informamos que tu vehículo ha sido lavado y está listo para ser recogido en ${lavadero}.</p>
       </div>
       <div style="background-color: white; padding: 20px; margin: 20px; max-width: 600px; margin: 20px auto;">
-          <p>Por favor, dirígete al lavadero en un plazo máximo de 30 minutos para recoger tu vehículo.</p>
+          <p>Por favor, dirígete al lavadero en la siguiente dirección:</p>
+          <p>${direccion}</p>
+          <p>Fecha de lavado: ${fecha}</p>
+          <p>Si no puedes recoger tu vehículo en un plazo máximo de 30 minutos, ${SiNoLoRecoge}.</p>
           <p>Si necesitas ayuda o tienes alguna pregunta, por favor contáctanos a través de:</p>
           <ul>
               <li>Correo electrónico: soporte@lavasoft.com</li>
@@ -41,14 +44,11 @@ const emailServicioTerminada = async (datos) => {
           <p style="font-size: 14px; color: grey;">Este mensaje ha sido enviado automáticamente. Por favor, no respondas a este mensaje.</p>
       </div>
       <div style="text-align:center; margin-top:20px;">
-          <blockquote style="padding-left: 10px; font-style: italic; max-width: 600px; margin: 0 auto;
-          ">"Un vehículo limpio es un vehículo feliz."</blockquote>
+          <blockquote style="padding-left: 10px; font-style: italic; max-width: 600px; margin: 0 auto;">"Un vehículo limpio es un vehículo feliz."</blockquote>
       </div>
     </div>
       `,
-    });
-
-    
+  });
 
   console.log("Mensaje enviado correctamente. ID del mensaje: %s", info.messageId);
 

@@ -3,6 +3,7 @@ const generarId = require("../helpers/generarId.js");
 const emailRegistro = require("../helpers/lavaderos/emailRegistro.js");
 const emailCancelado = require("../helpers/lavaderos/emailCancelado.js")
 const emailServicioTerminada = require("../helpers/lavaderos/emailServicioTerminada.js")
+const emailReservaConfirmada = require("../helpers/lavaderos/emailReservaConfirmada.js")
 const { AILavaderoREAL } = require("./openai/openai.js");
 
 const Usuario = require("../models/type_users/Usuario.js");
@@ -230,14 +231,24 @@ const getReservasNoAtendidas = async (req, res) => {
     const { _id } = req.lavadero;
     const { fecha } = req.body;
 
-    console.log(fecha);
-    console.log("2023-06-14");
-
     // Ordenar por hora de inicio, el que esté más cerca de la hora actual
     const reservas = await Reserva.find({ id_lavadero: _id, fecha, estado: "pendiente" }).sort({ hora_inicio: 1 });
     res.status(200).json(reservas);
+  } catch (e) {
+    console.log(e)
+    error = new Error("Hubo un error al obtener las reservas");
+    res.status(500).json({ msg: error.message });
+  }
+}
 
-    console.log(reservas);
+const getReservasProceso = async (req, res) => {
+  let error = "";
+  try {
+    const { _id } = req.lavadero;
+
+    // Ordenar por hora de inicio, el que esté más cerca de la hora actual
+    const reservas = await Reserva.find({ id_lavadero: _id, estado: "proceso" }).sort({ hora_inicio: 1 });
+    res.status(200).json(reservas);
 
   } catch (e) {
     console.log(e)
@@ -246,19 +257,76 @@ const getReservasNoAtendidas = async (req, res) => {
   }
 }
 
+const getReservasTerminadas = async (req, res) => {
+  let error = "";
+  try {
+    const { _id } = req.lavadero;
+    const { fecha } = req.body;
+
+    // Ordenar por fecha de inicio, el que esté más cerca de la hora actual
+    const reservas = await Reserva.find({ id_lavadero: _id, fecha, estado: "terminado" }).sort({ hora_inicio: 1 });
+    res.status(200).json(reservas);
+
+  } catch (e) {
+    console.log(e)
+    error = new Error("Hubo un error al obtener las reservas");
+    res.status(500).json({ msg: error.message });
+  }
+}
+
+const confirmarReserva = async (req, res) => {
+  let error = "";
+  try {
+    console.log(req.body);
+    const { id_reserva, id_usuario, nombre_servicio, nombreEmpleado } = req.body
+    const { nombreLavadero } = req.lavadero
+
+    try {
+      const [reserva, usuario] = await Promise.all([
+        Reserva.findById(id_reserva),
+        Usuario.findById(id_usuario),
+      ]);
+
+      await emailReservaConfirmada({
+        email: usuario.correo_electronico,
+        lavadero: nombreLavadero,
+        nombre: usuario.nombre,
+        servicio: nombre_servicio,
+        fecha: reserva.fecha,
+        nombreEmpleado,
+      });
+
+      reserva.estado = "proceso";
+      reserva.nombre_emplado = nombreEmpleado;
+      await reserva.save();
+    } catch (e) {
+      console.log(e)
+      error = new Error("Hubo un error al confirmar la reserva");
+      res.status(500).json({ msg: error.message });
+    }
+
+    res.status(200).json({ msg: "Se confirmó la reserva correctamente" });
+
+  } catch (e) {
+    console.log(e)
+    error = new Error("Hubo un error al confirmar la reserva");
+    res.status(500).json({ msg: error.message });
+  }
+}
+
+
 const putCancelarReserva = async (req, res) => {
 
   let error = "";
 
   try {
-    const { id_reserve, id_usuario, id_servicio, motivo } = req.body
+    const { id_reserva, id_usuario, nombre_servicio, motivo } = req.body
     const { nombreLavadero } = req.lavadero
 
     try {
-      const [reserva, usuario, servicio] = await Promise.all([
-        Reserva.findById(id_reserve),
+      const [reserva, usuario] = await Promise.all([
+        Reserva.findById(id_reserva),
         Usuario.findById(id_usuario),
-        Servicio.findById(id_servicio)
       ]);
 
 
@@ -271,7 +339,7 @@ const putCancelarReserva = async (req, res) => {
         lavadero: nombreLavadero,
         nombre: usuario.nombre,
         reserva: reserva.fecha,
-        servicio: servicio.nombre,
+        servicio: nombre_servicio,
         motivo: motivo
       });
 
@@ -294,15 +362,15 @@ const putCancelarReserva = async (req, res) => {
 }
 
 const servicioTerminado = async (req, res) => {
-
   let error = "";
   try {
-    const { id_reserve, id_usuario } = req.body
-    const { nombreLavadero } = req.lavadero
+    const { id_reserva, id_usuario } = req.body
+
+    const { nombreLavadero, siNoLoRecogen, direccion } = req.lavadero
 
     try {
       const [reserva, usuario] = await Promise.all([
-        Reserva.findById(id_reserve),
+        Reserva.findById(id_reserva),
         Usuario.findById(id_usuario),
       ]);
 
@@ -310,19 +378,22 @@ const servicioTerminado = async (req, res) => {
 
       await reserva.save()
 
-       //TEMPORALMENTE DESACTIVADO
     await emailServicioTerminada({
         email: usuario.correo_electronico,
         nombre: usuario.nombre,
         lavadero: nombreLavadero,
+        direccion: direccion,
+        SiNoLoRecoge: siNoLoRecogen,
+        fecha: reserva.fecha,
       });
+
     } catch (e) {
       console.log(e)
       error = new Error("Hubo un error al terminar el servicio");
       return res.status(404).json({ msg: error.message });
     }
 
-    res.status(200).json({ msg: 'Se cambio el estado con exito' })
+    res.status(200).json({ msg: 'Se confirmo que el servicio termino con exito, al usuario se le envio un correo' })
 
   }
   catch (e) {
@@ -330,6 +401,22 @@ const servicioTerminado = async (req, res) => {
     res.status(500).json({ msg: error.message });
   }
 }
+
+const refrescarToken = async (req, res) => {
+  let error = "";
+  try {
+    const { _id, hasPaid, visualizado } = req.lavadero;
+
+    const token = generarJWTHasPaid(_id, "lavadero", hasPaid, visualizado);
+
+    res.status(200).json({ token });
+  } catch (e) {
+    error = new Error("Hubo un error al refrescar el token");
+    res.status(500).json({ msg: error.message });
+  }
+}
+
+
 
 const crearSesionPago = async (req, res) => {
   const { item } = req.body;
@@ -346,7 +433,7 @@ const crearSesionPago = async (req, res) => {
       }
     ],
     mode: 'subscription',
-    success_url: 'http://localhost:4200/inicio',
+    success_url: 'http://localhost:4200/agradecimiento?redireccionado=true',
     cancel_url: 'http://localhost:4200/dashboard-lavadero/subscripcion',
     subscription_data: {
       trial_period_days: 14,
@@ -422,12 +509,23 @@ const webhook = async (req, res) => {
 
 
 module.exports = {
+  // basico
   registrarLavadero,
   editarLavadero,
   autenticarLavadero,
+  // lavadero
   getReservasNoAtendidas,
+  getReservasProceso,
+  getReservasTerminadas,
+
+  confirmarReserva,
   putCancelarReserva,
   servicioTerminado,
+
+  // refrescar token
+  refrescarToken,
+
+  // pago
   crearSesionPago,
   webhook
 };

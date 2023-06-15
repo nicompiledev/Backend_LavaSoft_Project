@@ -25,7 +25,7 @@ const emailOlvidePassword = async (datos) => {
 
     <ol style="font-size: 18px;">
         <li style="font-size: 16px;">Haz clic en el siguiente enlace para reestablecer tu contraseña:</li>
-        <li style="margin-top: 10px;"><a href="${process.env.FRONTEND_URL}/nuevo-password/${token}" style="display: block; margin: 0 auto; padding: 8px 16px; background-color: #2d4059; color: #ffffff; text-decoration: none; font-size: 18px; border-radius: 5px;">Reestablecer Contraseña</a></li>
+        <li style="margin-top: 10px;"><a href="${process.env.FRONTEND_URL}/nueva-contrasena/${token}?redireccionado=true" style="display: block; margin: 0 auto; padding: 8px 16px; background-color: #2d4059; color: #ffffff; text-decoration: none; font-size: 18px; border-radius: 5px;">Reestablecer Contraseña</a></li>
         <li style="font-size: 16px;">Ingresa tu nueva contraseña.</li>
         <li style="font-size: 16px;">Confirma tu nueva contraseña.</li>
     </ol>
