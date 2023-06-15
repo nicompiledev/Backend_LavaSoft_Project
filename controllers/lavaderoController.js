@@ -3,7 +3,6 @@ const generarId = require("../helpers/generarId.js");
 const emailRegistro = require("../helpers/lavaderos/emailRegistro.js");
 const emailCancelado = require("../helpers/lavaderos/emailCancelado.js")
 const emailServicioTerminada = require("../helpers/lavaderos/emailServicioTerminada.js")
-const emailOlvidePassword = require("../helpers/usuarios/emailOlvidePassword.js");
 const { AILavaderoREAL } = require("./openai/openai.js");
 
 const Usuario = require("../models/type_users/Usuario.js");
@@ -84,11 +83,11 @@ const registrarLavadero = async (req, res) => {
       await lavaderoGuardado.save(); // guarda las URLs de las imágenes en el lavadero
 
       // Send email
-      /*       await emailRegistro({
-              email: correo_electronico,
-              nombre
-            });
-       */
+      await emailRegistro({
+        email: correo_electronico,
+        nombre: nombreLavadero,
+      });
+
       res.status(200).json({ msg: "Tu petición se ha realizado con éxito, por favor espera a que un administrador acepte tu solicitud" });
 
     } catch (e) {
@@ -229,10 +228,16 @@ const getReservasNoAtendidas = async (req, res) => {
   let error = "";
   try {
     const { _id } = req.lavadero;
+    const { fecha } = req.body;
 
-    const reservas = await Reserva.find({ id_lavadero: _id, estado: "pendiente" });
+    console.log(fecha);
+    console.log("2023-06-14");
 
-    res.status(200).json({ reservas });
+    // Ordenar por hora de inicio, el que esté más cerca de la hora actual
+    const reservas = await Reserva.find({ id_lavadero: _id, fecha, estado: "pendiente" }).sort({ hora_inicio: 1 });
+    res.status(200).json(reservas);
+
+    console.log(reservas);
 
   } catch (e) {
     console.log(e)
@@ -261,15 +266,14 @@ const putCancelarReserva = async (req, res) => {
 
       }
 
-      /*    TEMPORALMENTE COMENTADO
-            await emailCancelado({
-              email: usuario.correo_electronico,
-              lavadero: nombreLavadero,
-              nombre: usuario.nombre,
-              reserva: reserva.fecha,
-              servicio: servicio.nombre,
-              motivo: motivo
-            }); */
+      await emailCancelado({
+        email: usuario.correo_electronico,
+        lavadero: nombreLavadero,
+        nombre: usuario.nombre,
+        reserva: reserva.fecha,
+        servicio: servicio.nombre,
+        motivo: motivo
+      });
 
       reserva.estado = "cancelado";
       reserva.motivoCancelacion = motivo;
@@ -306,12 +310,12 @@ const servicioTerminado = async (req, res) => {
 
       await reserva.save()
 
-      /*  TEMPORALMENTE DESACTIVADO
-            await emailServicioTerminada({
-              email: usuario.correo_electronico,
-              nombre: usuario.nombre,
-              lavadero: nombreLavadero,
-            }); */
+       //TEMPORALMENTE DESACTIVADO
+    await emailServicioTerminada({
+        email: usuario.correo_electronico,
+        nombre: usuario.nombre,
+        lavadero: nombreLavadero,
+      });
     } catch (e) {
       console.log(e)
       error = new Error("Hubo un error al terminar el servicio");

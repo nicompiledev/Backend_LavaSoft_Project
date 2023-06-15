@@ -3,6 +3,7 @@ const Lavadero = require("../../models/type_users/Lavadero.js");
 const Usuario = require("../../models/type_users/Usuario.js");
 const Admin = require("../../models/type_users/Admin.js");
 const { Servicio } = require("../../models/Servicio.js");
+const { VehiculoUsuario } = require("../../models/Vehiculos.js");
 
 const realizarInsercion = async () => {
 
@@ -867,6 +868,18 @@ const realizarInsercion = async () => {
     ];
 
     for (const usuario of usuarios) {
+
+        // agregar vehiculo a usuario
+        const vehiculo = new VehiculoUsuario({
+            placa: 'ABC123',
+            marca: 'Mazda',
+            modelo: '3',
+            tipo_vehiculo: 'Carro',
+        });
+        await vehiculo.save();
+
+        usuario.vehiculos = [vehiculo._id];
+
         const newUsuario = new Usuario(usuario);
         await newUsuario.save();
     }

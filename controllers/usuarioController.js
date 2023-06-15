@@ -21,7 +21,7 @@ const registrar = async (req, res) => {
 
     const fechaActual = new Date();
     const fechaNacimiento = new Date(fecha_nacimiento);
-    const edad = fechaActual.getFullYear() - fechaNacimiento.getFullYear();
+    let edad = fechaActual.getFullYear() - fechaNacimiento.getFullYear();
     const mes = fechaActual.getMonth() - fechaNacimiento.getMonth();
     if (mes < 0 || (mes === 0 && fechaActual.getDate() < fechaNacimiento.getDate())) {
       edad--;
@@ -51,12 +51,11 @@ const registrar = async (req, res) => {
     await usuario.save();
 
     // Enviar el email de confirmación y validar si se envió correctamente
-    /*  TEMPORALMENTE COMENTADO POR TEST
         await emailRegistro({
           email: correo_electronico,
           nombre,
           token: usuario.token,
-        }); */
+        });
 
     res.status(200).json({ msg: "Usuario registrado, ahora debes confirmar tu correo electrónico" });
 
@@ -163,10 +162,8 @@ const olvidePassword = async (req, res) => {
     // Ejecutar una consulta para obtener el usuario con el correo_electronico proporcionado
     const usuario = await Usuario.findOne({ correo_electronico });
 
-    console.log("usuario", usuario)
-
     if (!usuario) {
-      error = new Error("El Usuario no existe");
+      error = new Error("El correo no se encuentra registrado");
       return res.status(400).json({ msg: error.message });
     }
 
@@ -175,15 +172,13 @@ const olvidePassword = async (req, res) => {
     await usuario.save();
 
     // Enviar Email con instrucciones
-    /*
-    TEMPORALMENTE INHABILITADO POR PRUEBAS
         emailOlvidePassword({
           email: correo_electronico,
           nombre: usuario.nombre,
           token: usuario.token,
-        }); */
+        });
 
-    res.json({ msg: "Hemos enviado un correo_electronico con las instrucciones" });
+    res.json({ msg: "Hemos enviado un correo electronico con las instrucciones" });
   } catch (e) {
     console.log(e)
     error = new Error("Error del servidor");
@@ -202,7 +197,8 @@ const nuevoPassword = async (req, res) => {
     const usuario = await Usuario.findOne({ token });
 
     if (!usuario) {
-      error = new Error("Token no válido");
+
+      error = new Error("El proceso ya no es válido, por favor solicita un nuevo cambio de contraseña");
       return res.status(401).json({ msg: error.message })
     }
 
@@ -212,7 +208,7 @@ const nuevoPassword = async (req, res) => {
 
     await usuario.save();
 
-    res.status(200).json({ msg: "Password modificado correctamente" });
+    res.status(200).json({ msg: "Contraseña actualizada correctamente" });
 
   } catch (e) {
     console.log(e)
@@ -406,16 +402,16 @@ const actualizarPassword = async (req, res) => {
     if (await UsuarioModificar.comprobarPassword(pwd_actual)) {
 
       // actualizar el usuario con update ya teniendo el usuario
-      await Usuario.findByIdAndUpdate(
-        _id,
-        {
-          contrasena: pwd_nuevo,
-        },
-        { new: true }
-      );
+      UsuarioModificar.contrasena = pwd_nuevo;
 
       res.status(200).json({ msg: "Contraseña Actualizada Correctamente" });
     } else {
+
+      if(UsuarioModificar.contrasena === pwd_nuevo){
+        error = new Error("La contraseña nueva no puede ser igual a la actual");
+        return res.status(400).json({ msg: error.message });
+      }
+
       error = new Error("La contraseña actual es incorrecta");
       res.status(401).json({ msg: error.message });
     }

@@ -163,7 +163,6 @@ const getLavaderosRadio = async (req, res) => {
     .sort({ ubicacion: 'asc' });;
 
     res.json(lavaderos);
-    console.log(lavaderos);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

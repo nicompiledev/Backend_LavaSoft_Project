@@ -24,7 +24,7 @@ const emailRegistro = async (datos) => {
     subject: "Verifica tu cuenta en LavaSoft",
     html: `
         <div style="background-color: #f2f2f2; padding: 20px;">
-            <img src="https://www.zarla.com/images/zarla-redata-1x1-2400x2400-20211214-qcmpq7w86rx4wybrffy9.png" alt="Logo de LavaSoft" style="width: 150px;">
+            <img src="https://img.freepik.com/premium-vector/ls-logo_590037-67.jpg?w=2000" alt="Logo de LavaSoft" style="width: 150px;">
             <h2 style="color: #2e2e2e;">¡Bienvenido a LavaSoft, ${capitalizeFirstLetter(nombre)}!</h2>
             <p style="color: #2e2e2e;">Para comenzar a utilizar nuestros servicios, necesitamos que verifiques tu cuenta haciendo clic en el siguiente enlace:</p>
             <a href="${process.env.FRONTEND_URL}/confirmar/${token}" style="background-color: #0077c2; color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 5px;">Verificar Cuenta</a>

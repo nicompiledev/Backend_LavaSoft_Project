@@ -60,10 +60,17 @@ const usuarioSchema = new mongoose.Schema({
 
 usuarioSchema.pre("save", async function (next) {
   if (!this.isModified("contrasena")) {
-    next();
+    return next();
   }
-  const salt = await bcrypt.genSalt(10);
-  this.contrasena = await bcrypt.hash(this.contrasena, salt);
+
+  try {
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(this.contrasena, salt);
+    this.contrasena = hashedPassword;
+    next();
+  } catch (error) {
+    next(error);
+  }
 });
 
 usuarioSchema.methods.comprobarPassword = async function (
