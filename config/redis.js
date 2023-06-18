@@ -28,10 +28,15 @@ subscriber.on("connect", () => {
 
 
 async function updateRedis(id) {
-  // Borrar las claves en Redis
+  // Obtener las claves en Redis
   const keys = await publisher.keys('lavaderos_*');
-  for (const key of keys) {
-    await publisher.del(key);
+
+  // Verificar si keys es un arreglo
+  if (Array.isArray(keys)) {
+    // Borrar las claves en Redis
+    for (const key of keys) {
+      await publisher.del(key);
+    }
   }
 
   // Borrar la clave del lavadero específico
