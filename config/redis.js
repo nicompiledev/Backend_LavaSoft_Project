@@ -2,15 +2,11 @@ const redis = require("redis");
 const { promisify } = require("util");
 require("dotenv").config();
 
-const publisher = redis.createClient({
-  host: process.env.REDIS_URL,
-  port: process.env.REDIS_PORT,
-});
+// Utiliza la URL de conexión proporcionada por Render
+const publisher = redis.createClient(process.env.REDIS_URL);
 
-const subscriber = redis.createClient({
-  host: process.env.REDIS_URL,
-  port: process.env.REDIS_PORT,
-});
+// También puedes usar la misma URL para el cliente subscriber si es necesario
+const subscriber = redis.createClient(process.env.REDIS_URL);
 
 publisher.on("error", (error) => {
   console.error(`Error al conectarse a Redis: ${error.message} con publisher`);
