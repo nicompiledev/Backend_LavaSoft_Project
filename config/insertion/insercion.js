@@ -29,7 +29,7 @@ const realizarInsercion = async () => {
 
             hora_apertura: '08:00',
             hora_cierre: '18:00',
-            tipoVehiculos: ['Moto', 'Carro'],
+            tipoVehiculos: ['Moto', 'Carro', 'Camioneta'],
             imagenes: [
                 "https://images.pexels.com/photos/3354647/pexels-photo-3354647.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/372810/pexels-photo-372810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
@@ -69,7 +69,7 @@ const realizarInsercion = async () => {
             contrasena: 'contrasena123',
             hora_apertura: '08:00',
             hora_cierre: '18:00',
-            tipoVehiculos: ['Moto', 'Carro'],
+            tipoVehiculos: ['Moto', 'Carro', 'Camion'],
             imagenes: [
                 "https://images.pexels.com/photos/3354647/pexels-photo-3354647.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/372810/pexels-photo-372810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
@@ -108,7 +108,7 @@ const realizarInsercion = async () => {
             contrasena: 'contrasena123',
             hora_apertura: '08:00',
             hora_cierre: '18:00',
-            tipoVehiculos: ['Moto', 'Carro'],
+            tipoVehiculos: ['Carro', 'Camion'],
             imagenes: [
                 "https://images.pexels.com/photos/3354647/pexels-photo-3354647.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/372810/pexels-photo-372810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
@@ -146,7 +146,7 @@ const realizarInsercion = async () => {
             contrasena: 'contrasena123',
             hora_apertura: '08:00',
             hora_cierre: '18:00',
-            tipoVehiculos: ['Moto', 'Carro'],
+            tipoVehiculos: ['Camioneta', 'Camion'],
             imagenes: [
                 "https://images.pexels.com/photos/3354647/pexels-photo-3354647.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/372810/pexels-photo-372810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
@@ -185,7 +185,7 @@ const realizarInsercion = async () => {
             contrasena: 'contrasena123',
             hora_apertura: '08:00',
             hora_cierre: '18:00',
-            tipoVehiculos: ['Moto', 'Carro'],
+            tipoVehiculos: ['Moto', 'Carro', 'Camioneta', 'Camion'],
             imagenes: [
                 "https://images.pexels.com/photos/3354647/pexels-photo-3354647.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/372810/pexels-photo-372810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
@@ -223,7 +223,7 @@ const realizarInsercion = async () => {
             contrasena: 'contrasena123',
             hora_apertura: '08:00',
             hora_cierre: '18:00',
-            tipoVehiculos: ['Moto', 'Carro'],
+            tipoVehiculos: ['Moto'],
             imagenes: [
                 "https://images.pexels.com/photos/3354647/pexels-photo-3354647.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/372810/pexels-photo-372810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
@@ -261,7 +261,7 @@ const realizarInsercion = async () => {
             contrasena: 'contrasena123',
             hora_apertura: '08:00',
             hora_cierre: '18:00',
-            tipoVehiculos: ['Moto', 'Carro'],
+            tipoVehiculos: ['Carro', 'Moto'],
             imagenes: [
                 "https://images.pexels.com/photos/3354647/pexels-photo-3354647.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/372810/pexels-photo-372810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
@@ -299,7 +299,7 @@ const realizarInsercion = async () => {
             contrasena: 'contrasena123',
             hora_apertura: '08:00',
             hora_cierre: '18:00',
-            tipoVehiculos: ['Moto', 'Carro'],
+            tipoVehiculos: ['Camioneta', 'Carro', 'Moto'],
             imagenes: [
                 "https://images.pexels.com/photos/3354647/pexels-photo-3354647.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/372810/pexels-photo-372810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
@@ -413,7 +413,7 @@ const realizarInsercion = async () => {
             contrasena: 'contrasena123',
             hora_apertura: '08:00',
             hora_cierre: '18:00',
-            tipoVehiculos: ['Moto', 'Carro'],
+            tipoVehiculos: ['Carro'],
             imagenes: [
                 "https://images.pexels.com/photos/3354647/pexels-photo-3354647.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/372810/pexels-photo-372810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
@@ -452,7 +452,7 @@ const realizarInsercion = async () => {
             contrasena: 'contrasena123',
             hora_apertura: '08:00',
             hora_cierre: '18:00',
-            tipoVehiculos: ['Moto', 'Carro'],
+            tipoVehiculos: ['Carro', 'Moto'],
             imagenes: [
                 "https://images.pexels.com/photos/3354647/pexels-photo-3354647.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/372810/pexels-photo-372810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
@@ -490,7 +490,7 @@ const realizarInsercion = async () => {
             contrasena: 'contrasena123',
             hora_apertura: '08:00',
             hora_cierre: '18:00',
-            tipoVehiculos: ['Moto', 'Carro'],
+            tipoVehiculos: ['Carro', 'Camioneta'],
             imagenes: [
                 "https://images.pexels.com/photos/3354647/pexels-photo-3354647.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/372810/pexels-photo-372810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
@@ -529,7 +529,7 @@ const realizarInsercion = async () => {
             contrasena: 'contrasena123',
             hora_apertura: '08:00',
             hora_cierre: '18:00',
-            tipoVehiculos: ['Moto', 'Carro'],
+            tipoVehiculos: ['Moto', 'Carro', 'Camioneta'],
             imagenes: [
                 "https://images.pexels.com/photos/3354647/pexels-photo-3354647.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/372810/pexels-photo-372810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
@@ -823,31 +823,49 @@ const realizarInsercion = async () => {
     for (const lavadero of lavaderos) {
         const newLavadero = new Lavadero(lavadero);
 
-        const servicio1 = new Servicio({ nombre: 'Lavado Básico', tipoVehiculo: "Carro", categoria: 'lavado', detalle: 'Lavado exterior, aspirado interior, limpieza de vidrios, limpieza de tablero, limpieza de rines', costo: 15000, duracion: 30 });
+        if(newLavadero.tipoVehiculos.includes('Moto')){
+        // Moto
+        const servicio5 = new Servicio({
+            nombre: 'Lavado exterior', categoria: 'lavado', tipoVehiculo: 'Moto', detalle: 'Lavado exterior con agua a presión y shampoo.', costo: 10000, duracion: 15
+        });
+        const servicio6 = new Servicio({
+            nombre: 'Lavado de motor', categoria: 'lavado', tipoVehiculo: 'Moto', detalle: 'Lavado de motor con agua a presión y desengrasante.', costo: 20000, duracion: 30
+        });
+        newLavadero.servicios.push(servicio5._id);
+        newLavadero.servicios.push(servicio6._id);
+
+    }else if(newLavadero.tipoVehiculos.includes('Carro')){
+        const servicio1 = new Servicio({
+            nombre: 'Encerado con cera de carnauba', categoria: 'encerado', tipoVehiculo: 'Carro', detalle: 'Encerado con cera de carnauba, que protege la pintura de los rayos UV y la suciedad.', costo: 50000, duracion: 60
+        });
+        const servicio2 = new Servicio({
+            nombre: 'Lavado de motor', categoria: 'lavado', tipoVehiculo: 'Carro', detalle: 'Lavado de motor con agua a presión y desengrasante.', costo: 30000, duracion: 30
+        });
+        const servicio3 = new Servicio({
+            nombre: 'Lavado de tapicería', categoria: 'lavado', tipoVehiculo: 'Carro', detalle: 'Lavado de tapicería con espuma y aspirado.', costo: 40000, duracion: 45
+        });
+        const servicio4 = new Servicio({
+            nombre: 'Lavado de motor', categoria: 'lavado', tipoVehiculo: 'Moto', detalle: 'Lavado de motor con agua a presión y desengrasante.', costo: 20000, duracion: 30
+        });
+
         await servicio1.save();
-
-        const servicio2 = new Servicio({ nombre: 'Lavado Básico', tipoVehiculo: "Moto", categoria: 'lavado', detalle: 'Lavado exterior, aspirado interior, limpieza de vidrios, limpieza de tablero, limpieza de rines', costo: 10000, duracion: 30 });
         await servicio2.save();
-
-        const servicio3 = new Servicio({ nombre: 'Lavado Premium', tipoVehiculo: "Carro", categoria: 'lavado', detalle: 'Lavado exterior, aspirado interior, limpieza de vidrios, limpieza de tablero, limpieza de rines, encerado', costo: 25000, duracion: 60 });
         await servicio3.save();
-
-        const servicio4 = new Servicio({ nombre: 'Lavado Premium', tipoVehiculo: "Moto", categoria: 'lavado', detalle: 'Lavado exterior, aspirado interior, limpieza de vidrios, limpieza de tablero, limpieza de rines, encerado', costo: 20000, duracion: 60 });
         await servicio4.save();
-
 
         newLavadero.servicios.push(servicio1._id);
         newLavadero.servicios.push(servicio2._id);
         newLavadero.servicios.push(servicio3._id);
         newLavadero.servicios.push(servicio4._id);
+    };
 
         await newLavadero.save();
     }
 
     const usuarios = [
         {
-            nombre: 'Usuario 1',
-            apellido: 'Apellido 1',
+            nombre: 'Gabriel',
+            apellido: 'Gonzalez',
             genero: 'Masculino',
             fecha_nacimiento: '1990-01-01',
             correo_electronico: 'usuario@gmail.com',
@@ -856,8 +874,8 @@ const realizarInsercion = async () => {
             confirmado: true
         },
         {
-            nombre: 'Usuario 2',
-            apellido: 'Apellido 2',
+            nombre: 'Daniela',
+            apellido: 'Gonzalez',
             genero: 'Femenino',
             fecha_nacimiento: '1990-01-01',
             correo_electronico: 'usuario2@gmail.com',
@@ -873,7 +891,7 @@ const realizarInsercion = async () => {
         const vehiculo = new VehiculoUsuario({
             placa: 'ABC123',
             marca: 'Mazda',
-            modelo: '3',
+            modelo: '2020',
             tipo_vehiculo: 'Carro',
         });
         await vehiculo.save();
@@ -886,7 +904,7 @@ const realizarInsercion = async () => {
 
     const admins = [
         {
-            nombreAdmin: 'Admin 1',
+            nombreAdmin: 'Admin',
             correo_electronico: 'admin@gmail.com',
             contrasena: 'contrasena123',
         },
@@ -901,8 +919,6 @@ const realizarInsercion = async () => {
         const newAdmin = new Admin(admin);
         await newAdmin.save();
     }
-
-
 };
 
 module.exports = realizarInsercion;

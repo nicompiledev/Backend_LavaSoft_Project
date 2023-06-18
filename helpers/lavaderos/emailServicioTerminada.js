@@ -1,5 +1,9 @@
 const nodemailer = require("nodemailer");
 
+const accountSid = "AC23c30d3465c2e76dc181de7110fa2b8d";
+const authToken = "e36cee631170a0f94f72b76cd6d7cccd";
+const client = require("twilio")(accountSid, authToken);
+
 const emailServicioTerminada = async (datos) => {
   const transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
@@ -51,6 +55,14 @@ const emailServicioTerminada = async (datos) => {
   });
 
   console.log("Mensaje enviado correctamente. ID del mensaje: %s", info.messageId);
+/* 
+  client.messages
+  .create({
+    body: `¡Hola, ${capitalizeFirstLetter(nombre)}! Te informamos que tu vehículo ha sido lavado y está listo para ser recogido en ${lavadero}. Por favor, dirígete al lavadero. La información completa la puedes encontrar en tu correo electrónico.`,
+    from: '+13159292440',
+    to: '+573026009175'
+  })
+  .then((message) => console.log(message.sid)); */
 
 };
 

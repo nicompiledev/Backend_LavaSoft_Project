@@ -98,46 +98,7 @@ module.exports = (io) => {
 };
 
 const horasDisponibles = async (id_lavadero, fecha, id_servicios) => {
-  /* Necesito que mi codigo cumpla los siguientes requisitos en el momento de mostrar los tiempos disponibles para reservar, las divisiones van dependiendo el intervalo del servicio que se seleccionó, por ejemplo, si se selecciona un servicio de 30min, las divisiones serán de 30min, si se selecciona un servicio de 1:30min, las divisiones serán de 1:30min, etc.
-
-Suponiendo que se reserva un servicio de duración de 30min que empieza a las 8:30 AM y termina a las 9:00AM.
-1. No se podría agendar un servicio de 1:30min de duración a las 8:00AM porque está "Ocupado" de 8:30AM a 9:00AM con el servicio de 30min de duración.
-2. Si se podría agendar un servicio de 30min a las 8:00 AM ya que de 8:00 AM a 8:30 AM está libre y no entra en conflicto, Ya que el siguiente es de 8:30 a 9:00.
-3. No olvides tener en cuenta los espacios de trabajo, o sea, si alguien agendo a las 8:30AM pero aun hay espacio disponible, aun se puede reservar ahi.
-4. Si se podría agendar un servicio de 1:30min a las 9:00AM ya que de 9:00AM a 10:30AM está libre y no entra en conflicto, Ya que el siguiente es de 10:30 a 12:00.
-5. Si un servicio de 1:30min empieza a las 8:00AM y termina a las 9:30AM, no se podría agendar un servicio de 30min a las 9:00AM ya que de 9:00AM a 9:30AM está "Ocupado" con el servicio de 1:30min de duración.
-DEBES TENER MUY PRESENTE LOS ESPACIOS DE TRABAJO 
-
-  modelos:
-    const reservaSchema = new mongoose.Schema({
-    id_lavadero: [{ type: mongoose.Schema.Types.ObjectId, ref: "Lavadero", required: true }],
-    id_usuario: [{ type: mongoose.Schema.Types.ObjectId, ref: "Usuario", required: true }],
-    nombre_servicio: { type: String, required: true },
-    nombre_usuario: { type: String, required: true },
-    fecha: { type: String, required: true },
-    hora_inicio: { type: String, required: true },
-    hora_fin: { type: String, required: true },
-    espacio_de_trabajo: { type: Number, required: true },
-    estado: { type: String, enum: ["pendiente", "terminado", "cancelado"], default: "pendiente"},
-    motivoCancelacion: {type: String, default: "No fue cancelado"}
-  });
-
-  const servicioSchema = new mongoose.Schema({
-    nombre: { type: String, required: true },
-    categoria: { type: String, enum: ["lavado", "encerado", "polichado", "aspirado", "desinfeccion", "otros"], required: true },
-    tipoVehiculo: { type: String, required: true },
-    detalle: { type: String, required: true },
-    costo: { type: Number, required: true },
-    duracion: { type: Number, required: true }
-  });
-
-*/
-
-  //log
-
   try {
-
-
     const lavadero = await Lavadero.findById(id_lavadero);
     const reservas = await Reserva.find({
       id_lavadero: id_lavadero,
@@ -165,7 +126,7 @@ DEBES TENER MUY PRESENTE LOS ESPACIOS DE TRABAJO
           moment(reserva.hora_fin, 'h:mm A').isBetween(hora, horaFin) ||
           moment(reserva.hora_inicio, 'h:mm A').isSameOrBefore(hora) && moment(reserva.hora_fin, 'h:mm A').isSameOrAfter(horaFin);
       });
-      if (reservasEspacio.length === 0) {
+      if (reservasEspacio.length < lavadero.espacios_de_trabajo && (!moment(fecha).isSame(moment(), 'day') || hora.isAfter(moment()))) {
         horasLibres.push(hora.format('h:mm A'));
       }
       hora.add(duracionTotal / 60, 'hours');
@@ -175,5 +136,4 @@ DEBES TENER MUY PRESENTE LOS ESPACIOS DE TRABAJO
   } catch (error) {
     console.log(error);
   }
-
-};
+}
