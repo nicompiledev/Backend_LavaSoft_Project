@@ -8,6 +8,9 @@
     "test": "jest --detectOpenHandles --forceExit",
     "dev": "nodemon index.js"
   },
+  "engines": {
+    "node": "18.14.0"
+  },
   "author": "Kevin Ortega",
   "license": "ISC",
   "dependencies": {
