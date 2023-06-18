@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const generarId = require("../../helpers/generarId.js");
+const { updateRedis } = require('../../config/redis.js');
 
 const LavaderoSchema = new mongoose.Schema({
   // Información Basica
@@ -71,6 +72,23 @@ LavaderoSchema.pre("save", async function (next) {
 LavaderoSchema.methods.comprobarPassword = async function (passwordFormulario) {
   return await bcrypt.compare(passwordFormulario, this.contrasena);
 };
+
+// Middlewares post
+LavaderoSchema.post('save', function(doc, next) {
+  updateRedis();
+  next();
+});
+
+LavaderoSchema.post('update', function(doc, next) {
+  updateRedis(doc._id);
+  next();
+});
+
+LavaderoSchema.post('remove', function(doc, next) {
+  updateRedis(doc._id);
+  next();
+});
+
 
 const Lavadero = mongoose.model("Lavadero", LavaderoSchema);
 

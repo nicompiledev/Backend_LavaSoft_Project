@@ -5,6 +5,8 @@ require("dotenv").config();
 // Utiliza la URL de conexión proporcionada por Render
 const publisher = redis.createClient(process.env.REDIS_URL);
 
+
+
 // También puedes usar la misma URL para el cliente subscriber si es necesario
 const subscriber = redis.createClient(process.env.REDIS_URL);
 
@@ -24,9 +26,25 @@ subscriber.on("connect", () => {
   console.log("Conexión a Redis exitosa con subscriber");
 });
 
+
+async function updateRedis(id) {
+  // Borrar las claves en Redis
+  const keys = await publisher.keys('lavaderos_*');
+  for (const key of keys) {
+    await publisher.del(key);
+  }
+
+  // Borrar la clave del lavadero específico
+  if (id) {
+    await publisher.del(`lavadero_${id}`);
+  }
+}
+
+
 module.exports = {
   publisher,
   subscriber,
   getAsync: promisify(publisher.get).bind(publisher),
   setAsync: promisify(publisher.set).bind(publisher),
+  updateRedis
 };

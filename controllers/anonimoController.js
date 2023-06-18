@@ -104,7 +104,6 @@ const getLavaderos = async (req, res) => {
         },
       ]);
     }
-    
 
     const lavaderos = await lavaderosQuery.skip(startIndex).limit(PAGE_SIZE);
 
@@ -123,22 +122,34 @@ const getLavaderos = async (req, res) => {
 
 
 const getLavaderoID = async (req, res) => {
-
   const { id } = req.params;
-
   let error = "";
+
   try {
-    try{
-      const lavadero = await Lavadero.findById(id, { contrasena: 0, estado: 0, visualizado: 0 }).populate('servicios');
+    // Buscar la información en Redis
+    const cacheKey = `lavadero_${id}`;
+    const cachedData = await getAsync(cacheKey);
+
+    if (cachedData) {
+      // Si se encuentra la información en Redis, devolverla
+      return res.status(200).json(JSON.parse(cachedData));
+    }
+
+    // Si no se encuentra la información en Redis, buscarla en la base de datos
+    try {
+      const lavadero = await Lavadero.findById(id, { contrasena: 0, estado: 0, visualizado: 0, hasPaid: 0}).populate('servicios');
+
+      // Almacenar la información en Redis
+      await setAsync(cacheKey, JSON.stringify(lavadero));
 
       res.status(200).json(lavadero);
-
-    } catch (e) { console.log(e)
+    } catch (e) {
+      console.log(e);
       error = new Error("No existe el lavadero");
       return res.status(404).json({ msg: error.message });
     }
-
-  } catch (e) { console.log(e)
+  } catch (e) {
+    console.log(e);
     error = new Error("Hubo un error en el servidor");
     res.status(500).json({ msg: error.message });
   }
