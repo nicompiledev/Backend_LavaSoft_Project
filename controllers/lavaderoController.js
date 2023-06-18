@@ -433,8 +433,8 @@ const crearSesionPago = async (req, res) => {
       }
     ],
     mode: 'subscription',
-    success_url: 'https://lavasoft.onrender.com/agradecimiento?redireccionado=true',
-    cancel_url: 'https://lavasoft.onrender.com/dashboard-lavadero/subscripcion',
+    success_url: 'https://lavasoft.onrender.com/#/agradecimiento?redireccionado=true',
+    cancel_url: 'https://lavasoft.onrender.com/#/dashboard-lavadero/subscripcion',
     subscription_data: {
       trial_period_days: 14,
     },
