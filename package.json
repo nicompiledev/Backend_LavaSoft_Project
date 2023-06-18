@@ -1,12 +1,13 @@
 {
   "name": "lavasoft-backend",
   "version": "1.0.0",
-  "description": "first backend project",
+  "description": "Backend for Lavasoft",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "test": "jest --detectOpenHandles --forceExit",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "build": "echo 'No build step required'"
   },
   "engines": {
     "node": "18.14.0"
