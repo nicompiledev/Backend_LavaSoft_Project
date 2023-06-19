@@ -3,6 +3,7 @@ const generarId = require("../helpers/generarId.js");
 const emailRegistro = require("../helpers/usuarios/emailRegistro.js");
 const emailOlvidePassword = require("../helpers/usuarios/emailOlvidePassword.js");
 const emailCambiarCorreo = require("../helpers/usuarios/emailCambiarCorreo.js");
+const emailRazonReporte = require("../helpers/usuarios/emailRazonReporte.js");
 
 const Usuario = require("../models/type_users/Usuario.js");
 const Lavadero = require("../models/type_users/Lavadero.js");
@@ -463,6 +464,11 @@ const reportarLavadero = async (req, res) => {
     });
 
     await reporte.save();
+
+    await emailRazonReporte ({
+      nombre: req.usuario.nombre,
+      email: req.usuario.correo_electronico,
+    });
 
     res.status(200).json({ msg: "Reporte enviado correctamente, gracias por ayudarnos a mejorar" });
 

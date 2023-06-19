@@ -3,6 +3,7 @@ const {generarJWT} = require("../helpers/generarJWT.js");
 const generarId = require("../helpers/generarId.js");
 const emailConfirmado = require("../helpers/lavaderos/emailConfirmado.js");
 const emailNoConfirmado = require("../helpers/lavaderos/emailNoConfirmado.js");
+const emailReportado = require("../helpers/lavaderos/emailReportado.js");
 
 const Lavadero = require("../models/type_users/Lavadero.js");
 const Admin = require("../models/type_users/Admin.js")
@@ -238,19 +239,21 @@ const AceptarReporte = async (req, res) => {
     reporte.estado = "Aceptado";
     await reporte.save();
 
+    res.status(200).json({ msg: "Reporte aceptado correctamente" });
+
     const lavaderoStrikes = await Lavadero.updateOne({ _id: reporte.id_lavadero }, { $inc: { strikes: 1 } });
     // Si el lavadero tiene 3 strikes, se desactiva
     if (lavaderoStrikes.strikes == 5) {
-      const lavaderoDesactivado = await Lavadero.updateOne({ _id: reporte.id_lavadero }, { $set: { estado: false } });
-      if (!lavaderoDesactivado) {
-        error = new Error("El lavadero no existe");
-        return res.status(400).json({ msg: error.message });
-      }
+      await Lavadero.updateOne({ _id: reporte.id_lavadero }, { $set: { estado: false } });
     }
 
-    // Mandar correo al lavadero avisando que se le ha puesto un strike.
+    await emailReportado({
+      correo_electronico: lavaderoStrikes.correo_electronico,
+      nombre: lavaderoStrikes.nombre,
+      motivo: reporte.motivo,
+      strikes: lavaderoStrikes.strikes
+    });
 
-    res.status(200).json({ msg: "Reporte aceptado correctamente" });
   }
   catch (e) {
     error = new Error("Hubo un error en el servidor");
@@ -273,7 +276,6 @@ const RechazarReporte = async (req, res) => {
     await reporte.save();
 
     // Mandar correo al usuario avisando que ya hemos revisado su reporte, gracias por su colaboración.
-    
     res.status(200).json({ msg: "Reporte rechazado correctamente" });
   }
   catch (e) {
