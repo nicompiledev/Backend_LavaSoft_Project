@@ -43,7 +43,12 @@ const {
 
   // pago
   crearSesionPago,
-  webhook
+  webhook,
+
+  // estadisticas
+  obtenerGanancias,
+  obtenerServiciosMasMenosPedidos,
+  obtenerVehiculoMasReservado
 } = require('../controllers/lavaderoController.js');
 const checkAuth = require('../middleware/authMiddleware.js')
 
@@ -64,11 +69,14 @@ router.put("/reservas/cancelar", checkAuth, putCancelarReserva);
 router.put("/reservas/terminar", checkAuth, servicioTerminado);
 router.get("/refreshToken", checkAuth, refrescarToken);
 
-
-
 router.post("/irapagar", checkAuth, crearSesionPago);
 
 // Webhooks
 router.post("/webhook", webhook);
+
+// estadisticas
+router.get("/estadisticas/ganancias", checkAuth, obtenerGanancias);
+router.get("/estadisticas/servicios", checkAuth, obtenerServiciosMasMenosPedidos);
+router.get("/estadisticas/vehiculos", checkAuth, obtenerVehiculoMasReservado);
 
 module.exports = router;

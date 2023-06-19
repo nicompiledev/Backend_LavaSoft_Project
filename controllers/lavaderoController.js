@@ -525,13 +525,75 @@ const webhook = async (req, res) => {
 }
 
 
+// Estadisticas:
+const obtenerGanancias = async (mes, anio) => {
+  let error = "";
+  try{
+    const reservas = await Reserva.aggregate([
+      {
+        $match: {
+          estado: 'terminado',
+          fecha: {
+            $gte: new Date(anio, mes - 1, 1),
+            $lt: new Date(anio, mes, 1)
+          }
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          ganancias: { $sum: '$costo' }
+        }
+      }
+    ]);
+    res.status(200).json({ ganancias: reservas[0].ganancias })
+  }
+  catch(e){
+    error = new Error("Hubo un error al obtener las ganancias");
+    res.status(500).json({ msg: error.message });
+  }
+}
+
+const obtenerServiciosMasMenosPedidos = async () => {
+  let error = "";
+  try{
+    const reservas = await Reserva.aggregate([
+      { $group: { _id: '$nombre_servicio', total: { $sum: 1 } } },
+      { $sort: { total: -1 } }
+    ]);
+
+    res.status(200).json({ maspedido: reservas[0]._id, menospedido: reservas[reservas.length - 1]._id })
+  }
+  catch(e){
+    error = new Error("Hubo un error al obtener el vehiculo mas reservado");
+    res.status(500).json({ msg: error.message });
+  }
+}
+
+const obtenerVehiculoMasReservado = async () => {
+  let error = "";
+  try{
+    const reservas = await Reserva.aggregate([
+      { $match: { estado: 'terminado' } },
+      { $group: { _id: '$tipo_vehiculo', total: { $sum: 1 } } },
+      { $sort: { total: -1 } }
+    ]);
+
+    res.status(200).json(reservas[0]._id)
+  }
+  catch(e){
+    error = new Error("Hubo un error al obtener el vehiculo mas reservado");
+    res.status(500).json({ msg: error.message });
+  }
+}
+
 module.exports = {
   // basico
   registrarLavadero,
   editarLavadero,
   autenticarLavadero,
   getLavadero,
-  
+
   // lavadero
   getReservasNoAtendidas,
   getReservasProceso,
@@ -546,5 +608,10 @@ module.exports = {
 
   // pago
   crearSesionPago,
-  webhook
+  webhook,
+
+  // estadisticas
+  obtenerGanancias,
+  obtenerServiciosMasMenosPedidos,
+  obtenerVehiculoMasReservado
 };
