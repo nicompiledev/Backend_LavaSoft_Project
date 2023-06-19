@@ -27,6 +27,8 @@ const {
   registrarLavadero,
   editarLavadero,
   autenticarLavadero,
+  getLavadero,
+
   // lavadero
   getReservasNoAtendidas,
   getReservasProceso,
@@ -36,7 +38,7 @@ const {
   putCancelarReserva,
   servicioTerminado,
 
-  // refreshToken
+  // refrescar token
   refrescarToken,
 
   // pago
@@ -51,6 +53,7 @@ router.post("/peticion", upload.array('images'), registrarLavadero);
 router.post("/login", autenticarLavadero)
 
 // Area Privada
+router.get("/lavadero", checkAuth, getLavadero);
 router.put("/lavadero", checkAuth, upload.array('images'), editarLavadero);
 router.post("/reservas", checkAuth, getReservasNoAtendidas);
 router.get("/reservas/proceso", checkAuth, getReservasProceso);

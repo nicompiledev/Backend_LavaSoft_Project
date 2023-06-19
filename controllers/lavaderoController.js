@@ -171,6 +171,23 @@ const editarLavadero = async (req, res) => {
   }
 };
 
+const getLavadero = async (req, res) => {
+  let error = "";
+  try {
+    const lavadero = req.lavadero;
+
+    res.status(200).json(lavadero);
+  }
+  catch (e) {
+    console.log(e)
+    error = new Error("Hubo un error al obtener el lavadero");
+    res.status(400).json({ msg: error.message });
+  }
+};
+
+
+
+
 const autenticarLavadero = async (req, res) => {
   let error = "";
   try {
@@ -513,6 +530,8 @@ module.exports = {
   registrarLavadero,
   editarLavadero,
   autenticarLavadero,
+  getLavadero,
+  
   // lavadero
   getReservasNoAtendidas,
   getReservasProceso,
