@@ -825,14 +825,18 @@ const realizarInsercion = async () => {
 
         if(newLavadero.tipoVehiculos.includes('Moto')){
         // Moto
-        const servicio5 = new Servicio({
+        const servicio1 = new Servicio({
             nombre: 'Lavado exterior', categoria: 'lavado', tipoVehiculo: 'Moto', detalle: 'Lavado exterior con agua a presión y shampoo.', costo: 10000, duracion: 15
         });
-        const servicio6 = new Servicio({
+        const servicio2 = new Servicio({
             nombre: 'Lavado de motor', categoria: 'lavado', tipoVehiculo: 'Moto', detalle: 'Lavado de motor con agua a presión y desengrasante.', costo: 20000, duracion: 30
         });
-        newLavadero.servicios.push(servicio5._id);
-        newLavadero.servicios.push(servicio6._id);
+
+        await servicio1.save();
+        await servicio2.save();
+
+        newLavadero.servicios.push(servicio1._id);
+        newLavadero.servicios.push(servicio2._id);
 
     }else if(newLavadero.tipoVehiculos.includes('Carro')){
         const servicio1 = new Servicio({
@@ -845,7 +849,7 @@ const realizarInsercion = async () => {
             nombre: 'Lavado de tapicería', categoria: 'lavado', tipoVehiculo: 'Carro', detalle: 'Lavado de tapicería con espuma y aspirado.', costo: 40000, duracion: 45
         });
         const servicio4 = new Servicio({
-            nombre: 'Lavado de motor', categoria: 'lavado', tipoVehiculo: 'Moto', detalle: 'Lavado de motor con agua a presión y desengrasante.', costo: 20000, duracion: 30
+            nombre: 'Lavado de motor', categoria: 'lavado', tipoVehiculo: 'Carro', detalle: 'Lavado de motor con agua a presión y desengrasante.', costo: 20000, duracion: 30
         });
 
         await servicio1.save();
