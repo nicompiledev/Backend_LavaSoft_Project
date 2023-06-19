@@ -838,7 +838,9 @@ const realizarInsercion = async () => {
         newLavadero.servicios.push(servicio1._id);
         newLavadero.servicios.push(servicio2._id);
 
-    }else if(newLavadero.tipoVehiculos.includes('Carro')){
+    }
+    
+    if(newLavadero.tipoVehiculos.includes('Carro')){
         const servicio1 = new Servicio({
             nombre: 'Encerado con cera de carnauba', categoria: 'encerado', tipoVehiculo: 'Carro', detalle: 'Encerado con cera de carnauba, que protege la pintura de los rayos UV y la suciedad.', costo: 50000, duracion: 60
         });

@@ -28,6 +28,13 @@ subscriber.on("connect", () => {
 
 
 async function updateRedis(id) {
+
+
+  // Borrar todas las claves en Redis
+/*   publisher.flushall((err, succeeded) => {
+    console.log(succeeded); // Devolverá verdadero si se ejecutó correctamente
+  }); */
+
   // Obtener las claves en Redis
   const keys = await publisher.keys('lavaderos_*');
 
@@ -44,6 +51,8 @@ async function updateRedis(id) {
     await publisher.del(`lavadero_${id}`);
   }
 }
+
+/* updateRedis(); */
 
 
 module.exports = {
