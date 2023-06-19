@@ -31,6 +31,7 @@ const realizarInsercion = async () => {
             hora_cierre: '18:00',
             tipoVehiculos: ['Moto', 'Carro', 'Camioneta'],
             imagenes: [
+                "https://images.pexels.com/photos/6873086/pexels-photo-6873086.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/3354647/pexels-photo-3354647.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/372810/pexels-photo-372810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/3354648/pexels-photo-3354648.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
@@ -39,8 +40,7 @@ const realizarInsercion = async () => {
                 "https://images.unsplash.com/photo-1607860108855-64acf2078ed9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80",
                 "https://img.freepik.com/foto-gratis/mano-masculina-esponja-espuma-lavando-coche_1157-36584.jpg?w=1380&t=st=1685927713~exp=1685928313~hmac=1076757b4c5928a22a1d932746c6621cd1f27915109c18a0a6c514dfe11b8b71",
                 "https://img.freepik.com/vector-gratis/plantilla-logotipo-detalle-degradado_52683-83042.jpg?w=1380&t=st=1685927813~exp=1685928413~hmac=178da83b8cad87dda9883a4ec53f862a3e8935ec714caa921f6167fe42de00e3",
-                "https://img.freepik.com/fotos-premium/trabajador-lavado-coche-rojo-esponja-tunel-lavado_179755-10792.jpg?w=1380",
-                "https://images.pexels.com/photos/6873086/pexels-photo-6873086.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                "https://img.freepik.com/fotos-premium/trabajador-lavado-coche-rojo-esponja-tunel-lavado_179755-10792.jpg?w=1380"
             ],
             espacios_de_trabajo: 10,
             strikes: 0,
@@ -71,6 +71,7 @@ const realizarInsercion = async () => {
             hora_cierre: '18:00',
             tipoVehiculos: ['Moto', 'Carro', 'Camion'],
             imagenes: [
+                "https://img.freepik.com/fotos-premium/trabajador-lavado-coche-rojo-esponja-tunel-lavado_179755-10792.jpg?w=1380",
                 "https://images.pexels.com/photos/3354647/pexels-photo-3354647.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/372810/pexels-photo-372810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/3354648/pexels-photo-3354648.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
@@ -79,7 +80,6 @@ const realizarInsercion = async () => {
                 "https://images.unsplash.com/photo-1607860108855-64acf2078ed9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80",
                 "https://img.freepik.com/foto-gratis/mano-masculina-esponja-espuma-lavando-coche_1157-36584.jpg?w=1380&t=st=1685927713~exp=1685928313~hmac=1076757b4c5928a22a1d932746c6621cd1f27915109c18a0a6c514dfe11b8b71",
                 "https://img.freepik.com/vector-gratis/plantilla-logotipo-detalle-degradado_52683-83042.jpg?w=1380&t=st=1685927813~exp=1685928413~hmac=178da83b8cad87dda9883a4ec53f862a3e8935ec714caa921f6167fe42de00e3",
-                "https://img.freepik.com/fotos-premium/trabajador-lavado-coche-rojo-esponja-tunel-lavado_179755-10792.jpg?w=1380",
                 "https://images.pexels.com/photos/6873086/pexels-photo-6873086.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
             ],
             espacios_de_trabajo: 10,
@@ -110,13 +110,13 @@ const realizarInsercion = async () => {
             hora_cierre: '18:00',
             tipoVehiculos: ['Carro', 'Camion'],
             imagenes: [
+                "https://img.freepik.com/foto-gratis/mano-masculina-esponja-espuma-lavando-coche_1157-36584.jpg?w=1380&t=st=1685927713~exp=1685928313~hmac=1076757b4c5928a22a1d932746c6621cd1f27915109c18a0a6c514dfe11b8b71",
                 "https://images.pexels.com/photos/3354647/pexels-photo-3354647.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/372810/pexels-photo-372810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/3354648/pexels-photo-3354648.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/6873081/pexels-photo-6873081.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://img.freepik.com/foto-gratis/hermoso-coche-servicio-lavado_23-2149212221.jpg?w=1380&t=st=1685927664~exp=1685928264~hmac=e9f145c959b1d89d61eae24420bc9f48e539b2f518da39ba8967dd783d461498",
                 "https://images.unsplash.com/photo-1607860108855-64acf2078ed9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80",
-                "https://img.freepik.com/foto-gratis/mano-masculina-esponja-espuma-lavando-coche_1157-36584.jpg?w=1380&t=st=1685927713~exp=1685928313~hmac=1076757b4c5928a22a1d932746c6621cd1f27915109c18a0a6c514dfe11b8b71",
                 "https://img.freepik.com/vector-gratis/plantilla-logotipo-detalle-degradado_52683-83042.jpg?w=1380&t=st=1685927813~exp=1685928413~hmac=178da83b8cad87dda9883a4ec53f862a3e8935ec714caa921f6167fe42de00e3",
                 "https://img.freepik.com/fotos-premium/trabajador-lavado-coche-rojo-esponja-tunel-lavado_179755-10792.jpg?w=1380",
                 "https://images.pexels.com/photos/6873086/pexels-photo-6873086.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
@@ -148,11 +148,11 @@ const realizarInsercion = async () => {
             hora_cierre: '18:00',
             tipoVehiculos: ['Camioneta', 'Camion'],
             imagenes: [
+                "https://img.freepik.com/foto-gratis/hermoso-coche-servicio-lavado_23-2149212221.jpg?w=1380&t=st=1685927664~exp=1685928264~hmac=e9f145c959b1d89d61eae24420bc9f48e539b2f518da39ba8967dd783d461498",
                 "https://images.pexels.com/photos/3354647/pexels-photo-3354647.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/372810/pexels-photo-372810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/3354648/pexels-photo-3354648.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/6873081/pexels-photo-6873081.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-                "https://img.freepik.com/foto-gratis/hermoso-coche-servicio-lavado_23-2149212221.jpg?w=1380&t=st=1685927664~exp=1685928264~hmac=e9f145c959b1d89d61eae24420bc9f48e539b2f518da39ba8967dd783d461498",
                 "https://images.unsplash.com/photo-1607860108855-64acf2078ed9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80",
                 "https://img.freepik.com/foto-gratis/mano-masculina-esponja-espuma-lavando-coche_1157-36584.jpg?w=1380&t=st=1685927713~exp=1685928313~hmac=1076757b4c5928a22a1d932746c6621cd1f27915109c18a0a6c514dfe11b8b71",
                 "https://img.freepik.com/vector-gratis/plantilla-logotipo-detalle-degradado_52683-83042.jpg?w=1380&t=st=1685927813~exp=1685928413~hmac=178da83b8cad87dda9883a4ec53f862a3e8935ec714caa921f6167fe42de00e3",
@@ -187,8 +187,8 @@ const realizarInsercion = async () => {
             hora_cierre: '18:00',
             tipoVehiculos: ['Moto', 'Carro', 'Camioneta', 'Camion'],
             imagenes: [
-                "https://images.pexels.com/photos/3354647/pexels-photo-3354647.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/372810/pexels-photo-372810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+                "https://images.pexels.com/photos/3354647/pexels-photo-3354647.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/3354648/pexels-photo-3354648.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/6873081/pexels-photo-6873081.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://img.freepik.com/foto-gratis/hermoso-coche-servicio-lavado_23-2149212221.jpg?w=1380&t=st=1685927664~exp=1685928264~hmac=e9f145c959b1d89d61eae24420bc9f48e539b2f518da39ba8967dd783d461498",
@@ -225,10 +225,10 @@ const realizarInsercion = async () => {
             hora_cierre: '18:00',
             tipoVehiculos: ['Moto'],
             imagenes: [
+                "https://images.pexels.com/photos/6873081/pexels-photo-6873081.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/3354647/pexels-photo-3354647.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/372810/pexels-photo-372810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/3354648/pexels-photo-3354648.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-                "https://images.pexels.com/photos/6873081/pexels-photo-6873081.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://img.freepik.com/foto-gratis/hermoso-coche-servicio-lavado_23-2149212221.jpg?w=1380&t=st=1685927664~exp=1685928264~hmac=e9f145c959b1d89d61eae24420bc9f48e539b2f518da39ba8967dd783d461498",
                 "https://images.unsplash.com/photo-1607860108855-64acf2078ed9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80",
                 "https://img.freepik.com/foto-gratis/mano-masculina-esponja-espuma-lavando-coche_1157-36584.jpg?w=1380&t=st=1685927713~exp=1685928313~hmac=1076757b4c5928a22a1d932746c6621cd1f27915109c18a0a6c514dfe11b8b71",
@@ -263,6 +263,7 @@ const realizarInsercion = async () => {
             hora_cierre: '18:00',
             tipoVehiculos: ['Carro', 'Moto'],
             imagenes: [
+                "https://img.freepik.com/fotos-premium/trabajador-lavado-coche-rojo-esponja-tunel-lavado_179755-10792.jpg?w=1380",
                 "https://images.pexels.com/photos/3354647/pexels-photo-3354647.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/372810/pexels-photo-372810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/3354648/pexels-photo-3354648.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
@@ -271,7 +272,6 @@ const realizarInsercion = async () => {
                 "https://images.unsplash.com/photo-1607860108855-64acf2078ed9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80",
                 "https://img.freepik.com/foto-gratis/mano-masculina-esponja-espuma-lavando-coche_1157-36584.jpg?w=1380&t=st=1685927713~exp=1685928313~hmac=1076757b4c5928a22a1d932746c6621cd1f27915109c18a0a6c514dfe11b8b71",
                 "https://img.freepik.com/vector-gratis/plantilla-logotipo-detalle-degradado_52683-83042.jpg?w=1380&t=st=1685927813~exp=1685928413~hmac=178da83b8cad87dda9883a4ec53f862a3e8935ec714caa921f6167fe42de00e3",
-                "https://img.freepik.com/fotos-premium/trabajador-lavado-coche-rojo-esponja-tunel-lavado_179755-10792.jpg?w=1380",
                 "https://images.pexels.com/photos/6873086/pexels-photo-6873086.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
             ],
             espacios_de_trabajo: 10,
@@ -301,8 +301,8 @@ const realizarInsercion = async () => {
             hora_cierre: '18:00',
             tipoVehiculos: ['Camioneta', 'Carro', 'Moto'],
             imagenes: [
-                "https://images.pexels.com/photos/3354647/pexels-photo-3354647.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/372810/pexels-photo-372810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+                "https://images.pexels.com/photos/3354647/pexels-photo-3354647.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/3354648/pexels-photo-3354648.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/6873081/pexels-photo-6873081.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://img.freepik.com/foto-gratis/hermoso-coche-servicio-lavado_23-2149212221.jpg?w=1380&t=st=1685927664~exp=1685928264~hmac=e9f145c959b1d89d61eae24420bc9f48e539b2f518da39ba8967dd783d461498",
@@ -339,13 +339,13 @@ const realizarInsercion = async () => {
             hora_cierre: '18:00',
             tipoVehiculos: ['Moto', 'Carro'],
             imagenes: [
+                "https://img.freepik.com/foto-gratis/mano-masculina-esponja-espuma-lavando-coche_1157-36584.jpg?w=1380&t=st=1685927713~exp=1685928313~hmac=1076757b4c5928a22a1d932746c6621cd1f27915109c18a0a6c514dfe11b8b71",
                 "https://images.pexels.com/photos/3354647/pexels-photo-3354647.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/372810/pexels-photo-372810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/3354648/pexels-photo-3354648.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/6873081/pexels-photo-6873081.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://img.freepik.com/foto-gratis/hermoso-coche-servicio-lavado_23-2149212221.jpg?w=1380&t=st=1685927664~exp=1685928264~hmac=e9f145c959b1d89d61eae24420bc9f48e539b2f518da39ba8967dd783d461498",
                 "https://images.unsplash.com/photo-1607860108855-64acf2078ed9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80",
-                "https://img.freepik.com/foto-gratis/mano-masculina-esponja-espuma-lavando-coche_1157-36584.jpg?w=1380&t=st=1685927713~exp=1685928313~hmac=1076757b4c5928a22a1d932746c6621cd1f27915109c18a0a6c514dfe11b8b71",
                 "https://img.freepik.com/vector-gratis/plantilla-logotipo-detalle-degradado_52683-83042.jpg?w=1380&t=st=1685927813~exp=1685928413~hmac=178da83b8cad87dda9883a4ec53f862a3e8935ec714caa921f6167fe42de00e3",
                 "https://img.freepik.com/fotos-premium/trabajador-lavado-coche-rojo-esponja-tunel-lavado_179755-10792.jpg?w=1380",
                 "https://images.pexels.com/photos/6873086/pexels-photo-6873086.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
@@ -377,10 +377,10 @@ const realizarInsercion = async () => {
             hora_cierre: '18:00',
             tipoVehiculos: ['Moto', 'Carro'],
             imagenes: [
+                "https://images.pexels.com/photos/6873081/pexels-photo-6873081.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/3354647/pexels-photo-3354647.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/372810/pexels-photo-372810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/3354648/pexels-photo-3354648.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-                "https://images.pexels.com/photos/6873081/pexels-photo-6873081.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://img.freepik.com/foto-gratis/hermoso-coche-servicio-lavado_23-2149212221.jpg?w=1380&t=st=1685927664~exp=1685928264~hmac=e9f145c959b1d89d61eae24420bc9f48e539b2f518da39ba8967dd783d461498",
                 "https://images.unsplash.com/photo-1607860108855-64acf2078ed9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80",
                 "https://img.freepik.com/foto-gratis/mano-masculina-esponja-espuma-lavando-coche_1157-36584.jpg?w=1380&t=st=1685927713~exp=1685928313~hmac=1076757b4c5928a22a1d932746c6621cd1f27915109c18a0a6c514dfe11b8b71",
@@ -415,9 +415,9 @@ const realizarInsercion = async () => {
             hora_cierre: '18:00',
             tipoVehiculos: ['Carro'],
             imagenes: [
+                "https://images.pexels.com/photos/3354648/pexels-photo-3354648.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/3354647/pexels-photo-3354647.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/372810/pexels-photo-372810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-                "https://images.pexels.com/photos/3354648/pexels-photo-3354648.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/6873081/pexels-photo-6873081.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://img.freepik.com/foto-gratis/hermoso-coche-servicio-lavado_23-2149212221.jpg?w=1380&t=st=1685927664~exp=1685928264~hmac=e9f145c959b1d89d61eae24420bc9f48e539b2f518da39ba8967dd783d461498",
                 "https://images.unsplash.com/photo-1607860108855-64acf2078ed9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80",
@@ -454,6 +454,7 @@ const realizarInsercion = async () => {
             hora_cierre: '18:00',
             tipoVehiculos: ['Carro', 'Moto'],
             imagenes: [
+                "https://images.pexels.com/photos/6873086/pexels-photo-6873086.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/3354647/pexels-photo-3354647.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/372810/pexels-photo-372810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/3354648/pexels-photo-3354648.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
@@ -463,7 +464,6 @@ const realizarInsercion = async () => {
                 "https://img.freepik.com/foto-gratis/mano-masculina-esponja-espuma-lavando-coche_1157-36584.jpg?w=1380&t=st=1685927713~exp=1685928313~hmac=1076757b4c5928a22a1d932746c6621cd1f27915109c18a0a6c514dfe11b8b71",
                 "https://img.freepik.com/vector-gratis/plantilla-logotipo-detalle-degradado_52683-83042.jpg?w=1380&t=st=1685927813~exp=1685928413~hmac=178da83b8cad87dda9883a4ec53f862a3e8935ec714caa921f6167fe42de00e3",
                 "https://img.freepik.com/fotos-premium/trabajador-lavado-coche-rojo-esponja-tunel-lavado_179755-10792.jpg?w=1380",
-                "https://images.pexels.com/photos/6873086/pexels-photo-6873086.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
             ],
             espacios_de_trabajo: 10,
             strikes: 0,
@@ -492,6 +492,7 @@ const realizarInsercion = async () => {
             hora_cierre: '18:00',
             tipoVehiculos: ['Carro', 'Camioneta'],
             imagenes: [
+                "https://img.freepik.com/vector-gratis/plantilla-logotipo-detalle-degradado_52683-83042.jpg?w=1380&t=st=1685927813~exp=1685928413~hmac=178da83b8cad87dda9883a4ec53f862a3e8935ec714caa921f6167fe42de00e3",
                 "https://images.pexels.com/photos/3354647/pexels-photo-3354647.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/372810/pexels-photo-372810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/3354648/pexels-photo-3354648.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
@@ -499,7 +500,6 @@ const realizarInsercion = async () => {
                 "https://img.freepik.com/foto-gratis/hermoso-coche-servicio-lavado_23-2149212221.jpg?w=1380&t=st=1685927664~exp=1685928264~hmac=e9f145c959b1d89d61eae24420bc9f48e539b2f518da39ba8967dd783d461498",
                 "https://images.unsplash.com/photo-1607860108855-64acf2078ed9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80",
                 "https://img.freepik.com/foto-gratis/mano-masculina-esponja-espuma-lavando-coche_1157-36584.jpg?w=1380&t=st=1685927713~exp=1685928313~hmac=1076757b4c5928a22a1d932746c6621cd1f27915109c18a0a6c514dfe11b8b71",
-                "https://img.freepik.com/vector-gratis/plantilla-logotipo-detalle-degradado_52683-83042.jpg?w=1380&t=st=1685927813~exp=1685928413~hmac=178da83b8cad87dda9883a4ec53f862a3e8935ec714caa921f6167fe42de00e3",
                 "https://img.freepik.com/fotos-premium/trabajador-lavado-coche-rojo-esponja-tunel-lavado_179755-10792.jpg?w=1380",
                 "https://images.pexels.com/photos/6873086/pexels-photo-6873086.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
             ],
@@ -531,6 +531,7 @@ const realizarInsercion = async () => {
             hora_cierre: '18:00',
             tipoVehiculos: ['Moto', 'Carro', 'Camioneta'],
             imagenes: [
+                "https://images.pexels.com/photos/6873086/pexels-photo-6873086.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/3354647/pexels-photo-3354647.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/372810/pexels-photo-372810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/3354648/pexels-photo-3354648.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
@@ -540,7 +541,6 @@ const realizarInsercion = async () => {
                 "https://img.freepik.com/foto-gratis/mano-masculina-esponja-espuma-lavando-coche_1157-36584.jpg?w=1380&t=st=1685927713~exp=1685928313~hmac=1076757b4c5928a22a1d932746c6621cd1f27915109c18a0a6c514dfe11b8b71",
                 "https://img.freepik.com/vector-gratis/plantilla-logotipo-detalle-degradado_52683-83042.jpg?w=1380&t=st=1685927813~exp=1685928413~hmac=178da83b8cad87dda9883a4ec53f862a3e8935ec714caa921f6167fe42de00e3",
                 "https://img.freepik.com/fotos-premium/trabajador-lavado-coche-rojo-esponja-tunel-lavado_179755-10792.jpg?w=1380",
-                "https://images.pexels.com/photos/6873086/pexels-photo-6873086.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
             ],
             espacios_de_trabajo: 10,
             strikes: 0,
@@ -569,11 +569,11 @@ const realizarInsercion = async () => {
             hora_cierre: '18:00',
             tipoVehiculos: ['Moto', 'Carro'],
             imagenes: [
+                "https://img.freepik.com/foto-gratis/hermoso-coche-servicio-lavado_23-2149212221.jpg?w=1380&t=st=1685927664~exp=1685928264~hmac=e9f145c959b1d89d61eae24420bc9f48e539b2f518da39ba8967dd783d461498",
                 "https://images.pexels.com/photos/3354647/pexels-photo-3354647.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/372810/pexels-photo-372810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/3354648/pexels-photo-3354648.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/6873081/pexels-photo-6873081.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-                "https://img.freepik.com/foto-gratis/hermoso-coche-servicio-lavado_23-2149212221.jpg?w=1380&t=st=1685927664~exp=1685928264~hmac=e9f145c959b1d89d61eae24420bc9f48e539b2f518da39ba8967dd783d461498",
                 "https://images.unsplash.com/photo-1607860108855-64acf2078ed9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80",
                 "https://img.freepik.com/foto-gratis/mano-masculina-esponja-espuma-lavando-coche_1157-36584.jpg?w=1380&t=st=1685927713~exp=1685928313~hmac=1076757b4c5928a22a1d932746c6621cd1f27915109c18a0a6c514dfe11b8b71",
                 "https://img.freepik.com/vector-gratis/plantilla-logotipo-detalle-degradado_52683-83042.jpg?w=1380&t=st=1685927813~exp=1685928413~hmac=178da83b8cad87dda9883a4ec53f862a3e8935ec714caa921f6167fe42de00e3",
@@ -605,16 +605,16 @@ const realizarInsercion = async () => {
             contrasena: 'contrasena123',
             hora_apertura: '08:00',
             hora_cierre: '18:00',
-            tipoVehiculos: ['Moto', 'Carro'],
+            tipoVehiculos: ['Moto', 'Camioneta', 'Carro'],
             imagenes: [
+                "https://images.pexels.com/photos/3354648/pexels-photo-3354648.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+                "https://img.freepik.com/vector-gratis/plantilla-logotipo-detalle-degradado_52683-83042.jpg?w=1380&t=st=1685927813~exp=1685928413~hmac=178da83b8cad87dda9883a4ec53f862a3e8935ec714caa921f6167fe42de00e3",
                 "https://images.pexels.com/photos/3354647/pexels-photo-3354647.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/372810/pexels-photo-372810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-                "https://images.pexels.com/photos/3354648/pexels-photo-3354648.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/6873081/pexels-photo-6873081.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://img.freepik.com/foto-gratis/hermoso-coche-servicio-lavado_23-2149212221.jpg?w=1380&t=st=1685927664~exp=1685928264~hmac=e9f145c959b1d89d61eae24420bc9f48e539b2f518da39ba8967dd783d461498",
                 "https://images.unsplash.com/photo-1607860108855-64acf2078ed9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80",
                 "https://img.freepik.com/foto-gratis/mano-masculina-esponja-espuma-lavando-coche_1157-36584.jpg?w=1380&t=st=1685927713~exp=1685928313~hmac=1076757b4c5928a22a1d932746c6621cd1f27915109c18a0a6c514dfe11b8b71",
-                "https://img.freepik.com/vector-gratis/plantilla-logotipo-detalle-degradado_52683-83042.jpg?w=1380&t=st=1685927813~exp=1685928413~hmac=178da83b8cad87dda9883a4ec53f862a3e8935ec714caa921f6167fe42de00e3",
                 "https://img.freepik.com/fotos-premium/trabajador-lavado-coche-rojo-esponja-tunel-lavado_179755-10792.jpg?w=1380",
                 "https://images.pexels.com/photos/6873086/pexels-photo-6873086.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
             ],
@@ -645,6 +645,7 @@ const realizarInsercion = async () => {
             hora_cierre: '18:00',
             tipoVehiculos: ['Moto', 'Carro'],
             imagenes: [
+                "https://img.freepik.com/fotos-premium/trabajador-lavado-coche-rojo-esponja-tunel-lavado_179755-10792.jpg?w=1380",
                 "https://images.pexels.com/photos/3354647/pexels-photo-3354647.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/372810/pexels-photo-372810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/3354648/pexels-photo-3354648.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
@@ -653,7 +654,6 @@ const realizarInsercion = async () => {
                 "https://images.unsplash.com/photo-1607860108855-64acf2078ed9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80",
                 "https://img.freepik.com/foto-gratis/mano-masculina-esponja-espuma-lavando-coche_1157-36584.jpg?w=1380&t=st=1685927713~exp=1685928313~hmac=1076757b4c5928a22a1d932746c6621cd1f27915109c18a0a6c514dfe11b8b71",
                 "https://img.freepik.com/vector-gratis/plantilla-logotipo-detalle-degradado_52683-83042.jpg?w=1380&t=st=1685927813~exp=1685928413~hmac=178da83b8cad87dda9883a4ec53f862a3e8935ec714caa921f6167fe42de00e3",
-                "https://img.freepik.com/fotos-premium/trabajador-lavado-coche-rojo-esponja-tunel-lavado_179755-10792.jpg?w=1380",
                 "https://images.pexels.com/photos/6873086/pexels-photo-6873086.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
             ],
             espacios_de_trabajo: 10,
@@ -681,10 +681,10 @@ const realizarInsercion = async () => {
             contrasena: 'contrasena123',
             hora_apertura: '08:00',
             hora_cierre: '18:00',
-            tipoVehiculos: ['Moto', 'Carro'],
+            tipoVehiculos: ['Moto', 'Carro', 'Camioneta', 'Camion'],
             imagenes: [
-                "https://images.pexels.com/photos/3354647/pexels-photo-3354647.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/372810/pexels-photo-372810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+                "https://images.pexels.com/photos/3354647/pexels-photo-3354647.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/3354648/pexels-photo-3354648.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/6873081/pexels-photo-6873081.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://img.freepik.com/foto-gratis/hermoso-coche-servicio-lavado_23-2149212221.jpg?w=1380&t=st=1685927664~exp=1685928264~hmac=e9f145c959b1d89d61eae24420bc9f48e539b2f518da39ba8967dd783d461498",
@@ -721,10 +721,10 @@ const realizarInsercion = async () => {
             hora_cierre: '18:00',
             tipoVehiculos: ['Moto', 'Carro'],
             imagenes: [
+                "https://images.pexels.com/photos/6873081/pexels-photo-6873081.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/3354647/pexels-photo-3354647.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/372810/pexels-photo-372810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/3354648/pexels-photo-3354648.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-                "https://images.pexels.com/photos/6873081/pexels-photo-6873081.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://img.freepik.com/foto-gratis/hermoso-coche-servicio-lavado_23-2149212221.jpg?w=1380&t=st=1685927664~exp=1685928264~hmac=e9f145c959b1d89d61eae24420bc9f48e539b2f518da39ba8967dd783d461498",
                 "https://images.unsplash.com/photo-1607860108855-64acf2078ed9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80",
                 "https://img.freepik.com/foto-gratis/mano-masculina-esponja-espuma-lavando-coche_1157-36584.jpg?w=1380&t=st=1685927713~exp=1685928313~hmac=1076757b4c5928a22a1d932746c6621cd1f27915109c18a0a6c514dfe11b8b71",
@@ -797,6 +797,7 @@ const realizarInsercion = async () => {
             hora_cierre: '18:00',
             tipoVehiculos: ['Moto', 'Carro'],
             imagenes: [
+                "https://img.freepik.com/vector-gratis/plantilla-logotipo-detalle-degradado_52683-83042.jpg?w=1380&t=st=1685927813~exp=1685928413~hmac=178da83b8cad87dda9883a4ec53f862a3e8935ec714caa921f6167fe42de00e3",
                 "https://images.pexels.com/photos/3354647/pexels-photo-3354647.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/372810/pexels-photo-372810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                 "https://images.pexels.com/photos/3354648/pexels-photo-3354648.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
@@ -804,7 +805,6 @@ const realizarInsercion = async () => {
                 "https://img.freepik.com/foto-gratis/hermoso-coche-servicio-lavado_23-2149212221.jpg?w=1380&t=st=1685927664~exp=1685928264~hmac=e9f145c959b1d89d61eae24420bc9f48e539b2f518da39ba8967dd783d461498",
                 "https://images.unsplash.com/photo-1607860108855-64acf2078ed9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80",
                 "https://img.freepik.com/foto-gratis/mano-masculina-esponja-espuma-lavando-coche_1157-36584.jpg?w=1380&t=st=1685927713~exp=1685928313~hmac=1076757b4c5928a22a1d932746c6621cd1f27915109c18a0a6c514dfe11b8b71",
-                "https://img.freepik.com/vector-gratis/plantilla-logotipo-detalle-degradado_52683-83042.jpg?w=1380&t=st=1685927813~exp=1685928413~hmac=178da83b8cad87dda9883a4ec53f862a3e8935ec714caa921f6167fe42de00e3",
                 "https://img.freepik.com/fotos-premium/trabajador-lavado-coche-rojo-esponja-tunel-lavado_179755-10792.jpg?w=1380",
                 "https://images.pexels.com/photos/6873086/pexels-photo-6873086.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
             ],
