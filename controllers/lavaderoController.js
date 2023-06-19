@@ -526,16 +526,17 @@ const webhook = async (req, res) => {
 
 
 // Estadisticas:
-const obtenerGanancias = async (mes, anio) => {
-  let error = "";
-  try{
+const obtenerGanancias = async (req, res) => {
+  const { mes } = req.body;
+  try {
     const reservas = await Reserva.aggregate([
       {
         $match: {
+          id_lavadero: req.lavadero._id,
           estado: 'terminado',
           fecha: {
-            $gte: new Date(anio, mes - 1, 1),
-            $lt: new Date(anio, mes, 1)
+            $gte: new Date(2023, mes - 1, 1),
+            $lt: new Date(2023, mes, 1)
           }
         }
       },
@@ -546,46 +547,46 @@ const obtenerGanancias = async (mes, anio) => {
         }
       }
     ]);
-    res.status(200).json({ ganancias: reservas[0].ganancias })
-  }
-  catch(e){
-    error = new Error("Hubo un error al obtener las ganancias");
+
+    res.status(200).json({ ganancias: reservas[0].ganancias });
+  } catch (e) {
+    const error = new Error('Hubo un error al obtener las ganancias');
     res.status(500).json({ msg: error.message });
   }
-}
+};
 
-const obtenerServiciosMasMenosPedidos = async () => {
-  let error = "";
-  try{
+const obtenerServiciosMasMenosPedidos = async (req, res) => {
+  try {
     const reservas = await Reserva.aggregate([
+      { $match: { id_lavadero: req.lavadero._id } },
       { $group: { _id: '$nombre_servicio', total: { $sum: 1 } } },
       { $sort: { total: -1 } }
     ]);
 
-    res.status(200).json({ maspedido: reservas[0]._id, menospedido: reservas[reservas.length - 1]._id })
-  }
-  catch(e){
-    error = new Error("Hubo un error al obtener el vehiculo mas reservado");
+    res.status(200).json({
+      maspedido: reservas[0]._id,
+      menospedido: reservas[reservas.length - 1]._id
+    });
+  } catch (e) {
+    const error = new Error('Hubo un error al obtener el vehiculo mas reservado');
     res.status(500).json({ msg: error.message });
   }
-}
+};
 
-const obtenerVehiculoMasReservado = async () => {
-  let error = "";
-  try{
+const obtenerVehiculoMasReservado = async (req, res) => {
+  try {
     const reservas = await Reserva.aggregate([
-      { $match: { estado: 'terminado' } },
+      { $match: { id_lavadero: req.lavadero._id, estado: 'terminado' } },
       { $group: { _id: '$tipo_vehiculo', total: { $sum: 1 } } },
       { $sort: { total: -1 } }
     ]);
 
-    res.status(200).json(reservas[0]._id)
-  }
-  catch(e){
-    error = new Error("Hubo un error al obtener el vehiculo mas reservado");
+    res.status(200).json(reservas[0]._id);
+  } catch (e) {
+    const error = new Error('Hubo un error al obtener el vehiculo mas reservado');
     res.status(500).json({ msg: error.message });
   }
-}
+};
 
 module.exports = {
   // basico
