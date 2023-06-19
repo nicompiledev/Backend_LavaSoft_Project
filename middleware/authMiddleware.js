@@ -39,7 +39,7 @@ const checkAuth = async (req, res, next) => {
         case "lavadero":
           req.lavadero = await Lavadero.findById(id).select(
             "-contrasena -token -visualizado -creado"
-          );
+          ).populate("servicios");
           break;
       }
 
