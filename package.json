@@ -10,7 +10,7 @@
     "build": "echo 'No build step required'"
   },
   "engines": {
-    "node": "18.14.0"
+    "node": "18.16.0"
   },
   "author": "Kevin Ortega",
   "license": "ISC",
