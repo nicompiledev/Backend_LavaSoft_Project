@@ -424,7 +424,31 @@ const obtenerGananciasTodosLosMeses = async (req, res) => {
     const { _id } = req.lavadero;
     const { anio } = req.body;
 
-   /* const LavaderoSchema = new mongoose.Schema({
+    const reservas = await Reserva.find({ id_lavadero: _id, estado: "terminado" })
+
+    const ganancias = []
+
+    for (let i = 0; i < 12; i++) {
+      ganancias.push(0)
+    }
+
+    reservas.forEach(reserva => {
+      const fecha = new Date(reserva.fecha)
+      if (fecha.getFullYear() == anio) {
+        ganancias[fecha.getMonth()] += reserva.costoTotal
+      }
+    })
+
+    res.status(200).json({ ganancias })
+
+  } catch (e) {
+    error = new Error("Hubo un error al obtener las ganancias");
+    res.status(500).json({ msg: error.message });
+  }
+};
+
+const obtenerServiciosMasMenosSolicitados = async (req, res) => {
+     /* const LavaderoSchema = new mongoose.Schema({
     // Información Basica
     NIT: { type: String, required: true },
     nombreLavadero: { type: String, required: true },
@@ -487,30 +511,47 @@ const obtenerGananciasTodosLosMeses = async (req, res) => {
     estado: { type: String, enum: ["pendiente", "proceso", "terminado", "cancelado"], default: "pendiente"},
     motivoCancelacion: {type: String, default: "No fue cancelado"},
     nombre_emplado: { type: String, required: false },
-  }); */
+  }); */ 
+  let error = "";
+  try {
+    const { _id } = req.lavadero;
+    const { anio } = req.body;
 
     const reservas = await Reserva.find({ id_lavadero: _id, estado: "terminado" })
 
-    const ganancias = []
-
-    for (let i = 0; i < 12; i++) {
-      ganancias.push(0)
-    }
+    const servicios = {}
 
     reservas.forEach(reserva => {
       const fecha = new Date(reserva.fecha)
       if (fecha.getFullYear() == anio) {
-        ganancias[fecha.getMonth()] += reserva.costoTotal
+        if (servicios[reserva.nombre_servicio]) {
+          servicios[reserva.nombre_servicio] += 1
+        } else {
+          servicios[reserva.nombre_servicio] = 1
+        }
       }
     })
 
-    res.status(200).json({ ganancias })
+    const serviciosMasSolicitados = []
+    const serviciosMenosSolicitados = []
 
-  } catch (e) {
-    error = new Error("Hubo un error al obtener las ganancias");
+    for (const servicio in servicios) {
+      serviciosMasSolicitados.push({ nombre: servicio, cantidad: servicios[servicio] })
+      serviciosMenosSolicitados.push({ nombre: servicio, cantidad: servicios[servicio] })
+    }
+
+    serviciosMasSolicitados.sort((a, b) => b.cantidad - a.cantidad)
+    serviciosMenosSolicitados.sort((a, b) => a.cantidad - b.cantidad)
+
+    res.status(200).json({ serviciosMasSolicitados, serviciosMenosSolicitados })
+
+  }
+  catch (e) {
+    error = new Error("Hubo un error al obtener los servicios mas y menos solicitados");
     res.status(500).json({ msg: error.message });
   }
 };
+
 
 const refrescarToken = async (req, res) => {
   let error = "";
@@ -643,4 +684,5 @@ module.exports = {
 
   // estadisticas
   obtenerGananciasTodosLosMeses,
+  obtenerServiciosMasMenosSolicitados,
 };
