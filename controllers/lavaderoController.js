@@ -448,39 +448,134 @@ const obtenerGananciasTodosLosMeses = async (req, res) => {
 };
 
 const obtenerServiciosMasMenosSolicitados = async (req, res) => {
+     /* const LavaderoSchema = new mongoose.Schema({
+    // Información Basica
+    NIT: { type: String, required: true },
+    nombreLavadero: { type: String, required: true },
+    descripcion: {type: String, required: false},
+    telefono: { type: String, required: true },
+    siNoLoRecogen: {type: String, required: true },
+  
+    // Ubicacion
+    departamento: { type: String, required: true },
+    ciudad: { type: String, required: true },
+    sector: { type: String, required: true },
+    direccion: { type: String, required: true },
+    ubicacion: {
+      type: { type: String, default: "Point" },
+      coordinates: { type: [Number], required: true },
+    },
+  
+    // Autenticacion
+    correo_electronico: { type: String, required: true, unique: true },
+    contrasena: { type: String },
+  
+      // Suscripción
+    customerId: { type: String },
+    subscriptionId: { type: String },
+    hasPaid: { type: Boolean, default: false },
+    subscriptionStatus: { type: String },
+  
+  
+    // Informacion
+    hora_apertura: { type: String, required: true },
+    hora_cierre: { type: String, required: true },
+    tipoVehiculos: [{ type: String, enum: ['Moto', 'Carro', 'Camioneta', 'Bus', 'Camion'], required: true}],
+    imagenes: [{ type: String }], // nuevo campo de matriz de imágenes
+    servicios: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Servicio' }],
+    espacios_de_trabajo: { type: Number, required: true },
+  
+    // Staff
+    strikes: { type: Number, default: 0 },
+    estado: { type: Boolean, default: false },
+    visualizado: {type: Boolean, default: false,},
+    token: { type: String, default: generarId() },
+    creado: { type: Date, default: Date.now() },
+  
+  }); */
+
+
+  /* const reservaSchema = new mongoose.Schema({
+    id_lavadero: { type: mongoose.Schema.Types.ObjectId, ref: "Lavadero", required: true },
+    id_usuario: { type: mongoose.Schema.Types.ObjectId, ref: "Usuario", required: true },
+    nombre_servicio: { type: String, required: true },
+    nombre_usuario: { type: String, required: true },
+    id_vehiculo: { type: mongoose.Schema.Types.ObjectId, ref: "VehiculoUsuario", required: true },
+    placa_vehiculo: { type: String, required: true },
+    tipo_vehiculo: { type: String, required: true },
+    fecha: { type: String, required: true },
+    hora_inicio: { type: String, required: true },
+    hora_fin: { type: String, required: true },
+    espacio_de_trabajo: { type: Number, required: true },
+    costoTotal: { type: Number, required: true },
+    estado: { type: String, enum: ["pendiente", "proceso", "terminado", "cancelado"], default: "pendiente"},
+    motivoCancelacion: {type: String, default: "No fue cancelado"},
+    nombre_emplado: { type: String, required: false },
+  }); 
+  
+    const servicioSchema = new mongoose.Schema({
+    nombre: { type: String, required: true },
+    categoria: { type: String, enum: ["lavado", "encerado", "polichado", "aspirado", "desinfeccion", "otros"], required: true },
+    tipoVehiculo: { type: String, required: true },
+    detalle: { type: String, required: true },
+    costo: { type: Number, required: true },
+    duracion: { type: Number, required: true }
+  });
+  */ 
   let error = "";
   try {
     const { _id } = req.lavadero;
     const { anio } = req.body;
 
+    // Hay que tener en cuenta que en reserva nombre_servicio salen varios nombres de servicios, ejemplo "lavado, aspirado, polichado"
+
     const reservas = await Reserva.find({ id_lavadero: _id, estado: "terminado" })
 
-    const servicios = {}
-
-    reservas.forEach(reserva => {
-      const fecha = new Date(reserva.fecha)
-      if (fecha.getFullYear() == anio) {
-        if (servicios[reserva.nombre_servicio]) {
-          servicios[reserva.nombre_servicio] += 1
-        } else {
-          servicios[reserva.nombre_servicio] = 1
-        }
-      }
-    })
+    const servicios = await Servicio.find({ id_lavadero: _id })
 
     const serviciosMasSolicitados = []
     const serviciosMenosSolicitados = []
 
-    for (const servicio in servicios) {
-      serviciosMasSolicitados.push({ nombre: servicio, cantidad: servicios[servicio] })
-      serviciosMenosSolicitados.push({ nombre: servicio, cantidad: servicios[servicio] })
-    }
+    servicios.forEach(servicio => {
+      serviciosMasSolicitados.push({ nombre: servicio.nombre, cantidad: 0 })
+      serviciosMenosSolicitados.push({ nombre: servicio.nombre, cantidad: 0 })
+    })
 
-    serviciosMasSolicitados.sort((a, b) => b.cantidad - a.cantidad)
-    serviciosMenosSolicitados.sort((a, b) => a.cantidad - b.cantidad)
+    reservas.forEach(reserva => {
+      const fecha = new Date(reserva.fecha)
+      if (fecha.getFullYear() == anio) {
+        const serviciosReserva = reserva.nombre_servicio.split(", ")
+        serviciosReserva.forEach(servicioReserva => {
+          serviciosMasSolicitados.forEach(servicioMasSolicitado => {
+            if (servicioMasSolicitado.nombre == servicioReserva) {
+              servicioMasSolicitado.cantidad += 1
+            }
+          })
+        })
+      }
+    })
+
+    serviciosMasSolicitados.sort((a, b) => {
+      if (a.cantidad > b.cantidad) {
+        return -1
+      }
+      if (a.cantidad < b.cantidad) {
+        return 1
+      }
+      return 0
+    })
+
+    serviciosMenosSolicitados.sort((a, b) => {
+      if (a.cantidad > b.cantidad) {
+        return 1
+      }
+      if (a.cantidad < b.cantidad) {
+        return -1
+      }
+      return 0
+    })
 
     res.status(200).json({ serviciosMasSolicitados, serviciosMenosSolicitados })
-
   }
   catch (e) {
     error = new Error("Hubo un error al obtener los servicios mas y menos solicitados");
