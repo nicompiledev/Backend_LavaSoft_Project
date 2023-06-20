@@ -564,7 +564,7 @@ const obtenerGananciasPorMes = async (req, res) => {
     ];
 
     const ganancias = await Reserva.aggregate(pipeline);
-    return ganancias[0]?.totalGanancias || 0;
+    res.status(200).json({ ganancias: ganancias[0]?.totalGanancias || 0 });
   } catch (error) {
     console.error(error);
     throw new Error("Error al obtener las ganancias por mes");
