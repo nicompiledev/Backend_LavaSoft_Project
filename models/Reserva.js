@@ -11,6 +11,7 @@ const reservaSchema = new mongoose.Schema({
   hora_inicio: { type: String, required: true },
   hora_fin: { type: String, required: true },
   espacio_de_trabajo: { type: Number, required: true },
+  costoTotal: { type: Number, required: true },
   estado: { type: String, enum: ["pendiente", "proceso", "terminado", "cancelado"], default: "pendiente"},
   motivoCancelacion: {type: String, default: "No fue cancelado"},
   nombre_emplado: { type: String, required: false },

@@ -1,4 +1,4 @@
-const {generarJWTHasPaid} = require("../helpers/generarJWT.js");
+const { generarJWTHasPaid } = require("../helpers/generarJWT.js");
 const generarId = require("../helpers/generarId.js");
 const emailRegistro = require("../helpers/lavaderos/emailRegistro.js");
 const emailCancelado = require("../helpers/lavaderos/emailCancelado.js")
@@ -21,7 +21,7 @@ const registrarLavadero = async (req, res) => {
   try {
     const { nombreLavadero, NIT, departamento, ciudad, sector, direccion, telefono, correo_electronico, hora_apertura, hora_cierre, espacios_de_trabajo, longitud, latitud, siNoLoRecogen, tipoVehiculos } = req.body;
 
-    if(hora_apertura >= hora_cierre){
+    if (hora_apertura >= hora_cierre) {
       error = new Error("La hora de apertura debe ser menor a la hora de cierre");
       return res.status(400).json({ msg: error.message });
     }
@@ -113,7 +113,7 @@ const editarLavadero = async (req, res) => {
   try {
     const { NIT, nombreLavadero, descripcion, telefono, siNoLoRecogen, departamento, ciudad, sector, direccion, latitud, longitud, correo_electronico, hora_apertura, hora_cierre, tipoVehiculos, espacios_de_trabajo } = req.body;
 
-    if(hora_apertura >= hora_cierre){
+    if (hora_apertura >= hora_cierre) {
       error = new Error("La hora de apertura debe ser menor a la hora de cierre");
       return res.status(400).json({ msg: error.message });
     }
@@ -156,7 +156,7 @@ const editarLavadero = async (req, res) => {
     }
 
     // si todos los campos son correctos, visualizado: true
-    if(NIT && nombreLavadero && descripcion && telefono && siNoLoRecogen && departamento && ciudad && sector && direccion && latitud && longitud && correo_electronico && hora_apertura && hora_cierre && tipoVehiculos && espacios_de_trabajo && existeLavadero.imagenes.length > 0 && existeLavadero.servicios.length > 0){
+    if (NIT && nombreLavadero && descripcion && telefono && siNoLoRecogen && departamento && ciudad && sector && direccion && latitud && longitud && correo_electronico && hora_apertura && hora_cierre && tipoVehiculos && espacios_de_trabajo && existeLavadero.imagenes.length > 0 && existeLavadero.servicios.length > 0) {
       existeLavadero.visualizado = true;
     }
 
@@ -395,7 +395,7 @@ const servicioTerminado = async (req, res) => {
 
       await reserva.save()
 
-    await emailServicioTerminada({
+      await emailServicioTerminada({
         email: usuario.correo_electronico,
         nombre: usuario.nombre,
         lavadero: nombreLavadero,
@@ -415,6 +415,99 @@ const servicioTerminado = async (req, res) => {
   }
   catch (e) {
     error = new Error("Hubo un error al terminar el servicio");
+    res.status(500).json({ msg: error.message });
+  }
+}
+
+
+const obtenerGananciasPorMes = async (req, res) => {
+  /* const LavaderoSchema = new mongoose.Schema({
+    // Información Basica
+    NIT: { type: String, required: true },
+    nombreLavadero: { type: String, required: true },
+    descripcion: {type: String, required: false},
+    telefono: { type: String, required: true },
+    siNoLoRecogen: {type: String, required: true },
+  
+    // Ubicacion
+    departamento: { type: String, required: true },
+    ciudad: { type: String, required: true },
+    sector: { type: String, required: true },
+    direccion: { type: String, required: true },
+    ubicacion: {
+      type: { type: String, default: "Point" },
+      coordinates: { type: [Number], required: true },
+    },
+  
+    // Autenticacion
+    correo_electronico: { type: String, required: true, unique: true },
+    contrasena: { type: String },
+  
+      // Suscripción
+    customerId: { type: String },
+    subscriptionId: { type: String },
+    hasPaid: { type: Boolean, default: false },
+    subscriptionStatus: { type: String },
+  
+  
+    // Informacion
+    hora_apertura: { type: String, required: true },
+    hora_cierre: { type: String, required: true },
+    tipoVehiculos: [{ type: String, enum: ['Moto', 'Carro', 'Camioneta', 'Bus', 'Camion'], required: true}],
+    imagenes: [{ type: String }], // nuevo campo de matriz de imágenes
+    servicios: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Servicio' }],
+    espacios_de_trabajo: { type: Number, required: true },
+  
+    // Staff
+    strikes: { type: Number, default: 0 },
+    estado: { type: Boolean, default: false },
+    visualizado: {type: Boolean, default: false,},
+    token: { type: String, default: generarId() },
+    creado: { type: Date, default: Date.now() },
+  
+  }); */
+
+
+  /* const reservaSchema = new mongoose.Schema({
+    id_lavadero: { type: mongoose.Schema.Types.ObjectId, ref: "Lavadero", required: true },
+    id_usuario: { type: mongoose.Schema.Types.ObjectId, ref: "Usuario", required: true },
+    nombre_servicio: { type: String, required: true },
+    nombre_usuario: { type: String, required: true },
+    id_vehiculo: { type: mongoose.Schema.Types.ObjectId, ref: "VehiculoUsuario", required: true },
+    placa_vehiculo: { type: String, required: true },
+    tipo_vehiculo: { type: String, required: true },
+    fecha: { type: String, required: true },
+    hora_inicio: { type: String, required: true },
+    hora_fin: { type: String, required: true },
+    espacio_de_trabajo: { type: Number, required: true },
+    costoTotal: { type: Number, required: true },
+    estado: { type: String, enum: ["pendiente", "proceso", "terminado", "cancelado"], default: "pendiente"},
+    motivoCancelacion: {type: String, default: "No fue cancelado"},
+    nombre_emplado: { type: String, required: false },
+  }); */
+
+  let error = "";
+
+  // ver las ganancias de un mes y año especifico en un lavadero, teniendo en cuenta el costo total de las reservas terminadas
+
+  try {
+    const { _id } = req.lavadero;
+    const { mes, anio } = req.body; // Ej: mes: 05, anio: 2021
+
+    const reservas = await Reserva.find({ id_lavadero: _id, estado: 'terminado' })
+
+    let ganancias = 0;
+
+    reservas.forEach(reserva => {
+      const fecha = reserva.fecha.split('-')
+      if (fecha[1] == mes && fecha[0] == anio) {
+        ganancias += reserva.costoTotal
+      }
+    })
+
+    res.status(200).json({ ganancias })
+  } catch (e) {
+    error = new Error("Hubo un error al obtener las ganancias");
     res.status(500).json({ msg: error.message });
   }
 }
@@ -524,52 +617,6 @@ const webhook = async (req, res) => {
   res.json({ received: true });  // Eso quiere decir que recibimos el evento
 }
 
-const obtenerGananciasPorMes = async (req, res) => {
-
-  const { _id } = req.lavadero;
-  const { anio, mes } = req.body;
-  try {
-    const pipeline = [
-      {
-        $match: {
-          id_lavadero: _id,
-          estado: "terminado",
-          fecha: {
-            $gte: new Date(anio, mes - 1, 1),
-            $lt: new Date(anio, mes, 1)
-          }
-        }
-      },
-      {
-        $lookup: {
-          from: "servicios",
-          localField: "nombre_servicio",
-          foreignField: "nombre",
-          as: "servicio"
-        }
-      },
-      {
-        $unwind: "$servicio"
-      },
-      {
-        $group: {
-          _id: null,
-          totalGanancias: {
-            $sum: {
-              $multiply: ["$servicio.costo", "$espacio_de_trabajo"]
-            }
-          }
-        }
-      }
-    ];
-
-    const ganancias = await Reserva.aggregate(pipeline);
-    res.status(200).json({ ganancias: ganancias[0]?.totalGanancias || 0 });
-  } catch (error) {
-    console.error(error);
-    throw new Error("Error al obtener las ganancias por mes");
-  }
-};
 
 module.exports = {
   // basico

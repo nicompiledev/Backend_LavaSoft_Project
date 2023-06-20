@@ -68,6 +68,7 @@ module.exports = (io) => {
           nombre_servicio: servicios.map(servicio => servicio.nombre).join(", "),
           nombre_usuario: usuario.nombre,
           fecha: fecha,
+          costoTotal: costoTotal,
           hora_inicio: hora_agendada,
           hora_fin: moment(hora_agendada, 'h:mm A').add(duracionTotal / 60, 'hours').format('h:mm A'),
           espacio_de_trabajo: espacioDisponible,
