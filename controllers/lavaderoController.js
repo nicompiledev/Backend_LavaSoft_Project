@@ -642,5 +642,5 @@ module.exports = {
   webhook,
 
   // estadisticas
-  obtenerGananciasPorMes,
+  obtenerGananciasTodosLosMeses,
 };

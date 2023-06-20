@@ -46,7 +46,7 @@ const {
   webhook,
 
   // estadisticas
-  obtenerGananciasPorMes,
+  obtenerGananciasTodosLosMeses,
 } = require('../controllers/lavaderoController.js');
 const checkAuth = require('../middleware/authMiddleware.js')
 
@@ -73,6 +73,6 @@ router.post("/irapagar", checkAuth, crearSesionPago);
 router.post("/webhook", webhook);
 
 // estadisticas
-router.post("/estadisticas/ganancias", checkAuth, obtenerGananciasPorMes);
+router.post("/estadisticas/ganancias", checkAuth, obtenerGananciasTodosLosMeses);
 
 module.exports = router;
