@@ -75,6 +75,6 @@ router.post("/webhook", webhook);
 
 // estadisticas
 router.post("/estadisticas/ganancias", checkAuth, obtenerGananciasTodosLosMeses);
-router.post("/estadisticas/servicios", checkAuth, obtenerServiciosMasMenosSolicitados);
+router.get("/estadisticas/servicios", checkAuth, obtenerServiciosMasMenosSolicitados);
 
 module.exports = router;
