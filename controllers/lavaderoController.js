@@ -447,53 +447,6 @@ const obtenerGananciasTodosLosMeses = async (req, res) => {
   }
 };
 
-const obtenerServiciosMasMenosSolicitados = async (req, res) => {
-  let error = "";
-  try {
-    const { _id } = req.lavadero;
-    let servicioMasSolicitado = ""
-    let servicioMenosSolicitado = ""
-
-    // Hay que tener en cuenta que en reserva nombre_servicio salen varios nombres de servicios, ejemplo "lavado, aspirado, polichado" y otras veces solo sale un nombre de servicio, ejemplo "lavado", hay que mandar 1 de cada uno, o sea, uno mas solicitado y uno menos solicitado
-
-    const reservas = await Reserva.find({ id_lavadero: _id, estado: "terminado" })
-
-    const servicios = await Servicio.find({ id_lavadero: _id })
-
-    const serviciosMasSolicitados = []
-    const serviciosMenosSolicitados = []
-
-    servicios.forEach(servicio => {
-      let contador = 0
-      reservas.forEach(reserva => {
-        if (reserva.nombre_servicio.includes(servicio.nombre)) {
-          contador++
-        }
-      })
-      serviciosMasSolicitados.push({ nombre: servicio.nombre, contador })
-      serviciosMenosSolicitados.push({ nombre: servicio.nombre, contador })
-
-      console.log(serviciosMasSolicitados);
-    })
-
-    serviciosMasSolicitados.sort((a, b) => {
-      return b.contador - a.contador
-    })
-
-    serviciosMenosSolicitados.sort((a, b) => {
-      return a.contador - b.contador
-    })
-
-    servicioMasSolicitado = serviciosMasSolicitados[0]
-    servicioMenosSolicitado = serviciosMenosSolicitados[0]
-
-    res.status(200).json({ servicioMasSolicitado, servicioMenosSolicitado });
-  } catch (e) {
-    error = new Error("Hubo un error al obtener los servicios más y menos solicitados");
-    res.status(500).json({ msg: error.message });
-  }
-};
-
 
 const refrescarToken = async (req, res) => {
   let error = "";
@@ -626,5 +579,4 @@ module.exports = {
 
   // estadisticas
   obtenerGananciasTodosLosMeses,
-  obtenerServiciosMasMenosSolicitados,
 };

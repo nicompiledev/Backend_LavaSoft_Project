@@ -47,7 +47,6 @@ const {
 
   // estadisticas
   obtenerGananciasTodosLosMeses,
-  obtenerServiciosMasMenosSolicitados
 } = require('../controllers/lavaderoController.js');
 const checkAuth = require('../middleware/authMiddleware.js')
 
@@ -75,6 +74,5 @@ router.post("/webhook", webhook);
 
 // estadisticas
 router.post("/estadisticas/ganancias", checkAuth, obtenerGananciasTodosLosMeses);
-router.get("/estadisticas/servicios", checkAuth, obtenerServiciosMasMenosSolicitados);
 
 module.exports = router;
