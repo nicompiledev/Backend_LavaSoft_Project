@@ -386,15 +386,13 @@ const servicioTerminado = async (req, res) => {
     const { nombreLavadero, siNoLoRecogen, direccion } = req.lavadero
 
     try {
-      const [reserva, usuario] = await Promise.all([
-        Reserva.findById(id_reserva),
-        Usuario.findById(id_usuario),
-      ]);
+      const reserva = await Reserva.findById(id_reserva)
+      const usuario = await Usuario.findById(id_usuario)
 
-      reserva.estado = 'terminado'
-
-      await reserva.save()
-
+      // Actualizar estado de la reserva a terminado
+      reserva.estado = "terminado";
+      await reserva.save();
+      
       await emailServicioTerminada({
         email: usuario.correo_electronico,
         nombre: usuario.nombre,
