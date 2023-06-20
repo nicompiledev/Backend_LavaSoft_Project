@@ -418,38 +418,97 @@ const servicioTerminado = async (req, res) => {
 }
 
 
-const obtenerGananciasPorMes = async (req, res) => {
+const obtenerGananciasTodosLosMeses = async (req, res) => {
+  let error = "";
   try {
     const { _id } = req.lavadero;
     const { anio } = req.body;
 
-    const reservas = await Reserva.find({ id_lavadero: _id, estado: 'terminado' });
-    const gananciasPorMes = {};
+   /* const LavaderoSchema = new mongoose.Schema({
+    // Información Basica
+    NIT: { type: String, required: true },
+    nombreLavadero: { type: String, required: true },
+    descripcion: {type: String, required: false},
+    telefono: { type: String, required: true },
+    siNoLoRecogen: {type: String, required: true },
+  
+    // Ubicacion
+    departamento: { type: String, required: true },
+    ciudad: { type: String, required: true },
+    sector: { type: String, required: true },
+    direccion: { type: String, required: true },
+    ubicacion: {
+      type: { type: String, default: "Point" },
+      coordinates: { type: [Number], required: true },
+    },
+  
+    // Autenticacion
+    correo_electronico: { type: String, required: true, unique: true },
+    contrasena: { type: String },
+  
+      // Suscripción
+    customerId: { type: String },
+    subscriptionId: { type: String },
+    hasPaid: { type: Boolean, default: false },
+    subscriptionStatus: { type: String },
+  
+  
+    // Informacion
+    hora_apertura: { type: String, required: true },
+    hora_cierre: { type: String, required: true },
+    tipoVehiculos: [{ type: String, enum: ['Moto', 'Carro', 'Camioneta', 'Bus', 'Camion'], required: true}],
+    imagenes: [{ type: String }], // nuevo campo de matriz de imágenes
+    servicios: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Servicio' }],
+    espacios_de_trabajo: { type: Number, required: true },
+  
+    // Staff
+    strikes: { type: Number, default: 0 },
+    estado: { type: Boolean, default: false },
+    visualizado: {type: Boolean, default: false,},
+    token: { type: String, default: generarId() },
+    creado: { type: Date, default: Date.now() },
+  
+  }); */
 
-    reservas.forEach(reserva => {
-      const fecha = reserva.fecha.split('-');
-      const mes = fecha[1];
 
-      if (!gananciasPorMes[mes]) {
-        gananciasPorMes[mes] = reserva.costoTotal;
-      } else {
-        gananciasPorMes[mes] += reserva.costoTotal;
-      }
-    });
+  /* const reservaSchema = new mongoose.Schema({
+    id_lavadero: { type: mongoose.Schema.Types.ObjectId, ref: "Lavadero", required: true },
+    id_usuario: { type: mongoose.Schema.Types.ObjectId, ref: "Usuario", required: true },
+    nombre_servicio: { type: String, required: true },
+    nombre_usuario: { type: String, required: true },
+    id_vehiculo: { type: mongoose.Schema.Types.ObjectId, ref: "VehiculoUsuario", required: true },
+    placa_vehiculo: { type: String, required: true },
+    tipo_vehiculo: { type: String, required: true },
+    fecha: { type: String, required: true },
+    hora_inicio: { type: String, required: true },
+    hora_fin: { type: String, required: true },
+    espacio_de_trabajo: { type: Number, required: true },
+    costoTotal: { type: Number, required: true },
+    estado: { type: String, enum: ["pendiente", "proceso", "terminado", "cancelado"], default: "pendiente"},
+    motivoCancelacion: {type: String, default: "No fue cancelado"},
+    nombre_emplado: { type: String, required: false },
+  }); */
 
-    const meses = Object.keys(gananciasPorMes);
-    const ganancias = [];
+    const reservas = await Reserva.find({ id_lavadero: _id, estado: "terminado" })
 
-    for (const mes of meses) {
-      ganancias.push({
-        mes: mes,
-        ganancia: gananciasPorMes[mes]
-      });
+    const ganancias = []
+
+    for (let i = 0; i < 12; i++) {
+      ganancias.push(0)
     }
 
-    res.status(200).json({ ganancias });
-  } catch (error) {
-    res.status(500).json({ error: 'Hubo un error al obtener las ganancias' });
+    reservas.forEach(reserva => {
+      const fecha = new Date(reserva.fecha)
+      if (fecha.getFullYear() == anio) {
+        ganancias[fecha.getMonth()] += reserva.costoTotal
+      }
+    })
+
+    res.status(200).json({ ganancias })
+
+  } catch (e) {
+    error = new Error("Hubo un error al obtener las ganancias");
+    res.status(500).json({ msg: error.message });
   }
 };
 
