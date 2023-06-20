@@ -546,6 +546,8 @@ const obtenerServiciosMasMenosSolicitados = async (req, res) => {
       })
       serviciosMasSolicitados.push({ nombre: servicio.nombre, contador })
       serviciosMenosSolicitados.push({ nombre: servicio.nombre, contador })
+
+      console.log(serviciosMasSolicitados);
     })
 
     serviciosMasSolicitados.sort((a, b) => {
