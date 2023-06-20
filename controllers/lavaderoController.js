@@ -527,7 +527,7 @@ const obtenerServiciosMasMenosSolicitados = async (req, res) => {
     const { _id } = req.lavadero;
     const { anio } = req.body;
 
-    // Hay que tener en cuenta que en reserva nombre_servicio salen varios nombres de servicios, ejemplo "lavado, aspirado, polichado"
+    // Hay que tener en cuenta que en reserva nombre_servicio salen varios nombres de servicios, ejemplo "lavado, aspirado, polichado" y otras veces solo sale un nombre de servicio, ejemplo "lavado"
 
     const reservas = await Reserva.find({ id_lavadero: _id, estado: "terminado" })
 
@@ -544,11 +544,23 @@ const obtenerServiciosMasMenosSolicitados = async (req, res) => {
     reservas.forEach(reserva => {
       const fecha = new Date(reserva.fecha)
       if (fecha.getFullYear() == anio) {
-        const serviciosReserva = reserva.nombre_servicio.split(", ")
-        serviciosReserva.forEach(servicioReserva => {
+        reserva.nombre_servicio.split(",").forEach(servicio => {
           serviciosMasSolicitados.forEach(servicioMasSolicitado => {
-            if (servicioMasSolicitado.nombre == servicioReserva) {
-              servicioMasSolicitado.cantidad += 1
+            if (servicioMasSolicitado.nombre == servicio) {
+              servicioMasSolicitado.cantidad++
+            }
+          })
+        })
+      }
+    })
+
+    reservas.forEach(reserva => {
+      const fecha = new Date(reserva.fecha)
+      if (fecha.getFullYear() == anio) {
+        reserva.nombre_servicio.split(",").forEach(servicio => {
+          serviciosMenosSolicitados.forEach(servicioMenosSolicitado => {
+            if (servicioMenosSolicitado.nombre == servicio) {
+              servicioMenosSolicitado.cantidad++
             }
           })
         })
@@ -556,29 +568,16 @@ const obtenerServiciosMasMenosSolicitados = async (req, res) => {
     })
 
     serviciosMasSolicitados.sort((a, b) => {
-      if (a.cantidad > b.cantidad) {
-        return -1
-      }
-      if (a.cantidad < b.cantidad) {
-        return 1
-      }
-      return 0
+      return b.cantidad - a.cantidad
     })
 
     serviciosMenosSolicitados.sort((a, b) => {
-      if (a.cantidad > b.cantidad) {
-        return 1
-      }
-      if (a.cantidad < b.cantidad) {
-        return -1
-      }
-      return 0
+      return a.cantidad - b.cantidad
     })
 
     res.status(200).json({ serviciosMasSolicitados, serviciosMenosSolicitados })
-  }
-  catch (e) {
-    error = new Error("Hubo un error al obtener los servicios mas y menos solicitados");
+  } catch (e) {
+    error = new Error("Hubo un error al obtener los servicios más y menos solicitados");
     res.status(500).json({ msg: error.message });
   }
 };
