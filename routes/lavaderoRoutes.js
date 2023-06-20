@@ -46,9 +46,7 @@ const {
   webhook,
 
   // estadisticas
-  obtenerGanancias,
-  obtenerServiciosMasMenosPedidos,
-  obtenerVehiculoMasReservado
+  obtenerGananciasPorMes,
 } = require('../controllers/lavaderoController.js');
 const checkAuth = require('../middleware/authMiddleware.js')
 
@@ -75,8 +73,6 @@ router.post("/irapagar", checkAuth, crearSesionPago);
 router.post("/webhook", webhook);
 
 // estadisticas
-router.get("/estadisticas/ganancias", checkAuth, obtenerGanancias);
-router.get("/estadisticas/servicios", checkAuth, obtenerServiciosMasMenosPedidos);
-router.get("/estadisticas/vehiculos", checkAuth, obtenerVehiculoMasReservado);
+router.post("/estadisticas/ganancias", checkAuth, obtenerGananciasPorMes);
 
 module.exports = router;
