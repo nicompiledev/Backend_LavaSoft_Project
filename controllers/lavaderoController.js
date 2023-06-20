@@ -525,9 +525,10 @@ const obtenerServiciosMasMenosSolicitados = async (req, res) => {
   let error = "";
   try {
     const { _id } = req.lavadero;
-    const { anio } = req.body;
+    let servicioMasSolicitado = ""
+    let servicioMenosSolicitado = ""
 
-    // Hay que tener en cuenta que en reserva nombre_servicio salen varios nombres de servicios, ejemplo "lavado, aspirado, polichado" y otras veces solo sale un nombre de servicio, ejemplo "lavado"
+    // Hay que tener en cuenta que en reserva nombre_servicio salen varios nombres de servicios, ejemplo "lavado, aspirado, polichado" y otras veces solo sale un nombre de servicio, ejemplo "lavado", hay que mandar 1 de cada uno, o sea, uno mas solicitado y uno menos solicitado
 
     const reservas = await Reserva.find({ id_lavadero: _id, estado: "terminado" })
 
@@ -537,45 +538,28 @@ const obtenerServiciosMasMenosSolicitados = async (req, res) => {
     const serviciosMenosSolicitados = []
 
     servicios.forEach(servicio => {
-      serviciosMasSolicitados.push({ nombre: servicio.nombre, cantidad: 0 })
-      serviciosMenosSolicitados.push({ nombre: servicio.nombre, cantidad: 0 })
-    })
-
-    reservas.forEach(reserva => {
-      const fecha = new Date(reserva.fecha)
-      if (fecha.getFullYear() == anio) {
-        reserva.nombre_servicio.split(",").forEach(servicio => {
-          serviciosMasSolicitados.forEach(servicioMasSolicitado => {
-            if (servicioMasSolicitado.nombre == servicio) {
-              servicioMasSolicitado.cantidad++
-            }
-          })
-        })
-      }
-    })
-
-    reservas.forEach(reserva => {
-      const fecha = new Date(reserva.fecha)
-      if (fecha.getFullYear() == anio) {
-        reserva.nombre_servicio.split(",").forEach(servicio => {
-          serviciosMenosSolicitados.forEach(servicioMenosSolicitado => {
-            if (servicioMenosSolicitado.nombre == servicio) {
-              servicioMenosSolicitado.cantidad++
-            }
-          })
-        })
-      }
+      let contador = 0
+      reservas.forEach(reserva => {
+        if (reserva.nombre_servicio.includes(servicio.nombre)) {
+          contador++
+        }
+      })
+      serviciosMasSolicitados.push({ nombre: servicio.nombre, contador })
+      serviciosMenosSolicitados.push({ nombre: servicio.nombre, contador })
     })
 
     serviciosMasSolicitados.sort((a, b) => {
-      return b.cantidad - a.cantidad
+      return b.contador - a.contador
     })
 
     serviciosMenosSolicitados.sort((a, b) => {
-      return a.cantidad - b.cantidad
+      return a.contador - b.contador
     })
 
-    res.status(200).json({ serviciosMasSolicitados, serviciosMenosSolicitados })
+    servicioMasSolicitado = serviciosMasSolicitados[0]
+    servicioMenosSolicitado = serviciosMenosSolicitados[0]
+
+    res.status(200).json({ servicioMasSolicitado, servicioMenosSolicitado });
   } catch (e) {
     error = new Error("Hubo un error al obtener los servicios más y menos solicitados");
     res.status(500).json({ msg: error.message });
