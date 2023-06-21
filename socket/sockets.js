@@ -121,23 +121,33 @@ const horasDisponibles = async (id_lavadero, fecha, id_servicios) => {
     let hora = moment.utc(lavadero.hora_apertura, 'h:mm A');
     const horaCierre = moment.utc(lavadero.hora_cierre, 'h:mm A');
     const horaActual = moment.utc(); // Obtener la hora actual en formato UTC
+
     while (hora.isBefore(horaCierre)) {
       const horaFin = moment.utc(hora).add(duracionTotal / 60, 'hours');
       const reservasEspacio = reservas.filter(reserva => {
-        return moment.utc(reserva.hora_inicio, 'h:mm A').isBetween(hora, horaFin) ||
-          moment.utc(reserva.hora_fin, 'h:mm A').isBetween(hora, horaFin) ||
-          moment.utc(reserva.hora_inicio, 'h:mm A').isSameOrBefore(hora) && moment.utc(reserva.hora_fin, 'h:mm A').isSameOrAfter(horaFin);
+        const reservaHoraInicio = moment.utc(reserva.hora_inicio, 'h:mm A');
+        const reservaHoraFin = moment.utc(reserva.hora_fin, 'h:mm A');
+
+        return (
+          reservaHoraInicio.isBetween(hora, horaFin, undefined, '[]') ||
+          reservaHoraFin.isBetween(hora, horaFin, undefined, '[]') ||
+          (reservaHoraInicio.isSameOrBefore(hora) && reservaHoraFin.isSameOrAfter(horaFin))
+        );
       });
-      if (reservasEspacio.length < lavadero.espacios_de_trabajo && (!moment.utc(fecha).isSame(horaActual, 'day') || hora.isAfter(horaActual))) {
+
+      if (
+        reservasEspacio.length < lavadero.espacios_de_trabajo &&
+        (!moment.utc(fecha).isSame(horaActual, 'day') || hora.isAfter(horaActual, 'minute'))
+      ) {
         horasLibres.push(hora.format('h:mm A'));
       }
       hora.add(duracionTotal / 60, 'hours');
     }
 
-    console.log(horaActual);
+    console.log(hora.isAfter(horaActual));
 
     return horasLibres;
   } catch (error) {
     console.log(error);
   }
-}
+};
