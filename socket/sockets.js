@@ -124,6 +124,9 @@ const horasDisponibles = async (id_lavadero, fecha, id_servicios) => {
     const horaCierre = moment(lavadero.hora_cierre, 'h:mm A');
     while (hora.isBefore(horaCierre)) {
       const horaFin = moment(hora, 'h:mm A').add(duracionTotal / 60, 'hours');
+      if (horaFin.isAfter(horaCierre)) {
+        break;
+      }
       const reservasEspacio = reservas.filter(reserva => {
         return moment(reserva.hora_inicio, 'h:mm A').isBetween(hora, horaFin) ||
           moment(reserva.hora_fin, 'h:mm A').isBetween(hora, horaFin) ||
@@ -134,8 +137,6 @@ const horasDisponibles = async (id_lavadero, fecha, id_servicios) => {
       }
       hora.add(duracionTotal / 60, 'hours');
     }
-
-    console.log(moment());
 
     return horasLibres;
   } catch (error) {
