@@ -133,7 +133,7 @@ const horasDisponibles = async (id_lavadero, fecha, id_servicios) => {
       hora.add(duracionTotal / 60, 'hours');
     }
 
-    console.log(horasLibres, fecha);
+    console.log(hora.isAfter(moment()));
 
     return horasLibres;
   } catch (error) {
