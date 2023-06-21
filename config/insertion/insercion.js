@@ -826,10 +826,10 @@ const realizarInsercion = async () => {
         if(newLavadero.tipoVehiculos.includes('Moto')){
         // Moto
         const servicio1 = new Servicio({
-            nombre: 'Lavado exterior', categoria: 'lavado', tipoVehiculo: 'Moto', detalle: 'Lavado exterior con agua a presión y shampoo.', costo: 10000, duracion: 15
+            nombre: 'Lavado Básico', categoria: 'lavado', tipoVehiculo: 'Moto', detalle: 'Lavado exterior con agua a presión y shampoo.', costo: 12000, duracion: 60
         });
         const servicio2 = new Servicio({
-            nombre: 'Lavado de motor', categoria: 'lavado', tipoVehiculo: 'Moto', detalle: 'Lavado de motor con agua a presión y desengrasante.', costo: 20000, duracion: 30
+            nombre: 'Polichado', categoria: 'alistamiento', tipoVehiculo: 'Moto', detalle: 'Brillada con filtro UV y restauración de partes negras.', costo: 5000, duracion: 30
         });
 
         await servicio1.save();
@@ -841,19 +841,21 @@ const realizarInsercion = async () => {
     }
     
     if(newLavadero.tipoVehiculos.includes('Carro')){
+        const servicio = new Servicio({
+            nombre: 'Lavado Básico', categoria: 'lavado', tipoVehiculo: 'Carro', detalle: 'Lavado básico de exterior y aspirada', costo: 20000, duracion: 60
+        });
         const servicio1 = new Servicio({
-            nombre: 'Encerado con cera de carnauba', categoria: 'encerado', tipoVehiculo: 'Carro', detalle: 'Encerado con cera de carnauba, que protege la pintura de los rayos UV y la suciedad.', costo: 50000, duracion: 60
+            nombre: 'Encerado con cera de carnauba', categoria: 'encerado', tipoVehiculo: 'Carro', detalle: 'Encerado con cera de carnauba, que protege la pintura de los rayos UV y la suciedad.', costo: 30000, duracion: 60
         });
         const servicio2 = new Servicio({
-            nombre: 'Lavado de motor', categoria: 'lavado', tipoVehiculo: 'Carro', detalle: 'Lavado de motor con agua a presión y desengrasante.', costo: 30000, duracion: 30
-        });
-        const servicio3 = new Servicio({
-            nombre: 'Lavado de tapicería', categoria: 'lavado', tipoVehiculo: 'Carro', detalle: 'Lavado de tapicería con espuma y aspirado.', costo: 40000, duracion: 45
-        });
-        const servicio4 = new Servicio({
             nombre: 'Lavado de motor', categoria: 'lavado', tipoVehiculo: 'Carro', detalle: 'Lavado de motor con agua a presión y desengrasante.', costo: 20000, duracion: 30
         });
-
+        const servicio3 = new Servicio({
+            nombre: 'Lavado de tapicería', categoria: 'lavado', tipoVehiculo: 'Carro', detalle: 'Lavado de tapicería con espuma y aspirado.', costo: 80000, duracion: 120
+        });
+        const servicio4 = new Servicio({
+            nombre: 'Lavado de chasis', categoria: 'lavado', tipoVehiculo: 'Carro', detalle: 'Lavado de chasis con agua a presión y desengrasante.', costo: 20000, duracion: 30
+        });
         await servicio1.save();
         await servicio2.save();
         await servicio3.save();
