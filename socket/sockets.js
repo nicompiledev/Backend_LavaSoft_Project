@@ -132,7 +132,7 @@ const horasDisponibles = async (id_lavadero, fecha, id_servicios) => {
           moment(reserva.hora_fin, 'h:mm A').isBetween(hora, horaFin) ||
           moment(reserva.hora_inicio, 'h:mm A').isSameOrBefore(hora) && moment(reserva.hora_fin, 'h:mm A').isSameOrAfter(horaFin);
       });
-      if (reservasEspacio.length < lavadero.espacios_de_trabajo && (!moment(fecha).isSame(moment(), 'day') || hora.isAfter(moment()))) {
+      if (reservasEspacio.length < lavadero.espacios_de_trabajo && (!moment(fecha).isSame(moment(), 'day') || (hora.isAfter(moment()) && hora.isBefore(horaCierre)))) {
         horasLibres.push(hora.format('h:mm A'));
       }
       hora.add(duracionTotal / 60, 'hours');
