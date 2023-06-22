@@ -116,10 +116,11 @@ const horasDisponibles = async (id_lavadero, fecha, id_servicios) => {
     let duracionTotal = 0;
     for (const servicio of servicios) {
       duracionTotal += servicio.duracion;
-      console.log(servicio.duracion);
     }
 
-    console.log(servicios);
+    console.log("Fecha: ", fecha);
+
+
     const horasLibres = [];
     let hora = moment(lavadero.hora_apertura, 'h:mm A');
     const horaCierre = moment(lavadero.hora_cierre, 'h:mm A');
