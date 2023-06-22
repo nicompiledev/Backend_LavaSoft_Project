@@ -2,7 +2,7 @@ const { Reserva } = require('../models/Reserva.js');
 const Lavadero = require('../models/type_users/Lavadero.js');
 const { Servicio } = require('../models/Servicio.js');
 const moment = require('moment-timezone');
-moment.tz.setDefault('America/Bogota');
+moment.tz.setDefault("America/Bogota");
 
 
 module.exports = (io) => {
@@ -124,9 +124,6 @@ const horasDisponibles = async (id_lavadero, fecha, id_servicios) => {
     const horaCierre = moment(lavadero.hora_cierre, 'h:mm A');
     while (hora.isBefore(horaCierre)) {
       const horaFin = moment(hora, 'h:mm A').add(duracionTotal / 60, 'hours');
-      if (horaFin.isAfter(horaCierre)) {
-        break;
-      }
       const reservasEspacio = reservas.filter(reserva => {
         return moment(reserva.hora_inicio, 'h:mm A').isBetween(hora, horaFin) ||
           moment(reserva.hora_fin, 'h:mm A').isBetween(hora, horaFin) ||
@@ -137,6 +134,10 @@ const horasDisponibles = async (id_lavadero, fecha, id_servicios) => {
       }
       hora.add(duracionTotal / 60, 'hours');
     }
+
+    // ver la fecha actual y hora actual
+    console.log(moment().format('YYYY-MM-DD'));
+    console.log(moment().format('h:mm A'));
 
     return horasLibres;
   } catch (error) {
