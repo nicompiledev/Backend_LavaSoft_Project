@@ -109,16 +109,12 @@ const horasDisponibles = async (id_lavadero, fecha, id_servicios) => {
     });
 
     const servicios = await Servicio.find({ _id: { $in: id_servicios } });
-
-
     // Calcular duración total y costo total
     let duracionTotal = 0;
     for (const servicio of servicios) {
       duracionTotal += servicio.duracion;
     }
-
     const horasLibres = [];
-  
     // hora es la hora de apertura del lavadero de la fecha seleccionada
     let hora = moment(lavadero.hora_apertura, 'h:mm A').set({ 'year': fecha.split('-')[0], 'month': fecha.split('-')[1] - 1, 'date': fecha.split('-')[2] });
     const horaCierre = moment(lavadero.hora_cierre, 'h:mm A').set({ 'year': fecha.split('-')[0], 'month': fecha.split('-')[1] - 1, 'date': fecha.split('-')[2] });
@@ -146,5 +142,3 @@ const horasDisponibles = async (id_lavadero, fecha, id_servicios) => {
     console.log(error);
   }
 }
-
-// (!moment(fecha).isSame(moment(), 'day') || hora.isAfter(moment()))
