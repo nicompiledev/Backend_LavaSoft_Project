@@ -111,16 +111,14 @@ const horasDisponibles = async (id_lavadero, fecha, id_servicios) => {
 
     const servicios = await Servicio.find({ _id: { $in: id_servicios } });
 
-    console.log('fecha:', fecha)
-    console.log('hora_apertura:', lavadero.hora_apertura);
-console.log('hora_cierre:', lavadero.hora_cierre);
-
 
     // Calcular duración total y costo total
     let duracionTotal = 0;
     for (const servicio of servicios) {
       duracionTotal += servicio.duracion;
     }
+
+    console.log(reservas);
 
     const horasLibres = [];
     let hora = moment(lavadero.hora_apertura, 'h:mm A');
