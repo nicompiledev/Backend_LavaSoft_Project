@@ -120,6 +120,11 @@ const horasDisponibles = async (id_lavadero, fecha, id_servicios) => {
     const horasLibres = [];
     let hora = moment(lavadero.hora_apertura, 'h:mm A');
     const horaCierre = moment(lavadero.hora_cierre, 'h:mm A');
+
+    console.log(hora);
+    console.log(horaCierre);
+
+
     while (hora.isBefore(horaCierre)) {
       const horaFin = moment(hora, 'h:mm A').add(duracionTotal / 60, 'hours');
       const reservasEspacio = reservas.filter(reserva => {
