@@ -113,25 +113,13 @@ const horasDisponibles = async (id_lavadero, fecha, id_servicios) => {
 
     // Calcular duración total y costo total
     let duracionTotal = 0;
-    let costoTotal = 0;
     for (const servicio of servicios) {
       duracionTotal += servicio.duracion;
-      costoTotal += servicio.costo;
     }
 
     const horasLibres = [];
     let hora = moment(lavadero.hora_apertura, 'h:mm A');
     const horaCierre = moment(lavadero.hora_cierre, 'h:mm A');
-
-    // si la hora actual es mayor a la hora de cierre, no hay horas disponibles
-    console.log('hora de cierre', horaCierre.format('h:mm A'));
-    console.log('hora actual', moment().format('h:mm A'));
-    /* hora de cierre 6:00 PM
-       hora actual 7:31 PM */
-    if (moment().isAfter(horaCierre)) {
-      return [];
-    }
-
     while (hora.isBefore(horaCierre)) {
       const horaFin = moment(hora, 'h:mm A').add(duracionTotal / 60, 'hours');
       const reservasEspacio = reservas.filter(reserva => {
@@ -144,6 +132,15 @@ const horasDisponibles = async (id_lavadero, fecha, id_servicios) => {
       }
       hora.add(duracionTotal / 60, 'hours');
     }
+
+    console.log(horasLibres);
+
+    if(horasLibres.length === 0){
+      
+      horasLibres.push('No hay horas disponibles');
+    }
+
+    console.log(horasLibres);
 
     return horasLibres;
   } catch (error) {
