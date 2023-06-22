@@ -118,7 +118,10 @@ const horasDisponibles = async (id_lavadero, fecha, id_servicios) => {
       duracionTotal += servicio.duracion;
     }
 
-    console.log("Fecha: ", fecha);
+    // Si la fecha actual y la hora actual es mayor a la hora de cierre del lavadero, no mostrar horas disponibles
+    if (moment().isSameOrAfter(moment(fecha).add(lavadero.hora_cierre, 'hours'))) {
+      return [];
+    }
 
 
     const horasLibres = [];
@@ -132,12 +135,11 @@ const horasDisponibles = async (id_lavadero, fecha, id_servicios) => {
           moment(reserva.hora_fin, 'h:mm A').isBetween(hora, horaFin) ||
           moment(reserva.hora_inicio, 'h:mm A').isSameOrBefore(hora) && moment(reserva.hora_fin, 'h:mm A').isSameOrAfter(horaFin);
       });
-      if (reservasEspacio.length < lavadero.espacios_de_trabajo && (!moment(fecha).isSame(moment(), 'day') || (hora.isSameOrAfter(horaActual) && hora.isSameOrBefore(horaCierre)))) {
+      if (reservasEspacio.length < lavadero.espacios_de_trabajo && (!moment(fecha).isSame(moment(), 'day') || (hora.isAfter(horaActual) && hora.isBefore(horaCierre)))) {
         horasLibres.push(hora.format('h:mm A'));
       }
       hora.add(duracionTotal / 60, 'hours');
     };
-
 
 
     return horasLibres;
