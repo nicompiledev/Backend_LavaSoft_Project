@@ -136,10 +136,10 @@ const horasDisponibles = async (id_lavadero, fecha, id_servicios) => {
     }
 
     // si la hora actual es mayor a la hora de cierre, no hay horas disponibles
-    if (moment().isAfter(horaCierre)) {
-      return [];
-    }
-
+   console.log(horasLibres);
+   console.log(moment().format('h:mm A'));
+   console.log(horaCierre);
+  console.log(moment().isAfter(horaCierre));
     return horasLibres;
   } catch (error) {
     console.log(error);
