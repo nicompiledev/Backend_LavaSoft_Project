@@ -111,6 +111,11 @@ const horasDisponibles = async (id_lavadero, fecha, id_servicios) => {
 
     const servicios = await Servicio.find({ _id: { $in: id_servicios } });
 
+    console.log('fecha:', fecha)
+    console.log('hora_apertura:', lavadero.hora_apertura);
+console.log('hora_cierre:', lavadero.hora_cierre);
+
+
     // Calcular duración total y costo total
     let duracionTotal = 0;
     for (const servicio of servicios) {
@@ -120,12 +125,7 @@ const horasDisponibles = async (id_lavadero, fecha, id_servicios) => {
     const horasLibres = [];
     let hora = moment(lavadero.hora_apertura, 'h:mm A');
     const horaCierre = moment(lavadero.hora_cierre, 'h:mm A');
-
-    console.log(hora);
-    console.log(horaCierre);
-
-
-    while (hora.isBefore(horaCierre)) {
+    while (hora.isBefore(horaCierre)) {  // Mientras la hora sea menor a la hora de cierre
       const horaFin = moment(hora, 'h:mm A').add(duracionTotal / 60, 'hours');
       const reservasEspacio = reservas.filter(reserva => {
         return moment(reserva.hora_inicio, 'h:mm A').isBetween(hora, horaFin) ||
@@ -136,16 +136,7 @@ const horasDisponibles = async (id_lavadero, fecha, id_servicios) => {
         horasLibres.push(hora.format('h:mm A'));
       }
       hora.add(duracionTotal / 60, 'hours');
-    }
-
-    console.log(horasLibres);
-
-    if(horasLibres.length === 0){
-      
-      horasLibres.push('No hay horas disponibles');
-    }
-
-    console.log(horasLibres);
+    };
 
     return horasLibres;
   } catch (error) {
