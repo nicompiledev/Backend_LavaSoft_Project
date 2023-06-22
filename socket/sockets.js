@@ -28,7 +28,6 @@ module.exports = (io) => {
           return
         }
 
-        // Obtener reservas existentes para el lavadero y la fecha seleccionada
         const reservas = await Reserva.find({
           id_lavadero: id_lavadero,
           fecha: fecha,
@@ -118,16 +117,13 @@ const horasDisponibles = async (id_lavadero, fecha, id_servicios) => {
       duracionTotal += servicio.duracion;
     }
 
-    // Si la fecha actual y la hora actual es mayor a la hora de cierre del lavadero, no mostrar horas disponibles
-    if (moment().isSameOrAfter(moment(fecha).add(lavadero.hora_cierre, 'hours'))) {
-      return [];
-    }
-
-
     const horasLibres = [];
-    let hora = moment(lavadero.hora_apertura, 'h:mm A');
-    const horaCierre = moment(lavadero.hora_cierre, 'h:mm A');
+  
+    // hora es la hora de apertura del lavadero de la fecha seleccionada
+    let hora = moment(lavadero.hora_apertura, 'h:mm A').set({ 'year': fecha.split('-')[0], 'month': fecha.split('-')[1] - 1, 'date': fecha.split('-')[2] });
+    const horaCierre = moment(lavadero.hora_cierre, 'h:mm A').set({ 'year': fecha.split('-')[0], 'month': fecha.split('-')[1] - 1, 'date': fecha.split('-')[2] });
     while (hora.isBefore(horaCierre)) {  // Mientras la hora sea menor a la hora de cierre
+      const fechaActual = moment(fecha).format('YYYY-MM-DD');
       const horaActual = moment.tz("America/Bogota");  // Actualizar la hora actual en cada iteración
       const horaFin = moment(hora, 'h:mm A').add(duracionTotal / 60, 'hours');
       const reservasEspacio = reservas.filter(reserva => {
@@ -135,15 +131,20 @@ const horasDisponibles = async (id_lavadero, fecha, id_servicios) => {
           moment(reserva.hora_fin, 'h:mm A').isBetween(hora, horaFin) ||
           moment(reserva.hora_inicio, 'h:mm A').isSameOrBefore(hora) && moment(reserva.hora_fin, 'h:mm A').isSameOrAfter(horaFin);
       });
-      if (reservasEspacio.length < lavadero.espacios_de_trabajo && (!moment(fecha).isSame(moment(), 'day') || (hora.isAfter(horaActual) && hora.isBefore(horaCierre)))) {
+      if (reservasEspacio.length < lavadero.espacios_de_trabajo) {
+        if (moment(fecha).isSame(fechaActual, 'day') && hora.isBefore(horaActual)) {  // si la fecha es hoy y la hora es menor a la hora actual
+          hora.add(duracionTotal / 60, 'hours');
+          continue;
+        }
         horasLibres.push(hora.format('h:mm A'));
       }
       hora.add(duracionTotal / 60, 'hours');
-    };
-
+    }
 
     return horasLibres;
   } catch (error) {
     console.log(error);
   }
 }
+
+// (!moment(fecha).isSame(moment(), 'day') || hora.isAfter(moment()))
